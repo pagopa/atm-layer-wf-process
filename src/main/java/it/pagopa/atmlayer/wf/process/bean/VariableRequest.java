@@ -4,19 +4,18 @@ import java.util.List;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @RegisterForReflection
-public class TaskResponse {
+public class VariableRequest {
+    
+    private String taskId;
 
-    private List<Task> tasks;
+    private List<String> buttons;
 
-    private String transactionId;
-
+    private List<String> variables;
 }

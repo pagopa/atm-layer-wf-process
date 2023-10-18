@@ -5,8 +5,11 @@ import org.jboss.resteasy.reactive.RestResponse;
 import io.quarkus.logging.Log;
 import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
 import it.pagopa.atmlayer.wf.process.bean.TaskResponse;
+import it.pagopa.atmlayer.wf.process.bean.VariableRequest;
+import it.pagopa.atmlayer.wf.process.bean.VariableResponse;
 import it.pagopa.atmlayer.wf.process.service.ProcessService;
 import it.pagopa.atmlayer.wf.process.util.Constants;
+import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -31,9 +34,9 @@ public class ProcessResource {
      */
     @POST
     @Path("/deploy")
-    public RestResponse<Object> deploy(TaskRequest request) {
+    public RestResponse<Object> deploy() {
         Log.info("DEPLOY - Request received. . .");
-        return processService.deploy("src/main/resources/" + "pagamento-avviso2.bpmn");
+        return processService.deploy();
     }
 
     /**
@@ -45,15 +48,14 @@ public class ProcessResource {
     @POST
     @Path("/start")
     public RestResponse<TaskResponse> startProcess(TaskRequest request) {
-        Log.info("START - Request received. . .");
+        Log.info("START - Request body\n" + Utility.getJson(request));
+
         RestResponse<TaskResponse> taskResponse;
         try {
-
             /*
              * Starting camunda process
              */
-            String businessKey = processService.start(request.getTransactionId(), request.getVariables());
-
+            String businessKey = processService.start(request.getTransactionId(), request.getFunctionId(), request.getDeviceInfo(), request.getVariables());
             if (!businessKey.equals(Constants.EMPTY)) {
                 /*
                  * Retrieve active tasks
@@ -62,12 +64,12 @@ public class ProcessResource {
             } else {
                 taskResponse = RestResponse.status(RestResponse.Status.BAD_REQUEST);
             }
-
         } catch (RuntimeException e) {
             Log.error("START - Exception during start process: ", e);
             taskResponse = RestResponse.serverError();
         }
 
+        Log.info("START - Response body\n" + Utility.getJson(taskResponse.getEntity()));
         return taskResponse;
     }
 
@@ -80,7 +82,9 @@ public class ProcessResource {
     @POST
     @Path("/next")
     public RestResponse<TaskResponse> next(TaskRequest request) {
-        Log.info("NEXT - Request received. . .");
+        Log.info("NEXT - TaskRequest received. . .");
+        Log.info("NEXT - Request body\n:" + Utility.getJson(request));
+
         RestResponse<TaskResponse> taskResponse;
         try {
             /*
@@ -108,7 +112,24 @@ public class ProcessResource {
             taskResponse = RestResponse.serverError();
         }
 
+        Log.info("NEXT - Response body\n:" + Utility.getJson(taskResponse.getEntity()));
         return taskResponse;
+    }
+
+    @POST
+    @Path("/variables")
+    public RestResponse<VariableResponse> variables(VariableRequest request) {
+        Log.info("VARIABLES - VariableRequest received. . .");
+        RestResponse<VariableResponse> variableResponse;
+
+        try {
+            variableResponse = processService.getTaskVariables(request.getTaskId(), request.getVariables(), request.getButtons());
+        } catch (RuntimeException e) {
+            Log.error("NEXT - Exception during start process: ", e);
+            variableResponse = RestResponse.serverError();
+        }
+
+        return variableResponse;
     }
 
 }

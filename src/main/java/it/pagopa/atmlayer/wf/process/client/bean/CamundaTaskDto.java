@@ -2,10 +2,12 @@ package it.pagopa.atmlayer.wf.process.client.bean;
 
 import java.util.Date;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
 
 @Data
-public class TaskDto {
+@RegisterForReflection
+public class CamundaTaskDto {
 
   private String id;
 

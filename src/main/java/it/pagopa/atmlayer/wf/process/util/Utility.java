@@ -3,6 +3,10 @@ package it.pagopa.atmlayer.wf.process.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.quarkus.logging.Log;
 import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.AccessLevel;
@@ -30,4 +34,15 @@ public class Utility {
         return request.getTaskId() != null;
     }
 
+    public static String getJson(Object object) {
+        String result = null;
+        ObjectMapper om = new ObjectMapper();
+
+        try {
+            result = om.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+           Log.error("Error during Json processing log!");
+        }
+        return result;
+    }
 }

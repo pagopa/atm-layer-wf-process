@@ -1,6 +1,6 @@
 package it.pagopa.atmlayer.wf.process.bean;
 
-import java.util.List;
+import java.util.Map;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.AllArgsConstructor;
@@ -13,10 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @RegisterForReflection
-public class TaskResponse {
+public class VariableResponse {
+    
+    Map<String, Object> buttons;
 
-    private List<Task> tasks;
-
-    private String transactionId;
-
+    Map<String, Object> variables;
 }

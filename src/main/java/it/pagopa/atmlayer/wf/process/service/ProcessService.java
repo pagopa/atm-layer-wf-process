@@ -1,7 +1,6 @@
 package it.pagopa.atmlayer.wf.process.service;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,28 +10,35 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import io.quarkus.logging.Log;
+import it.pagopa.atmlayer.wf.process.bean.DeviceInfo;
+import it.pagopa.atmlayer.wf.process.bean.Task;
 import it.pagopa.atmlayer.wf.process.bean.TaskResponse;
-import it.pagopa.atmlayer.wf.process.client.CamundaProxy;
+import it.pagopa.atmlayer.wf.process.bean.VariableResponse;
+import it.pagopa.atmlayer.wf.process.bean.VariableResponse.VariableResponseBuilder;
+import it.pagopa.atmlayer.wf.process.client.CamundaRestClient;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaBodyRequestDto;
-import it.pagopa.atmlayer.wf.process.client.bean.TaskCompleteDto;
-import it.pagopa.atmlayer.wf.process.client.bean.TaskDto;
+import it.pagopa.atmlayer.wf.process.client.bean.CamundaVariablesDto;
+import it.pagopa.atmlayer.wf.process.client.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.util.Constants;
+import it.pagopa.atmlayer.wf.process.util.DeviceInfoEnum;
+import it.pagopa.atmlayer.wf.process.util.TaskVarsEnum;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * @author Pasquale Sansonna
  * 
- *         <p>This class provides services for managing operations related to BPM
+ *         <p>
+ *         This class provides services for managing operations related to BPM
  *         processes
  *         through Camunda.
- *         It can be injected into other parts of the application.</p>
+ *         </p>
  */
 @ApplicationScoped
 public class ProcessService {
 
     @RestClient
-    CamundaProxy camundaProxy;
+    CamundaRestClient camundaRestClient;
 
     /**
      * Deploys a BPMN process definition in Camunda.
@@ -40,13 +46,13 @@ public class ProcessService {
      * @param bpmnFilePath The path to the BPMN file to deploy.
      * @return A `RestResponse` containing the deployment outcome.
      */
-    public RestResponse<Object> deploy(String bpmnFilePath) {
+    public RestResponse<Object> deploy() {
         RestResponse<Object> response;
 
         try {
-            final File bpmn = new File(bpmnFilePath);
+            final File bpmn = new File("/variabili.bpmn");
             // Camunda communication
-            response = camundaProxy.deploy(bpmn);
+            response = camundaRestClient.deploy(bpmn);
 
             if (response.getStatus() == RestResponse.Status.OK.getStatusCode()) {
                 response = RestResponse.ok(response.getEntity());
@@ -67,23 +73,35 @@ public class ProcessService {
      *
      * @param transactionId The transaction ID associated with the process.
      * @param variables     The variables to associate with the process.
-     * @return The business key of the started process or an empty string in case of
+     * @return The business key (transactionId) of the started process or an empty string in case of
      *         an error.
      */
-    public String start(String transactionId, Map<String, Object> variables) {
-        RestResponse<StartProcessInstanceDto> camundaStartInstanceResponse = camundaStartProcess(transactionId,
+    public String start(String transactionId, String functionId, DeviceInfo deviceInfo, Map<String, Object> variables) {
+
+        populateDeviceInfoVariables(transactionId, deviceInfo, variables);
+
+        RestResponse<StartProcessInstanceDto> camundaStartInstanceResponse = camundaStartProcess(transactionId, functionId,
                 variables);
 
-        String businessKey;
         if (camundaStartInstanceResponse.getStatus() != RestResponse.Status.OK.getStatusCode()) {
-            businessKey = Constants.EMPTY;
+            transactionId = Constants.EMPTY;
             Log.error("START - Start process instance failed!");
         } else {
-            businessKey = camundaStartInstanceResponse.getEntity().getBusinessKey();
-            Log.info("START - Process started! Business key: " + businessKey);
+            Log.info("START - Process started! Business key: " + transactionId);
         }
 
-        return businessKey;
+        return transactionId;
+    }
+
+    
+    private void populateDeviceInfoVariables(String transactionId, DeviceInfo deviceInfo, Map<String, Object> variables) {
+        variables.put(DeviceInfoEnum.TRANSACTION_ID.getValue(), transactionId);
+        variables.put(DeviceInfoEnum.BANK_ID.getValue(), deviceInfo.getBankId());
+        variables.put(DeviceInfoEnum.BRANCH_ID.getValue(), deviceInfo.getBranchId());
+        variables.put(DeviceInfoEnum.TERMINAL_ID.getValue(), deviceInfo.getTerminalId());
+        variables.put(DeviceInfoEnum.CODE.getValue(), deviceInfo.getCode());
+        variables.put(DeviceInfoEnum.OP_TIMESTAMP.getValue(), deviceInfo.getOpTimestamp());
+        variables.put(DeviceInfoEnum.DEVICE_TYPE.getValue(), deviceInfo.getDeviceType());
     }
 
     /**
@@ -94,18 +112,21 @@ public class ProcessService {
      */
     public RestResponse<TaskResponse> getActiveTasks(String businessKey) {
         RestResponse<TaskResponse> taskResponse;
-        RestResponse<List<TaskDto>> camundaGetListResponse = getCamundaTaskList(businessKey);
+        RestResponse<List<CamundaTaskDto>> camundaGetListResponse = camundaGetTaskList(businessKey);
 
-        // TODO retrieve variables for each task from camunda and return them to the
-        // task microservice
         if (camundaGetListResponse.getStatus() == RestResponse.Status.OK.getStatusCode()) {
             Log.info("NEXT - Retrieving active tasks. . .");
-            List<String> taskIds = camundaGetListResponse.getEntity()
+            List<Task> activeTasks = camundaGetListResponse.getEntity()
                     .stream()
-                    .map(TaskDto::getId)
-                    .collect(Collectors.toCollection(ArrayList::new));
+                    .map(taskDto -> Task.builder()
+                            .form(taskDto.getFormKey())
+                            .id(taskDto.getId())
+                            .priority(taskDto.getPriority())
+                            .build())
+                    .collect(Collectors.toList());
 
-            taskResponse = RestResponse.ok(TaskResponse.builder().transactionId(businessKey).tasks(taskIds).build());
+            taskResponse = RestResponse
+                    .ok(TaskResponse.builder().transactionId(businessKey).tasks(activeTasks).build());
             Log.info("NEXT - Tasks retrieved!");
         } else {
             Log.error("NEXT - Get list of tasks failed!");
@@ -123,16 +144,43 @@ public class ProcessService {
      * @return `true` if the task is completed successfully, `false` otherwise.
      */
     public boolean complete(String taskId, Map<String, Object> variables) {
-        RestResponse<TaskCompleteDto> camundaCompleteResponse = camundaTaskComplete(taskId, variables);
+        RestResponse<Object> camundaCompleteResponse = camundaTaskComplete(taskId, variables);
 
         boolean isCompleted = false;
         if (camundaCompleteResponse.getStatus() == RestResponse.Status.OK.getStatusCode()
                 || camundaCompleteResponse.getStatus() == RestResponse.Status.NO_CONTENT.getStatusCode()) {
-            Log.error("NEXT - Task completed! taskId: " + taskId);
+            Log.info("NEXT - Task completed! taskId: " + taskId);
             isCompleted = true;
         }
 
         return isCompleted;
+    }
+
+    public RestResponse<VariableResponse> getTaskVariables(String taskId, List<String> variables,
+            List<String> buttons) {
+        // Retrieve task variables from camunda
+        
+        CamundaVariablesDto taskVariables = camundaGetTaskVariables(taskId).getEntity();
+        CamundaVariablesDto variablesFilteredList;
+        CamundaVariablesDto buttonsFilteredList;
+        VariableResponseBuilder variableResponseBuilder = VariableResponse.builder();
+
+        //Filter variables
+        if (variables != null && !variables.isEmpty()) {
+            variables.addAll(TaskVarsEnum.getValues());
+        } else {
+            variables = TaskVarsEnum.getValues();
+        }
+        variablesFilteredList = filterCamundaVariables(taskVariables, variables);
+        variableResponseBuilder.variables(mapVariablesResponse(variablesFilteredList));
+
+        //Filter buttons
+        if (buttons != null && !buttons.isEmpty()){
+            buttonsFilteredList = filterCamundaVariables(taskVariables, buttons);
+            variableResponseBuilder.buttons(mapVariablesResponse(buttonsFilteredList));
+        }
+        
+        return RestResponse.ok(variableResponseBuilder.build());
     }
 
     /**
@@ -147,7 +195,7 @@ public class ProcessService {
      * @return A `RestResponse` containing information about the started process
      *         instance.
      */
-    public RestResponse<StartProcessInstanceDto> camundaStartProcess(String transactionId,
+    public RestResponse<StartProcessInstanceDto> camundaStartProcess(String transactionId, String functionId,
             Map<String, Object> variables) {
         CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
                 .businessKey(transactionId)
@@ -155,7 +203,7 @@ public class ProcessService {
                 .build();
 
         // TODO retrieve processDefinitionKey from model
-        return camundaProxy.startInstance("pagamentoAvvisiPagoPA", body);
+        return camundaRestClient.startInstance(functionId, body);
     }
 
     /**
@@ -168,10 +216,10 @@ public class ProcessService {
      * @param businessKey The business key of the process instance.
      * @return A `RestResponse` containing a list of Camunda tasks.
      */
-    public RestResponse<List<TaskDto>> getCamundaTaskList(String businessKey) {
+    public RestResponse<List<CamundaTaskDto>> camundaGetTaskList(String businessKey) {
         CamundaBodyRequestDto body = CamundaBodyRequestDto.builder().processInstanceBusinessKey(businessKey).build();
 
-        return camundaProxy.getList(body);
+        return camundaRestClient.getList(body);
     }
 
     /**
@@ -185,13 +233,36 @@ public class ProcessService {
      * @param variables The variables to associate with the completion.
      * @return A `RestResponse` indicating the completion status.
      */
-    public RestResponse<TaskCompleteDto> camundaTaskComplete(String taskId, Map<String, Object> variables) {
-        // TODO add withVariablesInReturn TRUE in body request
+    public RestResponse<Object> camundaTaskComplete(String taskId, Map<String, Object> variables) {
         CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
                 .variables(Utility.generateBodyRequestVariables(variables))
                 .build();
 
-        return camundaProxy.complete(taskId, body);
+        return camundaRestClient.complete(taskId, body);
+    }
+
+    public RestResponse<CamundaVariablesDto> camundaGetTaskVariables(String taskId) {
+        return camundaRestClient.getTaskVariables(taskId);
+    }
+
+    private CamundaVariablesDto filterCamundaVariables(CamundaVariablesDto camundaVariablesDto, List<String> vars) {
+        Map<String, Map<String, Object>> variablesDto = camundaVariablesDto.getVariables();
+
+        // Utilizza uno stream per filtrare i campi in base ai nomi forniti
+        Map<String, Map<String, Object>> filteredFields = variablesDto.entrySet().stream()
+                .filter(entry -> vars.contains(entry.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        return CamundaVariablesDto.builder().variables(filteredFields).build();
+    }
+
+    private Map<String, Object> mapVariablesResponse(CamundaVariablesDto camundaVariablesDto) {
+        Map<String, Map<String, Object>> variables = camundaVariablesDto.getVariables();
+
+        return variables.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().get("value")));
     }
 
 }

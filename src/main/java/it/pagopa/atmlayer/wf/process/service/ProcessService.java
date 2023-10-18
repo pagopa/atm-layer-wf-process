@@ -93,17 +93,6 @@ public class ProcessService {
         return transactionId;
     }
 
-    
-    private void populateDeviceInfoVariables(String transactionId, DeviceInfo deviceInfo, Map<String, Object> variables) {
-        variables.put(DeviceInfoEnum.TRANSACTION_ID.getValue(), transactionId);
-        variables.put(DeviceInfoEnum.BANK_ID.getValue(), deviceInfo.getBankId());
-        variables.put(DeviceInfoEnum.BRANCH_ID.getValue(), deviceInfo.getBranchId());
-        variables.put(DeviceInfoEnum.TERMINAL_ID.getValue(), deviceInfo.getTerminalId());
-        variables.put(DeviceInfoEnum.CODE.getValue(), deviceInfo.getCode());
-        variables.put(DeviceInfoEnum.OP_TIMESTAMP.getValue(), deviceInfo.getOpTimestamp());
-        variables.put(DeviceInfoEnum.DEVICE_TYPE.getValue(), deviceInfo.getDeviceType());
-    }
-
     /**
      * Retrieves the active tasks associated with a BPM process.
      *
@@ -156,6 +145,14 @@ public class ProcessService {
         return isCompleted;
     }
 
+    /**
+     * Gets the task instance variables.
+     * 
+     * @param taskId The id of the task from which I will retrieve the variables.
+     * @param variables The additional variables to retrieve
+     * @param buttons The buttons to retrieve
+     * @return
+     */
     public RestResponse<VariableResponse> getTaskVariables(String taskId, List<String> variables,
             List<String> buttons) {
         // Retrieve task variables from camunda
@@ -216,7 +213,7 @@ public class ProcessService {
      * @param businessKey The business key of the process instance.
      * @return A `RestResponse` containing a list of Camunda tasks.
      */
-    public RestResponse<List<CamundaTaskDto>> camundaGetTaskList(String businessKey) {
+    private RestResponse<List<CamundaTaskDto>> camundaGetTaskList(String businessKey) {
         CamundaBodyRequestDto body = CamundaBodyRequestDto.builder().processInstanceBusinessKey(businessKey).build();
 
         return camundaRestClient.getList(body);
@@ -233,7 +230,7 @@ public class ProcessService {
      * @param variables The variables to associate with the completion.
      * @return A `RestResponse` indicating the completion status.
      */
-    public RestResponse<Object> camundaTaskComplete(String taskId, Map<String, Object> variables) {
+    private RestResponse<Object> camundaTaskComplete(String taskId, Map<String, Object> variables) {
         CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
                 .variables(Utility.generateBodyRequestVariables(variables))
                 .build();
@@ -241,7 +238,17 @@ public class ProcessService {
         return camundaRestClient.complete(taskId, body);
     }
 
-    public RestResponse<CamundaVariablesDto> camundaGetTaskVariables(String taskId) {
+    /**
+     * <p>
+     * <b>CAMUNDA COMMUNICATION</b>
+     * </p>
+     * 
+     * Get variables associated to the process instance.
+     *
+     * @param taskId    The ID of the task to complete.
+     * @return A `RestResponse` containing variables.
+     */
+    private RestResponse<CamundaVariablesDto> camundaGetTaskVariables(String taskId) {
         return camundaRestClient.getTaskVariables(taskId);
     }
 
@@ -265,4 +272,13 @@ public class ProcessService {
                         entry -> entry.getValue().get("value")));
     }
 
+    private void populateDeviceInfoVariables(String transactionId, DeviceInfo deviceInfo, Map<String, Object> variables) {
+        variables.put(DeviceInfoEnum.TRANSACTION_ID.getValue(), transactionId);
+        variables.put(DeviceInfoEnum.BANK_ID.getValue(), deviceInfo.getBankId());
+        variables.put(DeviceInfoEnum.BRANCH_ID.getValue(), deviceInfo.getBranchId());
+        variables.put(DeviceInfoEnum.TERMINAL_ID.getValue(), deviceInfo.getTerminalId());
+        variables.put(DeviceInfoEnum.CODE.getValue(), deviceInfo.getCode());
+        variables.put(DeviceInfoEnum.OP_TIMESTAMP.getValue(), deviceInfo.getOpTimestamp());
+        variables.put(DeviceInfoEnum.DEVICE_TYPE.getValue(), deviceInfo.getDeviceType());
+    }
 }

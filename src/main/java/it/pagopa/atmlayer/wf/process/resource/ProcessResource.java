@@ -17,8 +17,10 @@ import jakarta.ws.rs.Path;
 /**
  * @author Pasquale Sansonna
  * 
- *         <p>This class defines REST endpoints for managing BPM processes through
- *         Camunda.</p>
+ *         <p>
+ *         This class defines REST endpoints for managing BPM processes through
+ *         Camunda.
+ *         </p>
  */
 @Path("/api/v1/processes")
 public class ProcessResource {
@@ -43,11 +45,12 @@ public class ProcessResource {
      * Endpoint to start a BPMN process and to retireve active tasks.
      *
      * @param request The task request.
-     * @return A `RestResponse` containing information about the started process.
+     * @return A `RestResponse` containing information about the active tasks.
      */
     @POST
     @Path("/start")
     public RestResponse<TaskResponse> startProcess(TaskRequest request) {
+        Log.info("START - TaskRequest received. . .");
         Log.info("START - Request body\n" + Utility.getJson(request));
 
         RestResponse<TaskResponse> taskResponse;
@@ -55,7 +58,8 @@ public class ProcessResource {
             /*
              * Starting camunda process
              */
-            String businessKey = processService.start(request.getTransactionId(), request.getFunctionId(), request.getDeviceInfo(), request.getVariables());
+            String businessKey = processService.start(request.getTransactionId(), request.getFunctionId(),
+                    request.getDeviceInfo(), request.getVariables());
             if (!businessKey.equals(Constants.EMPTY)) {
                 /*
                  * Retrieve active tasks
@@ -77,7 +81,7 @@ public class ProcessResource {
      * Endpoint to complete a Camunda task and to retireve active tasks.
      *
      * @param request The task request.
-     * @return A `RestResponse` containing information about the completed task.
+     * @return A `RestResponse` containing information about active tasks.
      */
     @POST
     @Path("/next")
@@ -120,15 +124,19 @@ public class ProcessResource {
     @Path("/variables")
     public RestResponse<VariableResponse> variables(VariableRequest request) {
         Log.info("VARIABLES - VariableRequest received. . .");
+        Log.info("VARIABLES - Request body\n:" + Utility.getJson(request));
+
         RestResponse<VariableResponse> variableResponse;
 
         try {
-            variableResponse = processService.getTaskVariables(request.getTaskId(), request.getVariables(), request.getButtons());
+            variableResponse = processService.getTaskVariables(request.getTaskId(), request.getVariables(),
+                    request.getButtons());
         } catch (RuntimeException e) {
             Log.error("NEXT - Exception during start process: ", e);
             variableResponse = RestResponse.serverError();
         }
 
+        Log.info("VARIABLES - Response body\n:" + Utility.getJson(variableResponse.getEntity()));
         return variableResponse;
     }
 

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.serviceAccount.namespace }}
+  labels:
+    App: {{ .Values.serviceAccount.name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      App: {{ .Values.serviceAccount.name }}
+  template:
+    metadata:
+      labels:
+        App: {{ .Values.serviceAccount.name }}
+        force-recreate: {{ randAlphaNum 5 | quote }}
+    spec:
+      containers:
+        - name: {{ .Values.serviceAccount.name }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          imagePullPolicy: Always
+          env:
+            - name: PROCESS_SERVICE_LOG_LEVEL
+              value: "{{ .Values.logLevel }}"
+            - name: CAMUNDA_ADDRESS
+              value: "{{ .Values.camundaWebUser.address }}"
+            - name: PROCESS_SERVICE_ENGINE_ACCOUNT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.camundaWebUser.credentialsSecretName }}
+                  key: {{ .Values.camundaWebUser.credentialsSecretKeys.username }}
+            - name: PROCESS_SERVICE_ENGINE_ACCOUNT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.camundaWebUser.credentialsSecretName }}
+                  key: {{ .Values.camundaWebUser.credentialsSecretKeys.password }}
+              
+
+
+  strategy:
+    type: Recreate

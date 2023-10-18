@@ -17,19 +17,14 @@ import lombok.NoArgsConstructor;
 @RegisterForReflection
 public class CamundaBodyRequestDto {
 
-    @JsonProperty("businessKey")
     private String businessKey;
 
-    @JsonProperty("processInstanceBusinessKey")
     private String processInstanceBusinessKey;
 
-    @JsonProperty("taskId")
     private String taskId;
     
-    @JsonProperty("variables")
     private  Map<String, Map<String, Object>> variables;
 
-    @JsonProperty("withVariablesInReturn")
     private boolean withVariablesInReturn;
 
 }

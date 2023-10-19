@@ -9,7 +9,6 @@ import org.camunda.bpm.engine.rest.dto.runtime.StartProcessInstanceDto;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
 
-import io.quarkus.logging.Log;
 import it.pagopa.atmlayer.wf.process.bean.DeviceInfo;
 import it.pagopa.atmlayer.wf.process.bean.Task;
 import it.pagopa.atmlayer.wf.process.bean.TaskResponse;
@@ -18,12 +17,13 @@ import it.pagopa.atmlayer.wf.process.bean.VariableResponse.VariableResponseBuild
 import it.pagopa.atmlayer.wf.process.client.CamundaRestClient;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaBodyRequestDto;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaVariablesDto;
+import it.pagopa.atmlayer.wf.process.enums.DeviceInfoEnum;
+import it.pagopa.atmlayer.wf.process.enums.TaskVarsEnum;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.util.Constants;
-import it.pagopa.atmlayer.wf.process.util.DeviceInfoEnum;
-import it.pagopa.atmlayer.wf.process.util.TaskVarsEnum;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.enterprise.context.ApplicationScoped;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Pasquale Sansonna
@@ -34,6 +34,7 @@ import jakarta.enterprise.context.ApplicationScoped;
  *         through Camunda.
  *         </p>
  */
+@Slf4j
 @ApplicationScoped
 public class ProcessService {
 
@@ -56,12 +57,12 @@ public class ProcessService {
 
             if (response.getStatus() == RestResponse.Status.OK.getStatusCode()) {
                 response = RestResponse.ok(response.getEntity());
-                Log.info("DEPLOY - BPMN deployed!");
+                log.info("DEPLOY - BPMN deployed!");
             } else {
                 response = RestResponse.status(RestResponse.Status.BAD_REQUEST);
             }
         } catch (RuntimeException e) {
-            Log.error("Error during bpmn deployment: ", e);
+            log.error("Error during bpmn deployment: ", e);
             response = RestResponse.serverError();
         }
 
@@ -85,9 +86,9 @@ public class ProcessService {
 
         if (camundaStartInstanceResponse.getStatus() != RestResponse.Status.OK.getStatusCode()) {
             transactionId = Constants.EMPTY;
-            Log.error("START - Start process instance failed!");
+            log.error("START - Start process instance failed!");
         } else {
-            Log.info("START - Process started! Business key: " + transactionId);
+            log.info("START - Process started! Business key: {}", transactionId);
         }
 
         return transactionId;
@@ -104,7 +105,7 @@ public class ProcessService {
         RestResponse<List<CamundaTaskDto>> camundaGetListResponse = camundaGetTaskList(businessKey);
 
         if (camundaGetListResponse.getStatus() == RestResponse.Status.OK.getStatusCode()) {
-            Log.info("NEXT - Retrieving active tasks. . .");
+            log.info("NEXT - Retrieving active tasks. . .");
             List<Task> activeTasks = camundaGetListResponse.getEntity()
                     .stream()
                     .map(taskDto -> Task.builder()
@@ -116,9 +117,9 @@ public class ProcessService {
 
             taskResponse = RestResponse
                     .ok(TaskResponse.builder().transactionId(businessKey).tasks(activeTasks).build());
-            Log.info("NEXT - Tasks retrieved!");
+            log.info("NEXT - Tasks retrieved!");
         } else {
-            Log.error("NEXT - Get list of tasks failed!");
+            log.error("NEXT - Get list of tasks failed!");
             taskResponse = RestResponse.status(RestResponse.Status.BAD_REQUEST);
         }
 
@@ -138,7 +139,7 @@ public class ProcessService {
         boolean isCompleted = false;
         if (camundaCompleteResponse.getStatus() == RestResponse.Status.OK.getStatusCode()
                 || camundaCompleteResponse.getStatus() == RestResponse.Status.NO_CONTENT.getStatusCode()) {
-            Log.info("NEXT - Task completed! taskId: " + taskId);
+            log.info("NEXT - Task completed! taskId: {}", taskId);
             isCompleted = true;
         }
 

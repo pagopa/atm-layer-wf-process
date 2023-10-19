@@ -6,12 +6,13 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.quarkus.logging.Log;
 import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @ApplicationScoped
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Utility {
@@ -41,7 +42,7 @@ public class Utility {
         try {
             result = om.writerWithDefaultPrettyPrinter().writeValueAsString(object);
         } catch (JsonProcessingException e) {
-           Log.error("Error during Json processing log!");
+           log.error("Error during Json processing log!");
         }
         return result;
     }

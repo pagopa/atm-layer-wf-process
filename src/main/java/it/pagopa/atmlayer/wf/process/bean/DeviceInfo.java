@@ -1,6 +1,5 @@
 package it.pagopa.atmlayer.wf.process.bean;
 
-import java.time.Instant;
 import java.util.Date;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;

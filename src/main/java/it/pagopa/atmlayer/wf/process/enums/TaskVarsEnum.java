@@ -1,4 +1,4 @@
-package it.pagopa.atmlayer.wf.process.util;
+package it.pagopa.atmlayer.wf.process.enums;
 
 import java.util.Arrays;
 import java.util.List;

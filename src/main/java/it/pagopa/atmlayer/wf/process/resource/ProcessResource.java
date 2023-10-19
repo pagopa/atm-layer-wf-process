@@ -2,7 +2,6 @@ package it.pagopa.atmlayer.wf.process.resource;
 
 import org.jboss.resteasy.reactive.RestResponse;
 
-import io.quarkus.logging.Log;
 import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
 import it.pagopa.atmlayer.wf.process.bean.TaskResponse;
 import it.pagopa.atmlayer.wf.process.bean.VariableRequest;
@@ -13,6 +12,7 @@ import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Pasquale Sansonna
@@ -22,6 +22,7 @@ import jakarta.ws.rs.Path;
  *         Camunda.
  *         </p>
  */
+@Slf4j
 @Path("/api/v1/processes")
 public class ProcessResource {
 
@@ -37,7 +38,7 @@ public class ProcessResource {
     @POST
     @Path("/deploy")
     public RestResponse<Object> deploy() {
-        Log.info("DEPLOY - Request received. . .");
+        log.info("DEPLOY - Request received. . .");
         return processService.deploy();
     }
 
@@ -50,8 +51,8 @@ public class ProcessResource {
     @POST
     @Path("/start")
     public RestResponse<TaskResponse> startProcess(TaskRequest request) {
-        Log.info("START - TaskRequest received. . .");
-        Log.info("START - Request body\n" + Utility.getJson(request));
+        log.info("START - TaskRequest received. . .");
+        log.info("START - Request body\n{}", Utility.getJson(request));
 
         RestResponse<TaskResponse> taskResponse;
         try {
@@ -69,11 +70,11 @@ public class ProcessResource {
                 taskResponse = RestResponse.status(RestResponse.Status.BAD_REQUEST);
             }
         } catch (RuntimeException e) {
-            Log.error("START - Exception during start process: ", e);
+            log.error("START - Exception during start process: ", e);
             taskResponse = RestResponse.serverError();
         }
 
-        Log.info("START - Response body\n" + Utility.getJson(taskResponse.getEntity()));
+        log.info("START - Response body\n{}", Utility.getJson(taskResponse.getEntity()));
         return taskResponse;
     }
 
@@ -86,8 +87,8 @@ public class ProcessResource {
     @POST
     @Path("/next")
     public RestResponse<TaskResponse> next(TaskRequest request) {
-        Log.info("NEXT - TaskRequest received. . .");
-        Log.info("NEXT - Request body\n:" + Utility.getJson(request));
+        log.info("NEXT - TaskRequest received. . .");
+        log.info("NEXT - Request body\n:{}", Utility.getJson(request));
 
         RestResponse<TaskResponse> taskResponse;
         try {
@@ -95,7 +96,7 @@ public class ProcessResource {
              * Checking presence of taskId for complete
              */
             if (request.getTaskId() == null) {
-                Log.error("NEXT - Next failed! taskId is missing.");
+                log.error("NEXT - Next failed! taskId is missing.");
                 taskResponse = RestResponse.status(RestResponse.Status.BAD_REQUEST);
             } else {
                 /*
@@ -112,19 +113,19 @@ public class ProcessResource {
                 }
             }
         } catch (RuntimeException e) {
-            Log.error("NEXT - Exception during start process: ", e);
+            log.error("NEXT - Exception during start process: ", e);
             taskResponse = RestResponse.serverError();
         }
 
-        Log.info("NEXT - Response body\n:" + Utility.getJson(taskResponse.getEntity()));
+        log.info("NEXT - Response body\n:{}" , Utility.getJson(taskResponse.getEntity()));
         return taskResponse;
     }
 
     @POST
     @Path("/variables")
     public RestResponse<VariableResponse> variables(VariableRequest request) {
-        Log.info("VARIABLES - VariableRequest received. . .");
-        Log.info("VARIABLES - Request body\n:" + Utility.getJson(request));
+        log.info("VARIABLES - VariableRequest received. . .");
+        log.info("VARIABLES - Request body\n:{}", Utility.getJson(request));
 
         RestResponse<VariableResponse> variableResponse;
 
@@ -132,11 +133,11 @@ public class ProcessResource {
             variableResponse = processService.getTaskVariables(request.getTaskId(), request.getVariables(),
                     request.getButtons());
         } catch (RuntimeException e) {
-            Log.error("NEXT - Exception during start process: ", e);
+            log.error("NEXT - Exception during start process: ", e);
             variableResponse = RestResponse.serverError();
         }
 
-        Log.info("VARIABLES - Response body\n:" + Utility.getJson(variableResponse.getEntity()));
+        log.info("VARIABLES - Response body\n:{}", Utility.getJson(variableResponse.getEntity()));
         return variableResponse;
     }
 

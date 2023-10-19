@@ -1,0 +1,127 @@
+---
+openapi: 3.0.3
+info:
+  title: Process Resource API
+  version: 1.0.0
+paths:
+  /deploy:
+    post:
+      summary: Deploy a BPMN process definition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskRequest'
+      responses:
+        '200':
+          description: BPMN deployed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestResponseObject'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestResponseBadRequest'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestResponseServerError'
+  /start:
+    post:
+      summary: Start a BPMN process and retrieve active tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskRequest'
+      responses:
+        '200':
+          description: Process started successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestResponseBadRequest'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestResponseServerError'
+  /next:
+    post:
+      summary: Complete a Camunda task and retrieve active tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskRequest'
+      responses:
+        '200':
+          description: Task completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestResponseBadRequest'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestResponseServerError'
+components:
+  schemas:
+    TaskRequest:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        variables:
+          type: object
+      required:
+        - transactionId
+    RestResponseObject:
+      type: object
+      properties:
+        status:
+          type: integer
+        entity:
+          type: object
+    RestResponseBadRequest:
+      type: object
+      properties:
+        status:
+          type: integer
+    RestResponseServerError:
+      type: object
+      properties:
+        status:
+          type: integer
+    TaskResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        tasks:
+          type: array
+          items:
+            type: string

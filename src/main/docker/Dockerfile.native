@@ -1,0 +1,31 @@
+####
+# This Dockerfile is used in order to build a container that runs the Quarkus application in native (no JVM) mode.
+#
+# Before building the container image run:
+#
+# ./mvnw package -Dnative
+#
+# Then, build the image with:
+#
+# docker build -f src/main/docker/Dockerfile.native -t quarkus/workflow-process .
+#
+# Then run the container using:
+#
+# docker run -i --rm -p 8080:8080 quarkus/workflow-process
+#
+###
+FROM ghcr.io/graalvm/graalvm-ce:java17
+
+RUN gu install native-image
+
+WORKDIR /app
+
+COPY . .
+
+RUN mvn clean package -Pnative
+
+RUN cp target/*-runner /app/application
+
+EXPOSE 8080
+
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]

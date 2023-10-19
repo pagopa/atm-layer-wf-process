@@ -17,7 +17,7 @@ fullnameOverride: ""
 logLevel: DEBUG
 
 camundaWebUser:
-  address: pagopa-dev-atm-layer-wf-process.pagopa.svc.cluster.local:8080
+  address: http://pagopa-dev-atm-layer-wf-engine.pagopa.svc.cluster.local:8080
   credentialsSecretEnabled: true
   credentialsSecretName: "atm-layer-wf-engine-webuser"
   credentialsSecretKeys:

@@ -18,10 +18,10 @@ FROM quay.io/quarkus/ubi-quarkus-graalvmce-builder-image:22.3-java17 AS build
 COPY --chown=quarkus:quarkus mvnw /code/mvnw
 COPY --chown=quarkus:quarkus .mvn /code/.mvn
 COPY --chown=quarkus:quarkus pom.xml /code/
-COPY --chown=quarkus:quarkus src /code/src
 USER quarkus
 WORKDIR /code
 RUN ./mvnw -B org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
+COPY src /code/src
 ARG QUARKUS_PROFILE
 ARG APP_NAME
 RUN ./mvnw package -Pnative -Dquarkus.application.name=$APP_NAME -Dquarkus.profile=$QUARKUS_PROFILE

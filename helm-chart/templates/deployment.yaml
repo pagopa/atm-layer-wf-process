@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.serviceAccount.namespace }}
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.deployment.namespace }}
   labels:
-    App: {{ .Values.serviceAccount.name }}
+    App: {{ .Values.deployment.name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      App: {{ .Values.serviceAccount.name }}
+      App: {{ .Values.deployment.name }}
   template:
     metadata:
       labels:
-        App: {{ .Values.serviceAccount.name }}
+        App: {{ .Values.deployment.name }}
         force-recreate: {{ randAlphaNum 5 | quote }}
     spec:
       containers:
-        - name: {{ .Values.serviceAccount.name }}
+        - name: {{ .Values.deployment.name }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - containerPort: {{ .Values.service.port }}

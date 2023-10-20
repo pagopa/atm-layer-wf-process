@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.camunda.bpm.engine.rest.dto.runtime.StartProcessInstanceDto;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
 
@@ -16,6 +15,7 @@ import it.pagopa.atmlayer.wf.process.bean.VariableResponse;
 import it.pagopa.atmlayer.wf.process.bean.VariableResponse.VariableResponseBuilder;
 import it.pagopa.atmlayer.wf.process.client.CamundaRestClient;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaBodyRequestDto;
+import it.pagopa.atmlayer.wf.process.client.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaVariablesDto;
 import it.pagopa.atmlayer.wf.process.enums.DeviceInfoEnum;
 import it.pagopa.atmlayer.wf.process.enums.TaskVarsEnum;
@@ -81,7 +81,7 @@ public class ProcessService {
 
         populateDeviceInfoVariables(transactionId, deviceInfo, variables);
 
-        RestResponse<StartProcessInstanceDto> camundaStartInstanceResponse = camundaStartProcess(transactionId, functionId,
+        RestResponse<CamundaStartProcessInstanceDto> camundaStartInstanceResponse = camundaStartProcess(transactionId, functionId,
                 variables);
 
         if (camundaStartInstanceResponse.getStatus() != RestResponse.Status.OK.getStatusCode()) {
@@ -193,7 +193,7 @@ public class ProcessService {
      * @return A `RestResponse` containing information about the started process
      *         instance.
      */
-    public RestResponse<StartProcessInstanceDto> camundaStartProcess(String transactionId, String functionId,
+    public RestResponse<CamundaStartProcessInstanceDto> camundaStartProcess(String transactionId, String functionId,
             Map<String, Object> variables) {
         CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
                 .businessKey(transactionId)

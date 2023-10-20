@@ -58,9 +58,8 @@ public class ProcessService {
             if (response.getStatus() == RestResponse.Status.OK.getStatusCode()) {
                 response = RestResponse.ok(response.getEntity());
                 log.info("DEPLOY - BPMN deployed!");
-            } else {
-                response = RestResponse.status(RestResponse.Status.BAD_REQUEST);
             }
+            
         } catch (RuntimeException e) {
             log.error("Error during bpmn deployment: ", e);
             response = RestResponse.serverError();
@@ -280,6 +279,6 @@ public class ProcessService {
         variables.put(DeviceInfoEnum.TERMINAL_ID.getValue(), deviceInfo.getTerminalId());
         variables.put(DeviceInfoEnum.CODE.getValue(), deviceInfo.getCode());
         variables.put(DeviceInfoEnum.OP_TIMESTAMP.getValue(), deviceInfo.getOpTimestamp());
-        variables.put(DeviceInfoEnum.DEVICE_TYPE.getValue(), deviceInfo.getDeviceType());
+        variables.put(DeviceInfoEnum.DEVICE_TYPE.getValue(), deviceInfo.getChannel());
     }
 }

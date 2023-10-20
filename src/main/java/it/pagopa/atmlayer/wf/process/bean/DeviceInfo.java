@@ -48,6 +48,6 @@ public class DeviceInfo {
      */
     @Schema(description = "Identificativo del tipo di device")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private DeviceType deviceType;
+    private DeviceType channel;
 
 }

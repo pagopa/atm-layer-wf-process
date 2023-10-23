@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@Schema(description = "Le info del dispositivo")
 public class DeviceInfo {
 
     @Schema(required = true, description = "Il codice identificativo della banca (o codice ABI)", example = "02008")
@@ -46,8 +47,7 @@ public class DeviceInfo {
     /*
      * Type of device.
      */
-    @Schema(description = "Identificativo del tipo di device")
+    @Schema(description = "Tipo di dispositivo")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private DeviceType deviceType;
-
+    private DeviceType channel;
 }

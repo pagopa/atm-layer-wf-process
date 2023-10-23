@@ -1,5 +1,10 @@
 package it.pagopa.atmlayer.wf.process.resource;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
@@ -37,6 +42,10 @@ public class ProcessResource {
      */
     @POST
     @Path("/deploy")
+	@Operation(summary = "Esegue il 'deploy' di un flusso BPMN", description = "Esegue il deploy di un flusso BPMN nel motore di workflow (es. Camunda)")
+	@APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce l'ID della risorsa creata nel motore di workflow.", content = @Content(schema = @Schema(implementation = RestResponse.class)))
+	@APIResponse(responseCode = "400", description = "BAD_REQUEST. Nel caso di richiesta errata.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+	@APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante il deploy del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     public RestResponse<Object> deploy() {
         log.info("DEPLOY - Request received. . .");
         return processService.deploy();
@@ -50,7 +59,12 @@ public class ProcessResource {
      */
     @POST
     @Path("/start")
-    public RestResponse<TaskResponse> startProcess(TaskRequest request) {
+	@Operation(summary = "Esegue la 'start' dell'istanza di processo del flusso BPMN", description = "Esegue la 'start' dell'istanza di processo del flusso BPMN nel motore di workflow (es. Camunda) e restituisce la lista dei task attivi.")
+	@APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la lista dei task attivi del workflow.", content = @Content(schema = @Schema(implementation = TaskResponse.class)))
+	@APIResponse(responseCode = "400", description = "BAD_REQUEST. Nel caso di 'businessKey' errata.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+	@APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante la start dell'istanza di processo del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+    public RestResponse<TaskResponse> startProcess(
+    		@Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
         log.info("START - TaskRequest received. . .");
         log.info("START - Request body\n{}", Utility.getJson(request));
 
@@ -86,7 +100,12 @@ public class ProcessResource {
      */
     @POST
     @Path("/next")
-    public RestResponse<TaskResponse> next(TaskRequest request) {
+	@Operation(summary = "Esegue il 'next' task dell'istanza di processo del flusso BPMN", description = "Esegue il 'next' task dell'istanza di processo del flusso BPMN nel motore di workflow (es. Camunda) e restituisce la lista dei task attivi.")
+	@APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la lista dei task attivi del workflow, dopo il completamento del task corrente.", content = @Content(schema = @Schema(implementation = TaskResponse.class)))
+	@APIResponse(responseCode = "400", description = "BAD_REQUEST. Nel caso di 'taskId' nullo.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+	@APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante l'elaborazione dell'istanza di processo del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+    public RestResponse<TaskResponse> next(
+    		@Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
         log.info("NEXT - TaskRequest received. . .");
         log.info("NEXT - Request body\n:{}", Utility.getJson(request));
 
@@ -123,6 +142,9 @@ public class ProcessResource {
 
     @POST
     @Path("/variables")
+	@Operation(summary = "Recupera le variabili dell'istanza di processo e filtra le stesse in base a quelle richieste dal task aggiungendovi le TaskVars")
+	@APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la mappa delle variabili filtrate e le Taskvars del task corrente del workflow.", content = @Content(schema = @Schema(implementation = VariableResponse.class)))
+	@APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante l'elaborazione.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     public RestResponse<VariableResponse> variables(VariableRequest request) {
         log.info("VARIABLES - VariableRequest received. . .");
         log.info("VARIABLES - Request body\n:{}", Utility.getJson(request));

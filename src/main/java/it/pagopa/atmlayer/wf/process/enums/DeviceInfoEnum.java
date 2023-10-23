@@ -12,7 +12,7 @@ public enum DeviceInfoEnum {
     TERMINAL_ID("terminalId"),
     CODE("code"),
     OP_TIMESTAMP("opTimestamp"),
-    DEVICE_TYPE("deviceType");
+    DEVICE_TYPE("channel");
 
     private final String value;
 

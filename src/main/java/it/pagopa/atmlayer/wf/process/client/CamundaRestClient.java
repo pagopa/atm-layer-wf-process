@@ -3,13 +3,13 @@ package it.pagopa.atmlayer.wf.process.client;
 import java.io.File;
 import java.util.List;
 
-import org.camunda.bpm.engine.rest.dto.runtime.StartProcessInstanceDto;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaBodyRequestDto;
+import it.pagopa.atmlayer.wf.process.client.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaVariablesDto;
 import it.pagopa.atmlayer.wf.process.client.filter.CamundaBasicAuthFilter;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaTaskDto;
@@ -28,7 +28,7 @@ public interface CamundaRestClient {
 
     @POST
     @Path("/process-definition/key/{key}/start")
-    RestResponse<StartProcessInstanceDto> startInstance(@PathParam("key") String key, CamundaBodyRequestDto body);
+    RestResponse<CamundaStartProcessInstanceDto> startInstance(@PathParam("key") String key, CamundaBodyRequestDto body);
 
     @POST
     @Path("/task")

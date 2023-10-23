@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.camunda.bpm.engine.rest.dto.runtime.StartProcessInstanceDto;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
 
@@ -16,6 +15,7 @@ import it.pagopa.atmlayer.wf.process.bean.VariableResponse;
 import it.pagopa.atmlayer.wf.process.bean.VariableResponse.VariableResponseBuilder;
 import it.pagopa.atmlayer.wf.process.client.CamundaRestClient;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaBodyRequestDto;
+import it.pagopa.atmlayer.wf.process.client.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaVariablesDto;
 import it.pagopa.atmlayer.wf.process.enums.DeviceInfoEnum;
 import it.pagopa.atmlayer.wf.process.enums.TaskVarsEnum;
@@ -58,9 +58,8 @@ public class ProcessService {
             if (response.getStatus() == RestResponse.Status.OK.getStatusCode()) {
                 response = RestResponse.ok(response.getEntity());
                 log.info("DEPLOY - BPMN deployed!");
-            } else {
-                response = RestResponse.status(RestResponse.Status.BAD_REQUEST);
             }
+            
         } catch (RuntimeException e) {
             log.error("Error during bpmn deployment: ", e);
             response = RestResponse.serverError();
@@ -81,7 +80,7 @@ public class ProcessService {
 
         populateDeviceInfoVariables(transactionId, deviceInfo, variables);
 
-        RestResponse<StartProcessInstanceDto> camundaStartInstanceResponse = camundaStartProcess(transactionId, functionId,
+        RestResponse<CamundaStartProcessInstanceDto> camundaStartInstanceResponse = camundaStartProcess(transactionId, functionId,
                 variables);
 
         if (camundaStartInstanceResponse.getStatus() != RestResponse.Status.OK.getStatusCode()) {
@@ -193,7 +192,7 @@ public class ProcessService {
      * @return A `RestResponse` containing information about the started process
      *         instance.
      */
-    public RestResponse<StartProcessInstanceDto> camundaStartProcess(String transactionId, String functionId,
+    public RestResponse<CamundaStartProcessInstanceDto> camundaStartProcess(String transactionId, String functionId,
             Map<String, Object> variables) {
         CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
                 .businessKey(transactionId)
@@ -280,6 +279,6 @@ public class ProcessService {
         variables.put(DeviceInfoEnum.TERMINAL_ID.getValue(), deviceInfo.getTerminalId());
         variables.put(DeviceInfoEnum.CODE.getValue(), deviceInfo.getCode());
         variables.put(DeviceInfoEnum.OP_TIMESTAMP.getValue(), deviceInfo.getOpTimestamp());
-        variables.put(DeviceInfoEnum.DEVICE_TYPE.getValue(), deviceInfo.getDeviceType());
+        variables.put(DeviceInfoEnum.DEVICE_TYPE.getValue(), deviceInfo.getChannel());
     }
 }

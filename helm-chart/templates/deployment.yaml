@@ -2,9 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.deployment.name }}
-  namespace: {{ .Values.deployment.namespace }}
+  namespace: {{ .Values.namespace }}
   labels:
     App: {{ .Values.deployment.name }}
+  annotations:
+    {{- toYaml .Values.deployment.annotations | nindent 4 }}
+
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -16,6 +19,14 @@ spec:
         App: {{ .Values.deployment.name }}
         force-recreate: {{ randAlphaNum 5 | quote }}
     spec:
+      serviceAccountName: {{ include "chart-1.serviceAccountName" . }}
+      volumes:
+      - name: secrets-store-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true 
+          volumeAttributes:
+            secretProviderClass: atm-layer-wf-process-secrets
       containers:
         - name: {{ .Values.deployment.name }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
@@ -37,8 +48,10 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.camundaWebUser.credentialsSecretName }}
                   key: {{ .Values.camundaWebUser.credentialsSecretKeys.password }}
-              
-
+          volumeMounts:
+          - name: secrets-store-inline
+            mountPath: "/mnt/secrets-store"
+            readOnly: true
 
   strategy:
     type: Recreate

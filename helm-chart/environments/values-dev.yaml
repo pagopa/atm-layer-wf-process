@@ -26,6 +26,9 @@ camundaWebUser:
     username: WEB_USER
     password: WEB_PASSWORD
 
+secretProviderClass:
+  name: atm-layer-wf-process-secrets
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true

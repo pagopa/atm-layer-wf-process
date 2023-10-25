@@ -5,6 +5,7 @@ COPY --chown=quarkus:quarkus mvnw .
 COPY --chown=quarkus:quarkus .mvn .
 COPY --chown=quarkus:quarkus pom.xml .
 USER quarkus
+RUN chown 777 /app
 RUN ./mvnw -B org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
 COPY src src
 ARG QUARKUS_PROFILE

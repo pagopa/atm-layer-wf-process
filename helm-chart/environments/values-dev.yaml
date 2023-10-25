@@ -10,6 +10,8 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest
 
+namespace: pagopa
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -19,21 +21,23 @@ logLevel: DEBUG
 camundaWebUser:
   address: http://pagopa-dev-atm-layer-wf-engine.pagopa.svc.cluster.local:8080
   credentialsSecretEnabled: true
-  credentialsSecretName: "atm-layer-wf-engine-webuser"
+  credentialsSecretName: "pagopa-dev-atm-layer-wf-process-camunda"
   credentialsSecretKeys:
     username: WEB_USER
     password: WEB_PASSWORD
 
+secretProviderClass:
+  name: atm-layer-wf-process-secrets
 
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
   # Annotations to add to the service account
-  annotations: {}
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::00000000000:role/pagopa-dev-atm-layer-xxxxxx-serviceaccount-role
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: xxxxx
-  namespace: pagopa
+  name: pagopa-dev-atm-layer-wf-process
 
 podAnnotations: {}
 
@@ -49,18 +53,19 @@ securityContext: {}
   # runAsUser: 1000
 
 deployment:
-  name: xxxxx
-  namespace: pagopa
+  name: pagopa-dev-atm-layer-wf-process
+  annotation:
+    reloader.stakater.com/auto: "true"
+    secret.reloader.stakater.com/reload: pagopa-dev-atm-layer-wf-process-camunda
 
 service:
-  name: xxxxx
-  namespace: pagopa
+  name: pagopa-dev-atm-layer-wf-process
   type: NodePort
   port: 8080
 
 ingress:
   enabled: true
-  name: xxxxx
+  name: pagopa-dev-atm-layer-wf-process
   className: ""
   annotations: 
     kubernetes.io/ingress.class: "alb"

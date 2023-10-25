@@ -72,7 +72,4 @@ jobs:
           -f helm-chart/environments/values-${{ inputs.env }}.yaml \
           --set image.tag=${{ github.sha }} \
           --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ vars.DOCKER_IMAGE_NAME }} \
-          --set serviceAccount.name=${{ vars.DOCKER_IMAGE_NAME }} \
-          --set deployment.name=${{ vars.DOCKER_IMAGE_NAME }} \
-          --set service.name=${{ vars.DOCKER_IMAGE_NAME }} \
-          --set ingress.name=${{ vars.DOCKER_IMAGE_NAME }} 
+          --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=${{ secrets.SERVICEACCOUNT_IAM_ROLE }}

@@ -1,5 +1,5 @@
 # dependency resolution and compiling
-FROM maven:3.8-openjdk-17 AS builder
+FROM maven:3.9.4-amazoncorretto-17-al2023@sha256:c7719f952f62e301c6c24b86ef9a2ea1cd0a314a862ed12e51f0ffbc3fbb96b5 AS builder
 WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline
@@ -7,7 +7,7 @@ COPY src src
 RUN mvn package -DskipTests=true -Pnative
 
 # build native Quarkus
-FROM quay.io/quarkus/quarkus-micro-image:2.0
+FROM quay.io/quarkus/quarkus-micro-image@sha256:a9182e3618935ab7decb6ec0a7cdd2dd60288ea4a61e0c08c8c486fff42696e8
 WORKDIR /work/
 RUN chown 1001 /work \
     && chmod "g+rwX" /work \

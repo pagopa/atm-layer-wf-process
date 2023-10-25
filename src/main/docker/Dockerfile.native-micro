@@ -2,9 +2,9 @@
 FROM quay.io/quarkus/ubi-quarkus-graalvmce-builder-image:22.3-java17 AS builder
 WORKDIR /app
 USER quarkus
-COPY --chown=quarkus:quarkus mvnw .
-COPY --chown=quarkus:quarkus .mvn .
-COPY --chown=quarkus:quarkus pom.xml .
+COPY --chown=quarkus:quarkus mvnw /app
+COPY --chown=quarkus:quarkus .mvn /app
+COPY --chown=quarkus:quarkus pom.xml /app
 RUN chmod +x mvnw
 RUN ./mvnw quarkus:go-offline
 COPY src src

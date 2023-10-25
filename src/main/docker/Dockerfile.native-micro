@@ -4,7 +4,7 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline
 COPY src src
-RUN mvn package -DskipTests=true -Pnative -Dquarkus.native.container-build=true
+RUN mvn package -DskipTests=true -Pnative
 
 # build native Quarkus
 FROM quay.io/quarkus/quarkus-micro-image:2.0

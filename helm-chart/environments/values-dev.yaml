@@ -21,7 +21,7 @@ logLevel: DEBUG
 camundaWebUser:
   address: http://pagopa-dev-atm-layer-wf-engine.pagopa.svc.cluster.local:8080
   credentialsSecretEnabled: true
-  credentialsSecretName: "atm-layer-webuser"
+  credentialsSecretName: "pagopa-dev-atm-layer-wf-process-camunda"
   credentialsSecretKeys:
     username: WEB_USER
     password: WEB_PASSWORD
@@ -54,6 +54,9 @@ securityContext: {}
 
 deployment:
   name: pagopa-dev-atm-layer-wf-process
+  annotation:
+    reloader.stakater.com/auto: "true"
+    secret.reloader.stakater.com/reload: pagopa-dev-atm-layer-wf-process-camunda
 
 service:
   name: pagopa-dev-atm-layer-wf-process

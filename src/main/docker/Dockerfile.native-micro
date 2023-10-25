@@ -1,11 +1,13 @@
 # dependency resolution and compiling
 FROM quay.io/quarkus/ubi-quarkus-graalvmce-builder-image:22.3-java17 AS builder
 WORKDIR /app
-USER quarkus
-COPY --chown=quarkus:quarkus mvnw .
-COPY --chown=quarkus:quarkus .mvn .
-COPY --chown=quarkus:quarkus pom.xml .
-RUN chown quarkus ./mvnw org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
+RUN chown 1001 /app \
+    && chmod "g+rwX" /app \
+    && chown 1001:root /app
+COPY --chown=1001:root mvnw .
+COPY --chown=1001:root .mvn .
+COPY --chown=1001:root pom.xml .
+RUN ./mvnw org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
 COPY src src
 ARG QUARKUS_PROFILE
 ARG APP_NAME

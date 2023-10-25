@@ -1,9 +1,6 @@
 # dependency resolution and compiling
 FROM quay.io/quarkus/ubi-quarkus-graalvmce-builder-image:22.3-java17 AS builder
 WORKDIR /app
-RUN chown 1001 /app \
-    && chmod "g+rwX" /app \
-    && chown 1001:root /app
 COPY --chown=1001:root mvnw .
 COPY --chown=1001:root .mvn .
 COPY --chown=1001:root pom.xml .

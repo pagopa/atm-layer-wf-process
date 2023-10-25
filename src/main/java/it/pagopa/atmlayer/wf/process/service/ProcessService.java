@@ -99,8 +99,8 @@ public class ProcessService {
      * @param businessKey The business key of the process.
      * @return A `RestResponse` containing the retrieved tasks.
      */
-    public RestResponse<TaskResponse> getActiveTasks(String businessKey) {
-        RestResponse<TaskResponse> taskResponse;
+    public TaskResponse getActiveTasks(String businessKey) {
+        TaskResponse taskResponse = null;
         RestResponse<List<CamundaTaskDto>> camundaGetListResponse = camundaGetTaskList(businessKey);
 
         if (camundaGetListResponse.getStatus() == RestResponse.Status.OK.getStatusCode()) {
@@ -114,12 +114,10 @@ public class ProcessService {
                             .build())
                     .collect(Collectors.toList());
 
-            taskResponse = RestResponse
-                    .ok(TaskResponse.builder().transactionId(businessKey).tasks(activeTasks).build());
+            taskResponse = TaskResponse.builder().transactionId(businessKey).tasks(activeTasks).build();
             log.info("NEXT - Tasks retrieved!");
         } else {
             log.error("NEXT - Get list of tasks failed!");
-            taskResponse = RestResponse.status(RestResponse.Status.BAD_REQUEST);
         }
 
         return taskResponse;
@@ -153,9 +151,8 @@ public class ProcessService {
      * @param buttons The buttons to retrieve
      * @return
      */
-    public RestResponse<VariableResponse> getTaskVariables(String taskId, List<String> variables,
+    public VariableResponse getTaskVariables(String taskId, List<String> variables,
             List<String> buttons) {
-        // Retrieve task variables from camunda
         
         CamundaVariablesDto taskVariables = camundaGetTaskVariables(taskId).getEntity();
         CamundaVariablesDto variablesFilteredList;
@@ -177,7 +174,7 @@ public class ProcessService {
             variableResponseBuilder.buttons(mapVariablesResponse(buttonsFilteredList));
         }
         
-        return RestResponse.ok(variableResponseBuilder.build());
+        return variableResponseBuilder.build();
     }
 
     /**
@@ -252,10 +249,15 @@ public class ProcessService {
         return camundaRestClient.getTaskVariables(taskId);
     }
 
+    /**
+     * Filters variables retrieved from camunda {@link CamundaVariablesDto} with the 
+     * 
+     * @param camundaVariablesDto
+     * @param vars
+     * @return
+     */
     private CamundaVariablesDto filterCamundaVariables(CamundaVariablesDto camundaVariablesDto, List<String> vars) {
         Map<String, Map<String, Object>> variablesDto = camundaVariablesDto.getVariables();
-
-        // Utilizza uno stream per filtrare i campi in base ai nomi forniti
         Map<String, Map<String, Object>> filteredFields = variablesDto.entrySet().stream()
                 .filter(entry -> vars.contains(entry.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));

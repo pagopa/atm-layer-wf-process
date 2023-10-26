@@ -14,4 +14,10 @@ public interface Properties {
     @WithName("camunda.auth-password")
     public String camundaAuthPassword();
 
+    @WithName("get-task-list.attempts")
+    public int getTaskListAttempts();
+
+    @WithName("get-task-list.time-to-attempt")
+    public long getTaskListTimeToAttempt();
+
 }

@@ -1,6 +1,12 @@
 package it.pagopa.atmlayer.wf.process.service;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,8 +27,10 @@ import it.pagopa.atmlayer.wf.process.enums.DeviceInfoEnum;
 import it.pagopa.atmlayer.wf.process.enums.TaskVarsEnum;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.util.Constants;
+import it.pagopa.atmlayer.wf.process.util.Properties;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -41,31 +49,48 @@ public class ProcessService {
     @RestClient
     CamundaRestClient camundaRestClient;
 
+    @Inject
+    Properties properties;
+
     /**
      * Deploys a BPMN process definition in Camunda.
      *
      * @param bpmnFilePath The path to the BPMN file to deploy.
      * @return A `RestResponse` containing the deployment outcome.
+     * @throws MalformedURLException
      */
-    public RestResponse<Object> deploy() {
-        RestResponse<Object> response;
+    public RestResponse<Object> deploy(String requestUrl) throws IOException {
+        RestResponse<Object> camundaDeployResponse;
+        URL url = new URL(requestUrl);
 
-        try {
-            final File bpmn = new File("/variabili.bpmn");
-            // Camunda communication
-            response = camundaRestClient.deploy(bpmn);
+        // Camunda communication
+        camundaDeployResponse = camundaRestClient.deploy(downloadBpmnFile(url));
 
-            if (response.getStatus() == RestResponse.Status.OK.getStatusCode()) {
-                response = RestResponse.ok(response.getEntity());
-                log.info("DEPLOY - BPMN deployed!");
-            }
-            
-        } catch (RuntimeException e) {
-            log.error("Error during bpmn deployment: ", e);
-            response = RestResponse.serverError();
+        if (camundaDeployResponse.getStatus() == RestResponse.Status.OK.getStatusCode()) {
+            log.info("DEPLOY - BPMN deployed!");
+        } else {
+            log.error("DEPLOY - Error during deployment!");
         }
 
-        return response;
+        return camundaDeployResponse;
+    }
+
+    /**
+     * Downloads a BPMN file from the specified URL and returns it as a temporary
+     * file.
+     *
+     * @param url The URL from which to download the BPMN file.
+     * @return A temporary File object representing the downloaded BPMN file.
+     * @throws IOException If an I/O error occurs during the download or file
+     *                     creation.
+     */
+    private File downloadBpmnFile(URL url) throws IOException {
+        try (InputStream in = url.openStream();
+                OutputStream out = new FileOutputStream(File.createTempFile("downloaded", ".bpmn"))) {
+            in.transferTo(out);
+        }
+
+        return new File("downloaded.bpmn");
     }
 
     /**
@@ -73,14 +98,16 @@ public class ProcessService {
      *
      * @param transactionId The transaction ID associated with the process.
      * @param variables     The variables to associate with the process.
-     * @return The business key (transactionId) of the started process or an empty string in case of
+     * @return The business key (transactionId) of the started process or an empty
+     *         string in case of
      *         an error.
      */
     public String start(String transactionId, String functionId, DeviceInfo deviceInfo, Map<String, Object> variables) {
 
         populateDeviceInfoVariables(transactionId, deviceInfo, variables);
 
-        RestResponse<CamundaStartProcessInstanceDto> camundaStartInstanceResponse = camundaStartProcess(transactionId, functionId,
+        RestResponse<CamundaStartProcessInstanceDto> camundaStartInstanceResponse = camundaStartProcess(transactionId,
+                functionId,
                 variables);
 
         if (camundaStartInstanceResponse.getStatus() != RestResponse.Status.OK.getStatusCode()) {
@@ -95,13 +122,32 @@ public class ProcessService {
 
     /**
      * Retrieves the active tasks associated with a BPM process.
-     *
+     * 
      * @param businessKey The business key of the process.
      * @return A `RestResponse` containing the retrieved tasks.
+     * @throws InterruptedException
      */
-    public TaskResponse getActiveTasks(String businessKey) {
+    public TaskResponse getActiveTasks(String businessKey){
         TaskResponse taskResponse = null;
         RestResponse<List<CamundaTaskDto>> camundaGetListResponse = camundaGetTaskList(businessKey);
+
+        /*
+         * It is possibile that after start of a process or the complete of a specified task there is a service task in execution which takes
+         * long time to finish its work. We iterate till a predefined number of attempts and after a specified time. 
+         */
+        int attempts = 0;
+        while(camundaGetListResponse.getEntity().isEmpty() && attempts < properties.getTaskListAttempts()){
+            ++attempts;
+            
+            try {
+                Thread.sleep(properties.getTaskListTimeToAttempt());
+            } catch (InterruptedException e) {
+                log.error("NEXT - Error during getActiveTask", e);
+                Thread.currentThread().interrupt();
+            } 
+
+            camundaGetListResponse = camundaGetTaskList(businessKey);
+        }
 
         if (camundaGetListResponse.getStatus() == RestResponse.Status.OK.getStatusCode()) {
             log.info("NEXT - Retrieving active tasks. . .");
@@ -146,20 +192,20 @@ public class ProcessService {
     /**
      * Gets the task instance variables.
      * 
-     * @param taskId The id of the task from which I will retrieve the variables.
+     * @param taskId    The id of the task from which I will retrieve the variables.
      * @param variables The additional variables to retrieve
-     * @param buttons The buttons to retrieve
+     * @param buttons   The buttons to retrieve
      * @return
      */
     public VariableResponse getTaskVariables(String taskId, List<String> variables,
             List<String> buttons) {
-        
+
         CamundaVariablesDto taskVariables = camundaGetTaskVariables(taskId).getEntity();
         CamundaVariablesDto variablesFilteredList;
         CamundaVariablesDto buttonsFilteredList;
         VariableResponseBuilder variableResponseBuilder = VariableResponse.builder();
 
-        //Filter variables
+        // Filter variables
         if (variables != null && !variables.isEmpty()) {
             variables.addAll(TaskVarsEnum.getValues());
         } else {
@@ -168,12 +214,12 @@ public class ProcessService {
         variablesFilteredList = filterCamundaVariables(taskVariables, variables);
         variableResponseBuilder.variables(mapVariablesResponse(variablesFilteredList));
 
-        //Filter buttons
-        if (buttons != null && !buttons.isEmpty()){
+        // Filter buttons
+        if (buttons != null && !buttons.isEmpty()) {
             buttonsFilteredList = filterCamundaVariables(taskVariables, buttons);
             variableResponseBuilder.buttons(mapVariablesResponse(buttonsFilteredList));
         }
-        
+
         return variableResponseBuilder.build();
     }
 
@@ -242,7 +288,7 @@ public class ProcessService {
      * 
      * Get variables associated to the process instance.
      *
-     * @param taskId    The ID of the task to complete.
+     * @param taskId The ID of the task to complete.
      * @return A `RestResponse` containing variables.
      */
     private RestResponse<CamundaVariablesDto> camundaGetTaskVariables(String taskId) {
@@ -250,7 +296,7 @@ public class ProcessService {
     }
 
     /**
-     * Filters variables retrieved from camunda {@link CamundaVariablesDto} with the 
+     * Filters variables retrieved from camunda {@link CamundaVariablesDto} with the
      * 
      * @param camundaVariablesDto
      * @param vars
@@ -274,7 +320,8 @@ public class ProcessService {
                         entry -> entry.getValue().get("value")));
     }
 
-    private void populateDeviceInfoVariables(String transactionId, DeviceInfo deviceInfo, Map<String, Object> variables) {
+    private void populateDeviceInfoVariables(String transactionId, DeviceInfo deviceInfo,
+            Map<String, Object> variables) {
         variables.put(DeviceInfoEnum.TRANSACTION_ID.getValue(), transactionId);
         variables.put(DeviceInfoEnum.BANK_ID.getValue(), deviceInfo.getBankId());
         variables.put(DeviceInfoEnum.BRANCH_ID.getValue(), deviceInfo.getBranchId());

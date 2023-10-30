@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -64,20 +65,17 @@ public class ProcessService {
      * @return A `RestResponse` containing the deployment outcome.
      * @throws IOException
      */
-    public RestResponse<Object> deploy(String requestUrl) throws IOException {
+    public RestResponse<Object> deploy(String requestUrl, String fileName) throws IOException {
         RestResponse<Object> camundaDeployResponse;
         URL url = new URL(requestUrl);
-
-        // Camunda communication
-        camundaDeployResponse = camundaRestClient.deploy(Utility.downloadBpmnFile(url));
+        
+        camundaDeployResponse = camundaRestClient.deploy(Utility.downloadBpmnFile(url, fileName));
 
         if (camundaDeployResponse.getStatus() == RestResponse.Status.OK.getStatusCode()) {
             log.info("DEPLOY - BPMN deployed!");
         } else {
             log.error("DEPLOY - Error during deployment!");
         }
-
-        Utility.deleteFileIfExists(Constants.DOWNLOADED_BPMN);
 
         return camundaDeployResponse;
     }
@@ -98,9 +96,9 @@ public class ProcessService {
 
         if (camundaStartInstanceResponse.getStatus() != RestResponse.Status.OK.getStatusCode()) {
             transactionId = null;
-            log.error("START - Start process instance failed!");
+            log.error("Start process instance failed!");
         } else {
-            log.info("START - Process started! Business key: {}", transactionId);
+            log.info("Process started! Business key: {}", transactionId);
         }
 
         return transactionId;
@@ -148,7 +146,7 @@ public class ProcessService {
              */
             camundaGetListResponse = retryActiveTasks(camundaGetListResponse, businessKey);
 
-            log.info("NEXT - Retrieving active tasks. . .");
+            log.info("Retrieving active tasks. . .");
             List<Task> activeTasks = camundaGetListResponse.getEntity()
                     .stream()
                     .map(taskDto -> Task.builder()
@@ -159,9 +157,9 @@ public class ProcessService {
                     .collect(Collectors.toList());
 
             taskResponse = TaskResponse.builder().transactionId(businessKey).tasks(activeTasks).build();
-            log.info("NEXT - Tasks retrieved!");
+            log.info("Tasks retrieved!");
         } else {
-            log.error("NEXT - Get list of tasks failed!");
+            log.error("Get list of tasks failed!");
         }
 
         return taskResponse;
@@ -187,7 +185,7 @@ public class ProcessService {
             try {
                 Thread.sleep(properties.getTaskListTimeToAttempt());
             } catch (InterruptedException e) {
-                log.error("NEXT - Error during getActiveTask", e);
+                log.error("Error during getActiveTask", e);
                 Thread.currentThread().interrupt();
             }
 
@@ -210,7 +208,7 @@ public class ProcessService {
         boolean isCompleted = false;
         if (camundaCompleteResponse.getStatus() == RestResponse.Status.OK.getStatusCode()
                 || camundaCompleteResponse.getStatus() == RestResponse.Status.NO_CONTENT.getStatusCode()) {
-            log.info("NEXT - Task completed! taskId: {}", taskId);
+            log.info("Task completed! taskId: {}", taskId);
             isCompleted = true;
         }
 

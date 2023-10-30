@@ -1,6 +1,7 @@
 package it.pagopa.atmlayer.wf.process.resource;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -15,11 +16,13 @@ import it.pagopa.atmlayer.wf.process.bean.TaskResponse;
 import it.pagopa.atmlayer.wf.process.bean.VariableRequest;
 import it.pagopa.atmlayer.wf.process.bean.VariableResponse;
 import it.pagopa.atmlayer.wf.process.service.ProcessService;
+import it.pagopa.atmlayer.wf.process.util.Constants;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,12 +57,18 @@ public class ProcessResource {
     public RestResponse<Object> deploy(@Parameter(description = "L'url da cui recuperare il file bpmn.") @RestForm("url") String requestUrl) {
         log.info("DEPLOY - Request received. . .");
         RestResponse<Object> response;
+        String fileName = new StringBuilder().append(UUID.randomUUID().toString()).append(Constants.BPMN_EXTENSION).toString();
+
         try {
-            response = processService.deploy(requestUrl);
-        } catch (IOException e) {
+            response = processService.deploy(requestUrl, fileName);
+        } catch (RuntimeException | IOException e) {
             log.error("DEPLOY - Error during deployment: ", e);
             response = RestResponse.serverError();
+        } finally {
+            //Delete of temp bpmn used for deploy on Camunda platform
+            Utility.deleteFileIfExists(fileName);
         }
+
         return response;
     }
 
@@ -92,6 +101,7 @@ public class ProcessResource {
              * Retrieve active tasks
              */
             response = processService.retrieveActiveTasks(businessKey);
+            log.info("START - Response body\n{}", Utility.getJson(request));
         } catch (RuntimeException e) {
             log.error("START - Exception during start process: ", e);
             response = RestResponse.serverError();
@@ -137,7 +147,8 @@ public class ProcessResource {
                     response = processService.retrieveActiveTasks(request.getTransactionId());
                     log.info("NEXT - Response body\n{}", Utility.getJson(response.getEntity()));
                 } else {
-                    response = RestResponse.status(RestResponse.Status.BAD_REQUEST);
+                    log.error("NEXT - Error during complete of task: ", request.getTaskId());
+                    response = RestResponse.serverError();
                 }
             }
         } catch (RuntimeException e) {

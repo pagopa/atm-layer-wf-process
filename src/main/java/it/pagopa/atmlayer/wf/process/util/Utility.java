@@ -37,6 +37,8 @@ public class Utility {
             });
         }
 
+        log.info("created vars" + vars.toString());
+        
         return vars;
     }
 
@@ -62,14 +64,16 @@ public class Utility {
      * @param filePath
      * @throws IOException
      */
-    public static void deleteFileIfExists(String filePath) throws IOException {
+    public static void deleteFileIfExists(String filePath) {
         Path path = Paths.get(filePath);
 
         if (Files.exists(path)) {
-            Files.delete(path);
+            try{
+                Files.delete(path);
+            } catch (IOException e){
+                log.error("Error during delete file: ", e);
+            }
             log.debug("File deleted successfully!");
-        } else {
-            log.error("File does not exist.");
         }
     }
 
@@ -82,11 +86,11 @@ public class Utility {
      * @throws IOException If an I/O error occurs during the download or file
      *                     creation.
      */
-    public static File downloadBpmnFile(URL url) throws IOException {
-        File file = new File(Constants.DOWNLOADED_BPMN);
+    public static File downloadBpmnFile(URL url, String fileName) throws IOException {
+        File file = new File(fileName);
 
         try (InputStream in = url.openStream();
-                OutputStream out = new FileOutputStream(Constants.DOWNLOADED_BPMN)) {
+                OutputStream out = new FileOutputStream(fileName)) {
             in.transferTo(out);
         }
 

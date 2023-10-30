@@ -15,7 +15,6 @@ import it.pagopa.atmlayer.wf.process.bean.TaskResponse;
 import it.pagopa.atmlayer.wf.process.bean.VariableRequest;
 import it.pagopa.atmlayer.wf.process.bean.VariableResponse;
 import it.pagopa.atmlayer.wf.process.service.ProcessService;
-import it.pagopa.atmlayer.wf.process.util.Constants;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -52,12 +51,12 @@ public class ProcessResource {
     @POST
     @Path("/deploy")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public RestResponse<Object> deploy(@RestForm("url") String requestUrl) {
+    public RestResponse<Object> deploy(@Parameter(description = "L'url da cui recuperare il file bpmn.") @RestForm("url") String requestUrl) {
         log.info("DEPLOY - Request received. . .");
         RestResponse<Object> response;
         try {
             response = processService.deploy(requestUrl);
-        } catch (RuntimeException | IOException e) {
+        } catch (IOException e) {
             log.error("DEPLOY - Error during deployment: ", e);
             response = RestResponse.serverError();
         }
@@ -88,15 +87,11 @@ public class ProcessResource {
              */
             String businessKey = processService.start(request.getTransactionId(), request.getFunctionId(),
                     request.getDeviceInfo(), request.getVariables());
-            if (!Constants.EMPTY.equals(businessKey)) {
-                /*
-                 * Retrieve active tasks
-                 */
-                response = RestResponse.ok(processService.getActiveTasks(businessKey));
-                log.info("START - Response body\n{}", Utility.getJson(response.getEntity()));
-            } else {
-                response = RestResponse.status(RestResponse.Status.BAD_REQUEST);
-            }
+
+            /*
+             * Retrieve active tasks
+             */
+            response = processService.retrieveActiveTasks(businessKey);
         } catch (RuntimeException e) {
             log.error("START - Exception during start process: ", e);
             response = RestResponse.serverError();
@@ -122,14 +117,15 @@ public class ProcessResource {
         log.info("NEXT - TaskRequest received. . .");
         log.info("NEXT - Request body\n:{}", Utility.getJson(request));
 
-        RestResponse<TaskResponse> taskResponse;
+        RestResponse<TaskResponse> response;
+        
         try {
             /*
              * Checking presence of taskId for complete
              */
             if (request.getTaskId() == null) {
                 log.error("NEXT - Next failed! taskId is missing.");
-                taskResponse = RestResponse.status(RestResponse.Status.BAD_REQUEST);
+                response = RestResponse.status(RestResponse.Status.BAD_REQUEST);
             } else {
                 /*
                  * Complete camunda task
@@ -138,19 +134,18 @@ public class ProcessResource {
                     /*
                      * Retrieve active tasks
                      */
-                    String businessKey = request.getTransactionId();
-                    taskResponse = RestResponse.ok(processService.getActiveTasks(businessKey));
+                    response = processService.retrieveActiveTasks(request.getTransactionId());
+                    log.info("NEXT - Response body\n{}", Utility.getJson(response.getEntity()));
                 } else {
-                    taskResponse = RestResponse.status(RestResponse.Status.BAD_REQUEST);
+                    response = RestResponse.status(RestResponse.Status.BAD_REQUEST);
                 }
             }
         } catch (RuntimeException e) {
             log.error("NEXT - Exception during start process: ", e);
-            taskResponse = RestResponse.serverError();
+            response = RestResponse.serverError();
         }
 
-        log.info("NEXT - Response body\n:{}", Utility.getJson(taskResponse.getEntity()));
-        return taskResponse;
+        return response;
     }
 
     @Operation(summary = "Recupera le variabili dell'istanza di processo e filtra le stesse in base a quelle richieste dal task aggiungendovi le TaskVars")
@@ -162,18 +157,18 @@ public class ProcessResource {
         log.info("VARIABLES - VariableRequest received. . .");
         log.info("VARIABLES - Request body\n:{}", Utility.getJson(request));
 
-        RestResponse<VariableResponse> variableResponse;
+        RestResponse<VariableResponse> response;
 
         try {
-            variableResponse = RestResponse.ok(processService.getTaskVariables(request.getTaskId(), request.getVariables(),
+            response = RestResponse.ok(processService.getTaskVariables(request.getTaskId(), request.getVariables(),
                     request.getButtons()));
         } catch (RuntimeException e) {
             log.error("NEXT - Exception during start process: ", e);
-            variableResponse = RestResponse.serverError();
+            response = RestResponse.serverError();
         }
 
-        log.info("VARIABLES - Response body\n:{}", Utility.getJson(variableResponse.getEntity()));
-        return variableResponse;
+        log.info("VARIABLES - Response body\n:{}", Utility.getJson(response.getEntity()));
+        return response;
     }
 
 }

@@ -1,12 +1,17 @@
 package it.pagopa.atmlayer.wf.process.service;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -57,14 +62,14 @@ public class ProcessService {
      *
      * @param bpmnFilePath The path to the BPMN file to deploy.
      * @return A `RestResponse` containing the deployment outcome.
-     * @throws MalformedURLException
+     * @throws IOException
      */
     public RestResponse<Object> deploy(String requestUrl) throws IOException {
         RestResponse<Object> camundaDeployResponse;
         URL url = new URL(requestUrl);
 
         // Camunda communication
-        camundaDeployResponse = camundaRestClient.deploy(downloadBpmnFile(url));
+        camundaDeployResponse = camundaRestClient.deploy(Utility.downloadBpmnFile(url));
 
         if (camundaDeployResponse.getStatus() == RestResponse.Status.OK.getStatusCode()) {
             log.info("DEPLOY - BPMN deployed!");
@@ -72,25 +77,9 @@ public class ProcessService {
             log.error("DEPLOY - Error during deployment!");
         }
 
+        Utility.deleteFileIfExists(Constants.DOWNLOADED_BPMN);
+
         return camundaDeployResponse;
-    }
-
-    /**
-     * Downloads a BPMN file from the specified URL and returns it as a temporary
-     * file.
-     *
-     * @param url The URL from which to download the BPMN file.
-     * @return A temporary File object representing the downloaded BPMN file.
-     * @throws IOException If an I/O error occurs during the download or file
-     *                     creation.
-     */
-    private File downloadBpmnFile(URL url) throws IOException {
-        try (InputStream in = url.openStream();
-                OutputStream out = new FileOutputStream(File.createTempFile("downloaded", ".bpmn"))) {
-            in.transferTo(out);
-        }
-
-        return new File("downloaded.bpmn");
     }
 
     /**
@@ -103,15 +92,12 @@ public class ProcessService {
      *         an error.
      */
     public String start(String transactionId, String functionId, DeviceInfo deviceInfo, Map<String, Object> variables) {
-
         populateDeviceInfoVariables(transactionId, deviceInfo, variables);
 
-        RestResponse<CamundaStartProcessInstanceDto> camundaStartInstanceResponse = camundaStartProcess(transactionId,
-                functionId,
-                variables);
+        RestResponse<CamundaStartProcessInstanceDto> camundaStartInstanceResponse = camundaStartProcess(transactionId, functionId, variables);
 
         if (camundaStartInstanceResponse.getStatus() != RestResponse.Status.OK.getStatusCode()) {
-            transactionId = Constants.EMPTY;
+            transactionId = null;
             log.error("START - Start process instance failed!");
         } else {
             log.info("START - Process started! Business key: {}", transactionId);
@@ -121,35 +107,47 @@ public class ProcessService {
     }
 
     /**
+     * This method retrieves the active tasks for the specified camunda process
+     * identified by the business key.
+     * 
+     * @param businessKey
+     * @return RestResponse<TaskResponse>
+     */
+    public RestResponse<TaskResponse> retrieveActiveTasks(String businessKey) {
+        RestResponse<TaskResponse> response;
+        TaskResponse taskResponse;
+
+        taskResponse = getActiveTasks(businessKey);
+        if (taskResponse != null && businessKey != null) {
+            response = RestResponse.ok(taskResponse);
+        } else {
+            response = RestResponse.status(RestResponse.Status.BAD_REQUEST);
+        }
+
+        return response;
+    }
+
+    /**
      * Retrieves the active tasks associated with a BPM process.
      * 
      * @param businessKey The business key of the process.
      * @return A `RestResponse` containing the retrieved tasks.
      * @throws InterruptedException
      */
-    public TaskResponse getActiveTasks(String businessKey){
+    public TaskResponse getActiveTasks(String businessKey) {
         TaskResponse taskResponse = null;
         RestResponse<List<CamundaTaskDto>> camundaGetListResponse = camundaGetTaskList(businessKey);
 
-        /*
-         * It is possibile that after start of a process or the complete of a specified task there is a service task in execution which takes
-         * long time to finish its work. We iterate till a predefined number of attempts and after a specified time. 
-         */
-        int attempts = 0;
-        while(camundaGetListResponse.getEntity().isEmpty() && attempts < properties.getTaskListAttempts()){
-            ++attempts;
-            
-            try {
-                Thread.sleep(properties.getTaskListTimeToAttempt());
-            } catch (InterruptedException e) {
-                log.error("NEXT - Error during getActiveTask", e);
-                Thread.currentThread().interrupt();
-            } 
-
-            camundaGetListResponse = camundaGetTaskList(businessKey);
-        }
-
         if (camundaGetListResponse.getStatus() == RestResponse.Status.OK.getStatusCode()) {
+
+            /*
+             * It is possibile that after start of a process or the complete of a specified
+             * task there is a service task in execution which takes
+             * long time to finish its work. We iterate till a predefined number of attempts
+             * and after a specified time.
+             */
+            camundaGetListResponse = retryActiveTasks(camundaGetListResponse, businessKey);
+
             log.info("NEXT - Retrieving active tasks. . .");
             List<Task> activeTasks = camundaGetListResponse.getEntity()
                     .stream()
@@ -167,6 +165,36 @@ public class ProcessService {
         }
 
         return taskResponse;
+    }
+
+    /**
+     * This method iterate the call to retrieve active tasks in camunda in case
+     * camundaGetListResponse contains an empty list of tasks.
+     * The attempts are predefined in application properties, also the delay between
+     * the client calls.
+     * 
+     * @param camundaGetListResponse
+     * @param businessKey
+     * @return RestResponse<List<CamundaTaskDto>>
+     */
+    private RestResponse<List<CamundaTaskDto>> retryActiveTasks(
+            RestResponse<List<CamundaTaskDto>> camundaGetListResponse, String businessKey) {
+        int attempts = 0;
+
+        while (camundaGetListResponse.getEntity().isEmpty() && attempts < properties.getTaskListAttempts()) {
+            ++attempts;
+
+            try {
+                Thread.sleep(properties.getTaskListTimeToAttempt());
+            } catch (InterruptedException e) {
+                log.error("NEXT - Error during getActiveTask", e);
+                Thread.currentThread().interrupt();
+            }
+
+            camundaGetListResponse = camundaGetTaskList(businessKey);
+        }
+
+        return camundaGetListResponse;
     }
 
     /**
@@ -242,7 +270,6 @@ public class ProcessService {
                 .variables(Utility.generateBodyRequestVariables(variables))
                 .build();
 
-        // TODO retrieve processDefinitionKey from model
         return camundaRestClient.startInstance(functionId, body);
     }
 

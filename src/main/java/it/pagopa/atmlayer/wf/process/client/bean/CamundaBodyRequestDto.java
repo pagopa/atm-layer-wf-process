@@ -28,6 +28,4 @@ public class CamundaBodyRequestDto {
     
     private  Map<String, Map<String, Object>> variables;
 
-    private boolean withVariablesInReturn;
-
 }

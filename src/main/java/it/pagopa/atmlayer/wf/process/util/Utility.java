@@ -1,5 +1,14 @@
 package it.pagopa.atmlayer.wf.process.util;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,5 +54,42 @@ public class Utility {
            log.error("Error during Json processing log!");
         }
         return result;
+    }
+
+    /**
+     * Delete file if exists in the specified filePath.
+     * 
+     * @param filePath
+     * @throws IOException
+     */
+    public static void deleteFileIfExists(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+
+        if (Files.exists(path)) {
+            Files.delete(path);
+            log.debug("File deleted successfully!");
+        } else {
+            log.error("File does not exist.");
+        }
+    }
+
+    /**
+     * Downloads a BPMN file from the specified URL and returns it as a temporary
+     * file.
+     *
+     * @param url The URL from which to download the BPMN file.
+     * @return A temporary File object representing the downloaded BPMN file.
+     * @throws IOException If an I/O error occurs during the download or file
+     *                     creation.
+     */
+    public static File downloadBpmnFile(URL url) throws IOException {
+        File file = new File(Constants.DOWNLOADED_BPMN);
+
+        try (InputStream in = url.openStream();
+                OutputStream out = new FileOutputStream(Constants.DOWNLOADED_BPMN)) {
+            in.transferTo(out);
+        }
+
+        return file;
     }
 }

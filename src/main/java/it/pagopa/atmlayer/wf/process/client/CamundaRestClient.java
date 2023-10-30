@@ -13,11 +13,13 @@ import it.pagopa.atmlayer.wf.process.client.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaVariablesDto;
 import it.pagopa.atmlayer.wf.process.client.filter.CamundaBasicAuthFilter;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaTaskDto;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 
+@ApplicationScoped
 @RegisterRestClient(configKey = "camunda-rest-client")
 @RegisterProvider(CamundaBasicAuthFilter.class)
 public interface CamundaRestClient {

@@ -86,7 +86,6 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5-mockito</artifactId>
       <scope>test</scope>
-      <!-- To avoid Quarkus bug with Mockito -->
       <exclusions>
         <exclusion>
           <groupId>org.mockito</groupId>

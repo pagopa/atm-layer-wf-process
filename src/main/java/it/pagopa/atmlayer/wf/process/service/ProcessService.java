@@ -67,9 +67,8 @@ public class ProcessService {
      */
     public RestResponse<Object> deploy(String requestUrl, String fileName) throws IOException {
         RestResponse<Object> camundaDeployResponse;
-        URL url = new URL(requestUrl);
         
-        camundaDeployResponse = camundaRestClient.deploy(Utility.downloadBpmnFile(url, fileName));
+        camundaDeployResponse = camundaRestClient.deploy(Utility.downloadBpmnFile(new URL(requestUrl), fileName));
 
         if (camundaDeployResponse.getStatus() == RestResponse.Status.OK.getStatusCode()) {
             log.info("DEPLOY - BPMN deployed!");
@@ -115,9 +114,9 @@ public class ProcessService {
         RestResponse<TaskResponse> response;
         TaskResponse taskResponse;
 
-        taskResponse = getActiveTasks(businessKey);
-        if (taskResponse != null && businessKey != null) {
-            response = RestResponse.ok(taskResponse);
+        if (businessKey != null) {
+            taskResponse = getActiveTasks(businessKey);
+            response = taskResponse != null ? RestResponse.ok(taskResponse) : RestResponse.serverError();
         } else {
             response = RestResponse.status(RestResponse.Status.BAD_REQUEST);
         }

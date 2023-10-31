@@ -55,7 +55,6 @@ public class DeviceInfo {
      */
     @NotNull(message = "opTimestamp non può essere null")
     @Schema(description = "Timestamp della richiesta", format = "timestamp", pattern = "dd/MM/yyyy HH:mm")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd/MM/yyyy HH:mm")
     private Date opTimestamp;
 
     /*

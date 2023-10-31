@@ -7,12 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
 import it.pagopa.atmlayer.wf.process.bean.DeviceInfo;
 import it.pagopa.atmlayer.wf.process.bean.DeviceType;
 import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
+import it.pagopa.atmlayer.wf.process.bean.VariableRequest;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaBodyRequestDto;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaTaskDto;
@@ -102,6 +105,36 @@ public class ProcessTestData {
                                 .variables(ProcessTestData.getVariables())
                                 .deviceInfo(ProcessTestData.getDeviceInfo())
                                 .build();
+    }
+
+    public static VariableRequest createVariableRequest(){
+        List<String> buttons = IntStream.range(0, random.nextInt(6))
+                .mapToObj(i -> "Button_" + i)
+                .collect(Collectors.toList());
+
+        List<String> variables = IntStream.range(0, random.nextInt(6))
+                .mapToObj(i -> "Variable_" + i)
+                .collect(Collectors.toList());
+
+        return VariableRequest.builder()
+                                    .taskId(TRANSACTION_ID)
+                                    .buttons(buttons)
+                                    .variables(variables)
+                                    .build();
+    }
+
+    public static VariableRequest createVariableRequestWithoutVars(){
+        VariableRequest variableRequest = createVariableRequest();
+        variableRequest.setVariables(null);
+
+        return variableRequest;
+    }
+
+    public static VariableRequest createVariableRequestWithoutButtons(){
+        VariableRequest variableRequest = createVariableRequest();
+        variableRequest.setButtons(null);
+        
+        return variableRequest;
     }
 
     public static TaskRequest createTaskRequestNextMissingTaskId(){

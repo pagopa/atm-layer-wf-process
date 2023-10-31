@@ -15,14 +15,11 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
-import jakarta.enterprise.context.ApplicationScoped;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@ApplicationScoped
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Utility {
 
@@ -40,10 +37,6 @@ public class Utility {
         log.info("created vars" + vars.toString());
         
         return vars;
-    }
-
-    public static boolean isTaskIdPresent(TaskRequest request) {
-        return request.getTaskId() != null;
     }
 
     public static String getJson(Object object) {

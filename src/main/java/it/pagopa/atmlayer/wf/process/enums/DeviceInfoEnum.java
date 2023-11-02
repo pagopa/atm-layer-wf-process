@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 public enum DeviceInfoEnum {
     
     TRANSACTION_ID("transactionId"),

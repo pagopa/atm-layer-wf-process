@@ -4,7 +4,11 @@ import java.util.Map;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @RegisterForReflection
+@JsonInclude(Include.NON_NULL)
 @Schema(description = "Il body della richiesta di elaborazione del task")
 public class TaskRequest {
 
@@ -30,6 +35,7 @@ public class TaskRequest {
 	@Schema(description = "La mappa delle variabili in input al task da eseguire")
     private Map<String, Object> variables;
     
+    @NotNull(message = "deviceInfo non può essere null")
     private DeviceInfo deviceInfo;
 
 }

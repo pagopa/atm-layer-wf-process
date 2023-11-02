@@ -35,7 +35,7 @@ public class Utility {
         }
 
         log.info("created vars" + vars.toString());
-        
+
         return vars;
     }
 
@@ -46,7 +46,7 @@ public class Utility {
         try {
             result = om.writerWithDefaultPrettyPrinter().writeValueAsString(object);
         } catch (JsonProcessingException e) {
-           log.error("Error during Json processing log!");
+            log.error("Error during Json processing log!");
         }
         return result;
     }
@@ -61,9 +61,9 @@ public class Utility {
         Path path = Paths.get(filePath);
 
         if (Files.exists(path)) {
-            try{
+            try {
                 Files.delete(path);
-            } catch (IOException e){
+            } catch (IOException e) {
                 log.error("Error during delete file: ", e);
             }
             log.debug("File deleted successfully!");
@@ -82,8 +82,7 @@ public class Utility {
     public static File downloadBpmnFile(URL url, String fileName) throws IOException {
         File file = new File(fileName);
 
-        try (InputStream in = url.openStream();
-                OutputStream out = new FileOutputStream(fileName)) {
+        try (InputStream in = url.openStream(); OutputStream out = new FileOutputStream(fileName)) {
             in.transferTo(out);
         }
 

@@ -32,7 +32,6 @@ import it.pagopa.atmlayer.wf.process.client.bean.CamundaVariablesDto;
 import it.pagopa.atmlayer.wf.process.enums.DeviceInfoEnum;
 import it.pagopa.atmlayer.wf.process.enums.TaskVarsEnum;
 import it.pagopa.atmlayer.wf.process.client.bean.CamundaTaskDto;
-import it.pagopa.atmlayer.wf.process.util.Constants;
 import it.pagopa.atmlayer.wf.process.util.Properties;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -67,7 +66,7 @@ public class ProcessService {
      */
     public RestResponse<Object> deploy(String requestUrl, String fileName) throws IOException {
         RestResponse<Object> camundaDeployResponse;
-        
+
         camundaDeployResponse = camundaRestClient.deploy(Utility.downloadBpmnFile(new URL(requestUrl), fileName));
 
         if (camundaDeployResponse.getStatus() == RestResponse.Status.OK.getStatusCode()) {
@@ -91,7 +90,8 @@ public class ProcessService {
     public String start(String transactionId, String functionId, DeviceInfo deviceInfo, Map<String, Object> variables) {
         populateDeviceInfoVariables(transactionId, deviceInfo, variables);
 
-        RestResponse<CamundaStartProcessInstanceDto> camundaStartInstanceResponse = camundaStartProcess(transactionId, functionId, variables);
+        RestResponse<CamundaStartProcessInstanceDto> camundaStartInstanceResponse = camundaStartProcess(transactionId,
+                functionId, variables);
 
         if (camundaStartInstanceResponse.getStatus() != RestResponse.Status.OK.getStatusCode()) {
             transactionId = null;

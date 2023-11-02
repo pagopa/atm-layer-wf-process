@@ -54,7 +54,6 @@ public class ProcessResource {
     @Path("/deploy")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public RestResponse<Object> deploy(@Parameter(description = "L'url da cui recuperare il file bpmn.") @RestForm("url") String requestUrl) {
-        log.info("DEPLOY - Request received. . .");
         RestResponse<Object> response;
         String fileName = new StringBuilder().append(UUID.randomUUID().toString()).append(Constants.BPMN_EXTENSION).toString();
 
@@ -83,24 +82,19 @@ public class ProcessResource {
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante la start dell'istanza di processo del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @POST
     @Path("/start")
-    public RestResponse<TaskResponse> startProcess(
-            @Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
-        log.info("START - TaskRequest received. . .");
-        log.info("START - Request body\n{}", Utility.getJson(request));
-
+    public RestResponse<TaskResponse> startProcess(@Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
         RestResponse<TaskResponse> response;
+
         try {
             /*
              * Starting camunda process
              */
-            String businessKey = processService.start(request.getTransactionId(), request.getFunctionId(),
-                    request.getDeviceInfo(), request.getVariables());
+            String businessKey = processService.start(request.getTransactionId(), request.getFunctionId(), request.getDeviceInfo(), request.getVariables());
 
             /*
              * Retrieve active tasks
              */
             response = processService.retrieveActiveTasks(businessKey);
-            log.info("START - Response body\n{}", Utility.getJson(request));
         } catch (RuntimeException e) {
             log.error("START - Exception during start process: ", e);
             response = RestResponse.serverError();
@@ -121,13 +115,9 @@ public class ProcessResource {
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante l'elaborazione dell'istanza di processo del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @POST
     @Path("/next")
-    public RestResponse<TaskResponse> next(
-            @Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
-        log.info("NEXT - TaskRequest received. . .");
-        log.info("NEXT - Request body\n:{}", Utility.getJson(request));
-
+    public RestResponse<TaskResponse> next(@Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
         RestResponse<TaskResponse> response;
-        
+
         try {
             /*
              * Checking presence of taskId for complete
@@ -144,7 +134,6 @@ public class ProcessResource {
                      * Retrieve active tasks
                      */
                     response = processService.retrieveActiveTasks(request.getTransactionId());
-                    log.info("NEXT - Response body\n{}", Utility.getJson(response.getEntity()));
                 } else {
                     log.error("NEXT - Error during complete of task: ", request.getTaskId());
                     response = RestResponse.serverError();
@@ -164,20 +153,15 @@ public class ProcessResource {
     @POST
     @Path("/variables")
     public RestResponse<VariableResponse> variables(VariableRequest request) {
-        log.info("VARIABLES - VariableRequest received. . .");
-        log.info("VARIABLES - Request body\n:{}", Utility.getJson(request));
-
         RestResponse<VariableResponse> response;
 
         try {
-            response = RestResponse.ok(processService.getTaskVariables(request.getTaskId(), request.getVariables(),
-                    request.getButtons()));
+            response = RestResponse.ok(processService.getTaskVariables(request.getTaskId(), request.getVariables(), request.getButtons()));
         } catch (RuntimeException e) {
             log.error("NEXT - Exception during start process: ", e);
             response = RestResponse.serverError();
         }
 
-        log.info("VARIABLES - Response body\n:{}", Utility.getJson(response.getEntity()));
         return response;
     }
 

@@ -31,7 +31,7 @@ This command will build a native image and deploy it into a container. Make sure
 <br />
 <div align="center">
   <a>
-    <img src="docs/images/diagram_example.PNG" alt="bpmn" width="80" height="80">
+    <img src="docs/images/diagram_example.PNG" alt="bpmn" width="900" height="400">
   </a>
 </div>
 <br />

@@ -8,21 +8,37 @@ image:
   repository: 00000000000.dkr.ecr.eu-south-1.amazonaws.com/xxxxxxx
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: uat
+  tag: latest
+
+namespace: pagopa
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+logLevel: DEBUG
+
+camundaWebUser:
+  address: http://pagopa-uat-atm-layer-wf-engine.pagopa.svc.cluster.local:8080
+  credentialsSecretEnabled: true
+  credentialsSecretName: "pagopa-uat-atm-layer-wf-process-camunda"
+  credentialsSecretKeys:
+    username: WEB_USER
+    password: WEB_PASSWORD
+
+secretProviderClass:
+  name: atm-layer-wf-process-secrets
+  env: uat
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
   # Annotations to add to the service account
-  annotations: {}
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::00000000000:role/pagopa-uat-atm-layer-xxxxxx-serviceaccount-role
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: xxxxxxx
-  namespace: pagopa
+  name: pagopa-uat-atm-layer-wf-process
 
 podAnnotations: {}
 
@@ -37,23 +53,31 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+deployment:
+  name: pagopa-uat-atm-layer-wf-process
+  annotation:
+    reloader.stakater.com/auto: "true"
+    secret.reloader.stakater.com/reload: pagopa-uat-atm-layer-wf-process-camunda
+
 service:
+  name: pagopa-uat-atm-layer-wf-process
   type: NodePort
   port: 8080
 
 ingress:
-  enabled: false
+  enabled: true
+  name: pagopa-uat-atm-layer-wf-process
   className: ""
   annotations: 
     kubernetes.io/ingress.class: "alb"
     alb.ingress.kubernetes.io/scheme: "internal"
     alb.ingress.kubernetes.io/group.name: "alb-controller"
-    alb.ingress.kubernetes.io/load-balancer-name: "pagopa-dev-atm-layer-alb-int"
+    alb.ingress.kubernetes.io/load-balancer-name: "pagopa-uat-atm-layer-alb-int"
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTP": 8080}]'
   hosts:
-    - host: chart-example.local
+    - host:
       paths:
-        - path: /microservice5/
+        - path: /api/v1/processes
           pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
@@ -84,7 +108,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
 
 Release:
   Time:

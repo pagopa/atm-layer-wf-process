@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: 00000000000.dkr.ecr.eu-south-1.amazonaws.com/xxxxxxx
@@ -13,6 +13,21 @@ image:
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+logLevel: DEBUG
+
+modelServiceAddress: http://pagopa-uat-atm-layer-model.pagopa.svc.cluster.local:8080
+
+camundaWebUser:
+  address: http://pagopa-uat-atm-layer-wf-engine.pagopa.svc.cluster.local:8080
+  credentialsSecretName: "pagopa-uat-atm-layer-wf-process-camunda"
+  credentialsSecretKeys:
+    username: WEB_USER
+    password: WEB_PASSWORD
+
+secretProviderClass:
+  name: atm-layer-wf-process-secrets
+  env: uat
 
 serviceAccount:
   # Specifies whether a service account should be created

@@ -14,6 +14,21 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+logLevel: DEBUG
+
+modelServiceAddress: http://pagopa-prod-atm-layer-model.pagopa.svc.cluster.local:8080
+
+camundaWebUser:
+  address: http://pagopa-prod-atm-layer-wf-engine.pagopa.svc.cluster.local:8080
+  credentialsSecretName: "pagopa-prod-atm-layer-wf-process-camunda"
+  credentialsSecretKeys:
+    username: WEB_USER
+    password: WEB_PASSWORD
+
+secretProviderClass:
+  name: atm-layer-wf-process-secrets
+  env: prod
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true

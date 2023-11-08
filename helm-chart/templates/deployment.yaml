@@ -48,6 +48,8 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.camundaWebUser.credentialsSecretName }}
                   key: {{ .Values.camundaWebUser.credentialsSecretKeys.password }}
+            - name: MODEL_SERVICE_ADDRESS
+              value: "{{ .Values.modelServiceAddress }}"
           volumeMounts:
           - name: secrets-store-inline
             mountPath: "/mnt/secrets-store"

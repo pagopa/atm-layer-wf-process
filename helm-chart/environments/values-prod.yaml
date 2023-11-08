@@ -18,9 +18,10 @@ fullnameOverride: ""
 
 logLevel: DEBUG
 
+modelServiceAddress: http://pagopa-prod-atm-layer-model.pagopa.svc.cluster.local:8080
+
 camundaWebUser:
   address: http://pagopa-prod-atm-layer-wf-engine.pagopa.svc.cluster.local:8080
-  credentialsSecretEnabled: true
   credentialsSecretName: "pagopa-prod-atm-layer-wf-process-camunda"
   credentialsSecretKeys:
     username: WEB_USER

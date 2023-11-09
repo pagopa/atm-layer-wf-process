@@ -2,7 +2,7 @@
 This microservice serves as entrypoint to Camunda 7 platform. Manipulates and processes requests received from other microservices in atm-layer and makes possible to navigate through an instance of a deployed bpmn diagram which represents a specified business process.
 
 ## Prerequisites
-* Install an instance of Camunda platform 7.
+* Install an instance of Camunda platform 7
 * JDK 17
 * GraalVM 17 (necessary in case of a locally native build is needed)
 * Docker (necessary in case of build into container is needed)

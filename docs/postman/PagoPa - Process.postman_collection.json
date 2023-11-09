@@ -47,7 +47,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\":\"Process_04ih94k\",\r\n    \"variables\": {\r\n        \"example_variable\": \"example\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"00000\",\r\n        \"branchId\": \"00000\",\r\n        \"code\": \"0000\",\r\n        \"terminalId\": \"ABCD1234\",\r\n        \"opTimestamp\": \"11/10/2023 14:30\",\r\n        \"deviceType\": \"ATM\"\r\n    }\r\n}",
+					"raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\":\"Process_04ih94k\",\r\n    \"variables\": {\r\n        \"example_variable\": \"example\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"00000\",\r\n        \"branchId\": \"00000\",\r\n        \"code\": \"0000\",\r\n        \"terminalId\": \"ABCD1234\",\r\n        \"opTimestamp\": \"2023-10-31T17:30:00\",\r\n        \"deviceType\": \"ATM\"\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -79,7 +79,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"taskId\": \"taskId retrieved from camunda after a start or a next call\",\r\n    \"transactionId\": \"test\",\r\n    \"variables\": {\r\n        \"PRINTER\" : \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"00000\",\r\n        \"branchId\": \"00000\",\r\n        \"code\": \"0000\",\r\n        \"terminalId\": \"ABCD1234\",\r\n        \"opTimestamp\": \"11/10/2023 14:30\",\r\n        \"deviceType\": \"ATM\"\r\n    }\r\n}"
+					"raw": "{\r\n    \"taskId\": \"taskId retrieved from camunda after a start or a next call\",\r\n    \"transactionId\": \"test\",\r\n    \"variables\": {\r\n        \"PRINTER\" : \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"00000\",\r\n        \"branchId\": \"00000\",\r\n        \"code\": \"0000\",\r\n        \"terminalId\": \"ABCD1234\",\r\n        \"opTimestamp\": \"2023-10-31T17:30:00\",\r\n        \"deviceType\": \"ATM\"\r\n    }\r\n}"
 				},
 				"url": {
 					"raw": "{{address}}{{port}}{{process_path}}/next",

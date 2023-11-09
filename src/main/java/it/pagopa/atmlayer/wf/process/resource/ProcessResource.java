@@ -15,6 +15,8 @@ import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
 import it.pagopa.atmlayer.wf.process.bean.TaskResponse;
 import it.pagopa.atmlayer.wf.process.bean.VariableRequest;
 import it.pagopa.atmlayer.wf.process.bean.VariableResponse;
+import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
+import it.pagopa.atmlayer.wf.process.exception.ProcessException;
 import it.pagopa.atmlayer.wf.process.service.ProcessService;
 import it.pagopa.atmlayer.wf.process.util.Constants;
 import it.pagopa.atmlayer.wf.process.util.Utility;
@@ -53,17 +55,19 @@ public class ProcessResource {
     @POST
     @Path("/deploy")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public RestResponse<Object> deploy(@Parameter(description = "L'url da cui recuperare il file bpmn.") @RestForm("url") String requestUrl) {
+    public RestResponse<Object> deploy(
+            @Parameter(description = "L'url da cui recuperare il file bpmn.") @RestForm("url") String requestUrl) {
+        log.info("Executing DEPLOY. . .");
         RestResponse<Object> response;
         String fileName = new StringBuilder().append(UUID.randomUUID().toString()).append(Constants.BPMN_EXTENSION).toString();
 
         try {
             response = processService.deploy(requestUrl, fileName);
         } catch (RuntimeException | IOException e) {
-            log.error("DEPLOY - Error during deployment: ", e);
-            response = RestResponse.serverError();
+            log.error("Generic exception occured while deploying: ", e);
+            throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
-            //Delete of temp bpmn used for deploy on Camunda platform
+            // Delete of temp bpmn used for deploy on Camunda platform
             Utility.deleteFileIfExists(fileName);
         }
 
@@ -82,22 +86,26 @@ public class ProcessResource {
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante la start dell'istanza di processo del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @POST
     @Path("/start")
-    public RestResponse<TaskResponse> startProcess(@Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
-        RestResponse<TaskResponse> response;
+    public RestResponse<TaskResponse> startProcess(
+            @Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
+        log.info("Executing START. . .");
+        RestResponse<TaskResponse> response = null;
 
         try {
             /*
              * Starting camunda process
              */
-            String businessKey = processService.start(request.getTransactionId(), request.getFunctionId(), request.getDeviceInfo(), request.getVariables());
+            processService.start(request.getTransactionId(), request.getFunctionId(), request.getDeviceInfo(), request.getVariables());
 
             /*
              * Retrieve active tasks
              */
-            response = processService.retrieveActiveTasks(businessKey);
+            response = processService.retrieveActiveTasks(request.getTransactionId());
+        } catch (ProcessException e) {
+            throw e;
         } catch (RuntimeException e) {
-            log.error("START - Exception during start process: ", e);
-            response = RestResponse.serverError();
+            log.error("Generic exception occured while starting process: ", e);
+            throw new ProcessException(ProcessErrorEnum.GENERIC);
         }
 
         return response;
@@ -116,6 +124,7 @@ public class ProcessResource {
     @POST
     @Path("/next")
     public RestResponse<TaskResponse> next(@Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
+        log.info("Executing NEXT. . .");
         RestResponse<TaskResponse> response;
 
         try {
@@ -123,25 +132,23 @@ public class ProcessResource {
              * Checking presence of taskId for complete
              */
             if (request.getTaskId() == null) {
-                log.error("NEXT - Next failed! taskId is missing.");
-                response = RestResponse.status(RestResponse.Status.BAD_REQUEST);
+                log.error("Next failed! taskId is missing.");
+                throw new ProcessException(ProcessErrorEnum.TASK_ID_NOT_PRESENT);
             } else {
                 /*
                  * Complete camunda task
                  */
-                if (processService.complete(request.getTaskId(), request.getVariables())) {
-                    /*
-                     * Retrieve active tasks
-                     */
-                    response = processService.retrieveActiveTasks(request.getTransactionId());
-                } else {
-                    log.error("NEXT - Error during complete of task: ", request.getTaskId());
-                    response = RestResponse.serverError();
-                }
+                processService.complete(request.getTaskId(), request.getVariables());
+                /*
+                *  Retrieve active tasks
+                */
+                response = processService.retrieveActiveTasks(request.getTransactionId());
             }
+        } catch (ProcessException e) {
+            throw e;
         } catch (RuntimeException e) {
-            log.error("NEXT - Exception during start process: ", e);
-            response = RestResponse.serverError();
+            log.error("Generic exception occured while executing next: ", e);
+            throw new ProcessException(ProcessErrorEnum.GENERIC);
         }
 
         return response;
@@ -153,13 +160,16 @@ public class ProcessResource {
     @POST
     @Path("/variables")
     public RestResponse<VariableResponse> variables(VariableRequest request) {
+        log.info("Executing VARIABLES. . .");
         RestResponse<VariableResponse> response;
 
         try {
             response = RestResponse.ok(processService.getTaskVariables(request.getTaskId(), request.getVariables(), request.getButtons()));
+        } catch (ProcessException e) {
+            throw e;
         } catch (RuntimeException e) {
-            log.error("NEXT - Exception during start process: ", e);
-            response = RestResponse.serverError();
+            log.error("Generic exception occured while executing variables: ", e);
+            throw new ProcessException(ProcessErrorEnum.GENERIC);
         }
 
         return response;

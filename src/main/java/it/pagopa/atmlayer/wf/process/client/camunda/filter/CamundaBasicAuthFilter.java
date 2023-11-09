@@ -1,4 +1,4 @@
-package it.pagopa.atmlayer.wf.process.client.filter;
+package it.pagopa.atmlayer.wf.process.client.camunda.filter;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

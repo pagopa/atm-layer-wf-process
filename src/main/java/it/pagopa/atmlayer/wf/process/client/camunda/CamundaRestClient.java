@@ -1,4 +1,4 @@
-package it.pagopa.atmlayer.wf.process.client;
+package it.pagopa.atmlayer.wf.process.client.camunda;
 
 import java.io.File;
 import java.util.List;
@@ -8,11 +8,11 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.RestResponse;
 
-import it.pagopa.atmlayer.wf.process.client.bean.CamundaBodyRequestDto;
-import it.pagopa.atmlayer.wf.process.client.bean.CamundaStartProcessInstanceDto;
-import it.pagopa.atmlayer.wf.process.client.bean.CamundaVariablesDto;
-import it.pagopa.atmlayer.wf.process.client.filter.CamundaBasicAuthFilter;
-import it.pagopa.atmlayer.wf.process.client.bean.CamundaTaskDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.filter.CamundaBasicAuthFilter;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -27,8 +27,8 @@ public interface CamundaRestClient {
     RestResponse<Object> deploy(@RestForm File data);
 
     @POST
-    @Path("/process-definition/key/{key}/start")
-    RestResponse<CamundaStartProcessInstanceDto> startInstance(@PathParam("key") String key, CamundaBodyRequestDto body);
+    @Path("/process-definition/{id}/start")
+    RestResponse<CamundaStartProcessInstanceDto> startInstance(@PathParam("id") String id, CamundaBodyRequestDto body);
 
     @POST
     @Path("/task")

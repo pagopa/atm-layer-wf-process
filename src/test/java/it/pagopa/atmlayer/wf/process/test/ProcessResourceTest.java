@@ -3,7 +3,6 @@ package it.pagopa.atmlayer.wf.process.test;
 import static io.restassured.RestAssured.given;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -18,8 +17,9 @@ import io.quarkus.test.InjectMock;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.MockitoConfig;
-import it.pagopa.atmlayer.wf.process.client.CamundaRestClient;
-import it.pagopa.atmlayer.wf.process.client.bean.CamundaBodyRequestDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.CamundaRestClient;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
+import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
 import it.pagopa.atmlayer.wf.process.resource.ProcessResource;
 import it.pagopa.atmlayer.wf.process.test.util.ProcessTestData;
 import jakarta.ws.rs.core.MediaType;
@@ -34,10 +34,16 @@ public class ProcessResourceTest {
     @RestClient
     CamundaRestClient camundaRestClient;
 
+    @InjectMock
+    @MockitoConfig(convertScopes = true)
+    @RestClient
+    ModelRestClient modelRestClient;
+
     @Test
     public void testStartOk() {
         Mockito.when(camundaRestClient.startInstance(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
                 .thenReturn(RestResponse.ok(ProcessTestData.createCamundaStartProcessInstanceDto()));
+        Mockito.when(modelRestClient.findBPMNByTriad(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(RestResponse.ok(ProcessTestData.createModelBpmnDto()));
         Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class))).thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
 
         given()
@@ -60,13 +66,28 @@ public class ProcessResourceTest {
                 .when()
                 .post("/start")
                 .then()
-                .statusCode(StatusCode.BAD_REQUEST);
+                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
     }
 
     @Test
     public void testStartKo() {
         Mockito.when(camundaRestClient.startInstance(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
                 .thenThrow(new RuntimeException());
+        
+        given()
+                .body(ProcessTestData.createTaskRequestStart())
+                .contentType(MediaType.APPLICATION_JSON)
+                .when()
+                .post("/start")
+                .then()
+                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    public void testStartModelFindBpmnIdKo() {
+        Mockito.when(camundaRestClient.startInstance(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
+                .thenReturn(RestResponse.ok(ProcessTestData.createCamundaStartProcessInstanceDto()));
+        Mockito.when(modelRestClient.findBPMNByTriad(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(RestResponse.serverError());
         
         given()
                 .body(ProcessTestData.createTaskRequestStart())

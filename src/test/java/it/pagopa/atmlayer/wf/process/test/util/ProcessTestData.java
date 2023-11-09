@@ -16,10 +16,11 @@ import it.pagopa.atmlayer.wf.process.bean.DeviceInfo;
 import it.pagopa.atmlayer.wf.process.bean.DeviceType;
 import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
 import it.pagopa.atmlayer.wf.process.bean.VariableRequest;
-import it.pagopa.atmlayer.wf.process.client.bean.CamundaBodyRequestDto;
-import it.pagopa.atmlayer.wf.process.client.bean.CamundaStartProcessInstanceDto;
-import it.pagopa.atmlayer.wf.process.client.bean.CamundaTaskDto;
-import it.pagopa.atmlayer.wf.process.client.bean.CamundaVariablesDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
+import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -31,6 +32,8 @@ public class ProcessTestData {
     public static final String FUNCTION_ID = "TEST_FUNCTION_ID";
 
     public static final String TASK_ID = "TEST_TASK_ID";
+
+    public static final String BPMN_ID = "TEST_BPMN_ID";
 
     private static Random random = new Random();
 
@@ -150,5 +153,9 @@ public class ProcessTestData {
         tasks.add(CamundaTaskDto.builder().id(TASK_ID + "1").build());
         tasks.add(CamundaTaskDto.builder().id(TASK_ID + "2").build());
         return tasks;
+    }
+
+    public static ModelBpmnDto createModelBpmnDto(){
+        return ModelBpmnDto.builder().camundaDefinitionId(BPMN_ID).build();
     }
 }

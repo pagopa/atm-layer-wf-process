@@ -21,7 +21,6 @@ import it.pagopa.atmlayer.wf.process.service.ProcessService;
 import it.pagopa.atmlayer.wf.process.util.Constants;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.inject.Inject;
-import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -55,11 +54,11 @@ public class ProcessResource {
     @APIResponse(responseCode = "400", description = "BAD_REQUEST. Nel caso di richiesta errata.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante il deploy del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @POST
-    @Path("/deploy/{resourceType}")
+    @Path("/deploy/{resourceType:.*}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public RestResponse<Object> deploy(
             @Parameter(description = "L'url da cui recuperare il file bpmn.") @RestForm("url") String requestUrl,
-            @Parameter(description = "Tipo di File (BPMN, DMN...)") @NotNull @PathParam("resourceType") String resourceType) {
+            @Parameter(description = "Tipo di File (BPMN, DMN...)") @PathParam("resourceType") String resourceType) {
         log.info("Executing DEPLOY. . .");
         RestResponse<Object> response;
         String fileName = new StringBuilder().append(UUID.randomUUID().toString()).append(Constants.BPMN_EXTENSION)

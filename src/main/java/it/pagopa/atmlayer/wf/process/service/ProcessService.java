@@ -214,6 +214,7 @@ public class ProcessService {
             RestResponse<List<InstanceDto>> instanceResponse = camundaRestClient
                     .getInstanceActivity(businessKey);
             if (!instanceResponse.getEntity().isEmpty()) {
+                log.debug("Instance still running...");
                 /*
                  * It is possibile that after start of a process or the complete of a specified
                  * task there is a service task in execution which takes
@@ -292,18 +293,17 @@ public class ProcessService {
         } catch (WebApplicationException e) {
             switch (e.getResponse().getStatus()) {
                 case RestResponse.StatusCode.BAD_REQUEST -> {
-                    log.error("Complete task failed! Invalid variable.");
-                    throw new ProcessException(ProcessErrorEnum.COMPLETE_C04);
+                    log.warn("Complete task failed! Invalid variable.");
                 }
                 case RestResponse.StatusCode.INTERNAL_SERVER_ERROR -> {
-                    log.error("Complete task failed! Task not exists or not corresponding to the specified instance.");
-                    throw new ProcessException(ProcessErrorEnum.COMPLETE_C05);
+                    log.warn("Complete task failed! Task not exists or not corresponding to the specified instance.");
                 }
                 default -> {
-                    log.error("Unknown response status code: {}", e.getResponse().getStatus());
-                    throw new ProcessException(ProcessErrorEnum.GENERIC);
+                    log.warn("Unknown response status code: {}", e.getResponse().getStatus());
                 }
             }
+        } catch (ProcessingException e) {
+            log.warn("Connection refused on Camunda service...");
         }
     }
 

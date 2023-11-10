@@ -19,8 +19,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.MockitoConfig;
 import it.pagopa.atmlayer.wf.process.client.camunda.CamundaRestClient;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
-import it.pagopa.atmlayer.wf.process.client.camunda.bean.CaumndaInstanceActivityDto;
-import it.pagopa.atmlayer.wf.process.client.camunda.bean.InstanceDto;
 import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
 import it.pagopa.atmlayer.wf.process.resource.ProcessResource;
 import it.pagopa.atmlayer.wf.process.test.util.ProcessTestData;

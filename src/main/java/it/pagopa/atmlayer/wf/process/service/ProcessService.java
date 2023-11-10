@@ -18,7 +18,7 @@ import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
-import it.pagopa.atmlayer.wf.process.client.camunda.bean.CaumndaInstanceActivityDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.InstanceDto;
 import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
 import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
 import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
@@ -211,9 +211,9 @@ public class ProcessService {
         }
 
         if (camundaGetListResponse.getEntity().isEmpty()) {
-            RestResponse<CaumndaInstanceActivityDto> instanceResponse = camundaRestClient
+            RestResponse<List<InstanceDto>> instanceResponse = camundaRestClient
                     .getInstanceActivity(businessKey);
-            if (!instanceResponse.getEntity().getInstanceList().isEmpty()) {
+            if (!instanceResponse.getEntity().isEmpty()) {
                 /*
                  * It is possibile that after start of a process or the complete of a specified
                  * task there is a service task in execution which takes

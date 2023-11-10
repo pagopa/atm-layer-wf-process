@@ -12,7 +12,7 @@ import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
-import it.pagopa.atmlayer.wf.process.client.camunda.bean.CaumndaInstanceActivityDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.InstanceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.filter.CamundaBasicAuthFilter;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -46,5 +46,5 @@ public interface CamundaRestClient {
 
     @GET
     @Path("/process-instance")
-    RestResponse<CaumndaInstanceActivityDto> getInstanceActivity(@QueryParam("businessKey") String businessKey);
+    RestResponse<List<InstanceDto>> getInstanceActivity(@QueryParam("businessKey") String businessKey);
 }

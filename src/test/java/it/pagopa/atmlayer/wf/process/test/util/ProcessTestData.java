@@ -20,7 +20,6 @@ import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
-import it.pagopa.atmlayer.wf.process.client.camunda.bean.CaumndaInstanceActivityDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.InstanceDto;
 import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
 import lombok.AccessLevel;
@@ -161,9 +160,7 @@ public class ProcessTestData {
         return ModelBpmnDto.builder().camundaDefinitionId(BPMN_ID).build();
     }
 
-    public static CaumndaInstanceActivityDto createResponseInstance() {
-        CaumndaInstanceActivityDto response = new CaumndaInstanceActivityDto();
-        response.setInstanceList(new ArrayList<InstanceDto>());
-        return response;
+    public static List<InstanceDto> createResponseInstance() {
+        return new ArrayList<InstanceDto>();
     }
 }

@@ -21,9 +21,11 @@ import it.pagopa.atmlayer.wf.process.service.ProcessService;
 import it.pagopa.atmlayer.wf.process.util.Constants;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,13 +55,15 @@ public class ProcessResource {
     @APIResponse(responseCode = "400", description = "BAD_REQUEST. Nel caso di richiesta errata.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante il deploy del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @POST
-    @Path("/deploy")
+    @Path("/deploy/{resourceType}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public RestResponse<Object> deploy(
-            @Parameter(description = "L'url da cui recuperare il file bpmn.") @RestForm("url") String requestUrl) {
+            @Parameter(description = "L'url da cui recuperare il file bpmn.") @RestForm("url") String requestUrl,
+            @Parameter(description = "Tipo di File (BPMN, DMN...)") @NotNull @PathParam("resourceType") String resourceType) {
         log.info("Executing DEPLOY. . .");
         RestResponse<Object> response;
-        String fileName = new StringBuilder().append(UUID.randomUUID().toString()).append(Constants.BPMN_EXTENSION).toString();
+        String fileName = new StringBuilder().append(UUID.randomUUID().toString()).append(Constants.BPMN_EXTENSION)
+                .toString();
 
         try {
             response = processService.deploy(requestUrl, fileName);
@@ -95,7 +99,8 @@ public class ProcessResource {
             /*
              * Starting camunda process
              */
-            processService.start(request.getTransactionId(), request.getFunctionId(), request.getDeviceInfo(), request.getVariables());
+            processService.start(request.getTransactionId(), request.getFunctionId(), request.getDeviceInfo(),
+                    request.getVariables());
 
             /*
              * Retrieve active tasks
@@ -123,7 +128,8 @@ public class ProcessResource {
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante l'elaborazione dell'istanza di processo del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @POST
     @Path("/next")
-    public RestResponse<TaskResponse> next(@Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
+    public RestResponse<TaskResponse> next(
+            @Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
         log.info("Executing NEXT. . .");
         RestResponse<TaskResponse> response;
 
@@ -164,7 +170,8 @@ public class ProcessResource {
         RestResponse<VariableResponse> response;
 
         try {
-            response = RestResponse.ok(processService.getTaskVariables(request.getTaskId(), request.getVariables(), request.getButtons()));
+            response = RestResponse.ok(
+                    processService.getTaskVariables(request.getTaskId(), request.getVariables(), request.getButtons()));
         } catch (ProcessException e) {
             throw e;
         } catch (RuntimeException e) {

@@ -12,16 +12,18 @@ import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CaumndaInstanceActivityDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.filter.CamundaBasicAuthFilter;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 
 @RegisterRestClient(configKey = "camunda-rest-client")
 @RegisterProvider(CamundaBasicAuthFilter.class)
 public interface CamundaRestClient {
-    
+
     @POST
     @Path("/deployment/create")
     RestResponse<Object> deploy(@RestForm File data);
@@ -42,4 +44,7 @@ public interface CamundaRestClient {
     @Path("/task/{id}/variables")
     RestResponse<CamundaVariablesDto> getTaskVariables(@PathParam("id") String id);
 
+    @GET
+    @Path("/process-instance")
+    RestResponse<CaumndaInstanceActivityDto> getInstanceActivity(@QueryParam("id") String businessKey);
 }

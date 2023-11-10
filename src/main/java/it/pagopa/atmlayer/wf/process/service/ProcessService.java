@@ -18,6 +18,7 @@ import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CaumndaInstanceActivityDto;
 import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
 import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
 import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
@@ -26,6 +27,7 @@ import it.pagopa.atmlayer.wf.process.util.Properties;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.WebApplicationException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -100,30 +102,38 @@ public class ProcessService {
      * @return bpmnId
      */
     private String findBpmnId(String functionId, DeviceInfo deviceInfo) {
-        RestResponse<ModelBpmnDto> modelFindBpmnIdResponse;
+        String bpmnId = functionId;
+        RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = null;
 
         try {
             modelFindBpmnIdResponse = modelRestClient.findBPMNByTriad(functionId, deviceInfo.getBankId(),
                     deviceInfo.getBranchId(), deviceInfo.getTerminalId());
-            log.info("Bpmn Id found!");
         } catch (WebApplicationException e) {
             switch (e.getResponse().getStatus()) {
                 case RestResponse.StatusCode.BAD_REQUEST -> {
                     log.error("Find Bpmn id failed! No runnable BPMN found for selection.");
-                    throw new ProcessException(ProcessErrorEnum.BPMN_ID_NOT_FOUND_M01);
                 }
                 case RestResponse.StatusCode.INTERNAL_SERVER_ERROR -> {
                     log.error("Find Bpmn id failed! A model generic error occured.");
-                    throw new ProcessException(ProcessErrorEnum.MODEL_GENERIC_ERROR_M02);
                 }
                 default -> {
                     log.error("Unknown response status code: {}", e.getResponse().getStatus());
-                    throw new ProcessException(ProcessErrorEnum.GENERIC);
                 }
             }
+        } catch (ProcessingException e) {
+            log.warn("Connection refused with model service");
+        }
+        /*
+         * Model call is ok
+         */
+        if (modelFindBpmnIdResponse != null) {
+            bpmnId = modelFindBpmnIdResponse.getEntity().getCamundaDefinitionId();
+            log.info("BpmnId retrived by model: {}", bpmnId);
+        } else {
+            log.info("Using functionId as bpmnId: {}", bpmnId);
         }
 
-        return modelFindBpmnIdResponse.getEntity().getCamundaDefinitionId();
+        return bpmnId;
     }
 
     /**
@@ -200,13 +210,19 @@ public class ProcessService {
             }
         }
 
-        /*
-         * It is possibile that after start of a process or the complete of a specified
-         * task there is a service task in execution which takes
-         * long time to finish its work. We iterate till a predefined number of attempts
-         * and after a specified time.
-         */
-        camundaGetListResponse = retryActiveTasks(camundaGetListResponse, businessKey);
+        if (camundaGetListResponse.getEntity().isEmpty()) {
+            RestResponse<CaumndaInstanceActivityDto> instanceResponse = camundaRestClient
+                    .getInstanceActivity(businessKey);
+            if (!instanceResponse.getEntity().getInstanceList().isEmpty()) {
+                /*
+                 * It is possibile that after start of a process or the complete of a specified
+                 * task there is a service task in execution which takes
+                 * long time to finish its work. We iterate till a predefined number of attempts
+                 * and after a specified time.
+                 */
+                camundaGetListResponse = retryActiveTasks(camundaGetListResponse, businessKey);
+            }
+        }
 
         log.info("Retrieving active tasks. . .");
         List<Task> activeTasks = camundaGetListResponse.getEntity()
@@ -308,7 +324,7 @@ public class ProcessService {
             taskVariables = camundaGetTaskVariables(taskId);
             log.info("Retrieve variables completed!");
         } catch (WebApplicationException e) {
-            if (e.getResponse().getStatus() == RestResponse.StatusCode.INTERNAL_SERVER_ERROR){
+            if (e.getResponse().getStatus() == RestResponse.StatusCode.INTERNAL_SERVER_ERROR) {
                 log.error("Retrieve variables failed! Task id is null or does ont exist.");
                 throw new ProcessException(ProcessErrorEnum.VARIABLES_C06);
             } else {

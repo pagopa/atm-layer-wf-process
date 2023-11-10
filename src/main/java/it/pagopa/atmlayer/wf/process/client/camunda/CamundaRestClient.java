@@ -46,5 +46,5 @@ public interface CamundaRestClient {
 
     @GET
     @Path("/process-instance")
-    RestResponse<CaumndaInstanceActivityDto> getInstanceActivity(@QueryParam("id") String businessKey);
+    RestResponse<CaumndaInstanceActivityDto> getInstanceActivity(@QueryParam("businessKey") String businessKey);
 }

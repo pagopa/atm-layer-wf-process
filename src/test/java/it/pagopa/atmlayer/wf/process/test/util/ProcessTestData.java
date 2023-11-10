@@ -20,6 +20,8 @@ import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CaumndaInstanceActivityDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.InstanceDto;
 import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -72,11 +74,11 @@ public class ProcessTestData {
         return variable;
     }
 
-    public static CamundaStartProcessInstanceDto createCamundaStartProcessInstanceDto(){
+    public static CamundaStartProcessInstanceDto createCamundaStartProcessInstanceDto() {
         return CamundaStartProcessInstanceDto.builder().businessKey(ProcessTestData.TRANSACTION_ID).build();
     }
 
-    public static CamundaVariablesDto createCamundaVariablesDto(){
+    public static CamundaVariablesDto createCamundaVariablesDto() {
         Map<String, Map<String, Object>> variables = new HashMap<>();
 
         // Creazione di una mappa casuale nidificata
@@ -92,25 +94,25 @@ public class ProcessTestData {
         return new CamundaVariablesDto(variables);
     }
 
-    public static TaskRequest createTaskRequestStart(){
+    public static TaskRequest createTaskRequestStart() {
         return TaskRequest.builder()
-                                .transactionId(ProcessTestData.TRANSACTION_ID)
-                                .functionId(ProcessTestData.FUNCTION_ID)
-                                .variables(ProcessTestData.getVariables())
-                                .deviceInfo(ProcessTestData.getDeviceInfo())
-                                .build();
+                .transactionId(ProcessTestData.TRANSACTION_ID)
+                .functionId(ProcessTestData.FUNCTION_ID)
+                .variables(ProcessTestData.getVariables())
+                .deviceInfo(ProcessTestData.getDeviceInfo())
+                .build();
     }
 
-    public static TaskRequest createTaskRequestNext(){
+    public static TaskRequest createTaskRequestNext() {
         return TaskRequest.builder()
-                                .transactionId(ProcessTestData.TRANSACTION_ID)
-                                .taskId(ProcessTestData.TASK_ID)
-                                .variables(ProcessTestData.getVariables())
-                                .deviceInfo(ProcessTestData.getDeviceInfo())
-                                .build();
+                .transactionId(ProcessTestData.TRANSACTION_ID)
+                .taskId(ProcessTestData.TASK_ID)
+                .variables(ProcessTestData.getVariables())
+                .deviceInfo(ProcessTestData.getDeviceInfo())
+                .build();
     }
 
-    public static VariableRequest createVariableRequest(){
+    public static VariableRequest createVariableRequest() {
         List<String> buttons = IntStream.range(0, random.nextInt(6))
                 .mapToObj(i -> "Button_" + i)
                 .collect(Collectors.toList());
@@ -120,42 +122,48 @@ public class ProcessTestData {
                 .collect(Collectors.toList());
 
         return VariableRequest.builder()
-                                    .taskId(TRANSACTION_ID)
-                                    .buttons(buttons)
-                                    .variables(variables)
-                                    .build();
+                .taskId(TRANSACTION_ID)
+                .buttons(buttons)
+                .variables(variables)
+                .build();
     }
 
-    public static VariableRequest createVariableRequestWithoutVars(){
+    public static VariableRequest createVariableRequestWithoutVars() {
         VariableRequest variableRequest = createVariableRequest();
         variableRequest.setVariables(null);
 
         return variableRequest;
     }
 
-    public static VariableRequest createVariableRequestWithoutButtons(){
+    public static VariableRequest createVariableRequestWithoutButtons() {
         VariableRequest variableRequest = createVariableRequest();
         variableRequest.setButtons(null);
-        
+
         return variableRequest;
     }
 
-    public static TaskRequest createTaskRequestNextMissingTaskId(){
+    public static TaskRequest createTaskRequestNextMissingTaskId() {
         return TaskRequest.builder()
-                                .transactionId(ProcessTestData.TRANSACTION_ID)
-                                .variables(ProcessTestData.getVariables())
-                                .deviceInfo(ProcessTestData.getDeviceInfo())
-                                .build();
+                .transactionId(ProcessTestData.TRANSACTION_ID)
+                .variables(ProcessTestData.getVariables())
+                .deviceInfo(ProcessTestData.getDeviceInfo())
+                .build();
     }
 
-    public static List<CamundaTaskDto> createListCamundaTaskDto(){
+    public static List<CamundaTaskDto> createListCamundaTaskDto() {
         List<CamundaTaskDto> tasks = new ArrayList<>();
         tasks.add(CamundaTaskDto.builder().id(TASK_ID + "1").build());
         tasks.add(CamundaTaskDto.builder().id(TASK_ID + "2").build());
         return tasks;
     }
 
-    public static ModelBpmnDto createModelBpmnDto(){
+    public static ModelBpmnDto createModelBpmnDto() {
         return ModelBpmnDto.builder().camundaDefinitionId(BPMN_ID).build();
+    }
+
+    public static CaumndaInstanceActivityDto createResponseInstance() {
+        CaumndaInstanceActivityDto response = new CaumndaInstanceActivityDto();
+        response.setInstanceList(new ArrayList<InstanceDto>());
+        return response;
     }
 }

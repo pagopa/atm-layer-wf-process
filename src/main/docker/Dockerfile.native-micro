@@ -10,7 +10,7 @@ RUN ./mvnw -B org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
 COPY src src
 ARG QUARKUS_PROFILE
 ARG APP_NAME
-RUN ./mvnw package -Pnative -Dquarkus.application.name=$APP_NAME -Dquarkus.profile=$QUARKUS_PROFILE -DskipTests=true
+RUN ./mvnw package -Pnative -Dquarkus.application.name=$APP_NAME -Dquarkus.profile=$QUARKUS_PROFILE
 
 # build native Quarkus
 FROM quay.io/quarkus/quarkus-micro-image:2.0

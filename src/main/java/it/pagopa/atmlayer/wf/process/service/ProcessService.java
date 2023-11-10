@@ -128,9 +128,9 @@ public class ProcessService {
          */
         if (modelFindBpmnIdResponse != null) {
             bpmnId = modelFindBpmnIdResponse.getEntity().getCamundaDefinitionId();
-            log.info("BpmnId retrived by model: {}", bpmnId);
+            log.info("BpmnId retrived by model: [{}]", bpmnId);
         } else {
-            log.info("Using functionId as bpmnId: {}", bpmnId);
+            log.info("Using functionId as bpmnId: [{}]", bpmnId);
         }
 
         return bpmnId;

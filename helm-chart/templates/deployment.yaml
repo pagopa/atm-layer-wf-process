@@ -19,7 +19,7 @@ spec:
         App: {{ .Values.deployment.name }}
         force-recreate: {{ randAlphaNum 5 | quote }}
     spec:
-      serviceAccountName: {{ include "chart-1.serviceAccountName" . }}
+      serviceAccountName: {{ include "atm-layer-wf-process.serviceAccountName" . }}
       volumes:
       - name: secrets-store-inline
         csi:

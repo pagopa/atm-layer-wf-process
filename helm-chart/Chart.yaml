@@ -1,5 +1,5 @@
 apiVersion: v2
-name: chart-1
+name: atm-layer-wf-process
 description: |
   Helm Chart for WF Process ATM Layer
 

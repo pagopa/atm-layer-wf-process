@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "chart-1.fullname" . }}
+  name: {{ include "atm-layer-wf-process.fullname" . }}
   labels:
-    {{- include "chart-1.labels" . | nindent 4 }}
+    {{- include "atm-layer-wf-process.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "chart-1.fullname" . }}
+    name: {{ include "atm-layer-wf-process.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

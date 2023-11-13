@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "chart-1.name" -}}
+{{- define "atm-layer-wf-process.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "chart-1.fullname" -}}
+{{- define "atm-layer-wf-process.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "chart-1.chart" -}}
+{{- define "atm-layer-wf-process.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "chart-1.labels" -}}
-helm.sh/chart: {{ include "chart-1.chart" . }}
-{{ include "chart-1.selectorLabels" . }}
+{{- define "atm-layer-wf-process.labels" -}}
+helm.sh/chart: {{ include "atm-layer-wf-process.chart" . }}
+{{ include "atm-layer-wf-process.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "chart-1.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "chart-1.name" . }}
+{{- define "atm-layer-wf-process.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "atm-layer-wf-process.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "chart-1.serviceAccountName" -}}
+{{- define "atm-layer-wf-process.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "chart-1.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "atm-layer-wf-process.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

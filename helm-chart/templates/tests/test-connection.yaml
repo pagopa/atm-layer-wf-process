@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "chart-1.fullname" . }}-test-connection"
+  name: "{{ include "atm-layer-wf-process.fullname" . }}-test-connection"
   labels:
-    {{- include "chart-1.labels" . | nindent 4 }}
+    {{- include "atm-layer-wf-process.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test
 spec:
@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "chart-1.fullname" . }}:{{ .Values.service.port }}']
+      args: ['{{ include "atm-layer-wf-process.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never

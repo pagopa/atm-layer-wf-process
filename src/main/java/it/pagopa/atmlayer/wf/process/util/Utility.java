@@ -162,4 +162,30 @@ public class Utility {
 
         return variableResponseBuilder.build();
     }
+
+    /**
+     * <p>Checks if branch ID and the terminal ID are present or if are not empty and eventually 
+     * populate them in this way:</p>
+     * 
+     * <p><b>Branch ID</b> : "_"</p>
+     * <p><b>Terminal ID</b> : "bankId+code"</p>
+     * 
+     * @param deviceInfo
+     * @return deviceInfo updated
+     */
+    public static DeviceInfo constructModelDeviceInfo(DeviceInfo deviceInfo){
+        if (deviceInfo.getBranchId() == null || deviceInfo.getBranchId().isEmpty()){
+            deviceInfo.setBranchId(Constants.UNDERSCORE);
+        }
+
+        if (deviceInfo.getTerminalId() == null || deviceInfo.getTerminalId().isEmpty()){
+            deviceInfo.setTerminalId(constructTerminalId(deviceInfo.getBankId(), deviceInfo.getCode()));
+        }
+
+        return deviceInfo;
+    }
+
+    private static String constructTerminalId(String bankId, String code){
+        return bankId.concat(code);
+    }
 }

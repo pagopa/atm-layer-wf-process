@@ -105,6 +105,7 @@ public class ProcessService {
         String bpmnId = functionId;
         RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = null;
 
+        deviceInfo = Utility.constructModelDeviceInfo(deviceInfo);
         try {
             modelFindBpmnIdResponse = modelRestClient.findBPMNByTriad(functionId, deviceInfo.getBankId(),
                     deviceInfo.getBranchId(), deviceInfo.getTerminalId());
@@ -196,6 +197,30 @@ public class ProcessService {
      */
     public TaskResponse getActiveTasks(String businessKey) {
         TaskResponse taskResponse = null;
+        List<CamundaTaskDto> camundaTaskList = getList(businessKey);
+
+        log.info("Retrieving active tasks. . .");
+        List<Task> activeTasks = camundaTaskList.stream()
+                .map(taskDto -> Task.builder()
+                        .form(taskDto.getFormKey())
+                        .id(taskDto.getId())
+                        .priority(taskDto.getPriority())
+                        .build())
+                .collect(Collectors.toList());
+
+        taskResponse = TaskResponse.builder().transactionId(businessKey).tasks(activeTasks).build();
+        log.info("Tasks retrieved!");
+
+        return taskResponse;
+    }
+
+    /**
+     * <p>Retrieve the list of task associated to the business key.</p>
+     * 
+     * @param businessKey
+     * @return the list of camunda task associated to the businessKey
+     */
+    private List<CamundaTaskDto> getList(String businessKey){
         RestResponse<List<CamundaTaskDto>> camundaGetListResponse;
 
         try {
@@ -210,7 +235,7 @@ public class ProcessService {
             }
         }
 
-        if (camundaGetListResponse.getEntity().isEmpty()) {
+         if (camundaGetListResponse.getEntity().isEmpty()) {
             RestResponse<List<InstanceDto>> instanceResponse = camundaRestClient
                     .getInstanceActivity(businessKey);
             if (!instanceResponse.getEntity().isEmpty()) {
@@ -225,20 +250,7 @@ public class ProcessService {
             }
         }
 
-        log.info("Retrieving active tasks. . .");
-        List<Task> activeTasks = camundaGetListResponse.getEntity()
-                .stream()
-                .map(taskDto -> Task.builder()
-                        .form(taskDto.getFormKey())
-                        .id(taskDto.getId())
-                        .priority(taskDto.getPriority())
-                        .build())
-                .collect(Collectors.toList());
-
-        taskResponse = TaskResponse.builder().transactionId(businessKey).tasks(activeTasks).build();
-        log.info("Tasks retrieved!");
-
-        return taskResponse;
+        return camundaGetListResponse.getEntity();
     }
 
     /**

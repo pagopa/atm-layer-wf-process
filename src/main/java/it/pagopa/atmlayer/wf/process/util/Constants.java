@@ -8,4 +8,6 @@ import lombok.NoArgsConstructor;
 public class Constants {
 
     public static final String BPMN_EXTENSION = ".bpmn";
+
+    public static final String UNDERSCORE = "_";
 }

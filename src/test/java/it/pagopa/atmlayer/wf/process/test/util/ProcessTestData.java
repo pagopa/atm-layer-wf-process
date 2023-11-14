@@ -160,7 +160,12 @@ public class ProcessTestData {
         return ModelBpmnDto.builder().camundaDefinitionId(BPMN_ID).build();
     }
 
+    public static List<InstanceDto> createEmptyResponseInstance() {
+        return List.of();
+    }
+
     public static List<InstanceDto> createResponseInstance() {
-        return new ArrayList<InstanceDto>();
+
+        return List.of(new InstanceDto());
     }
 }

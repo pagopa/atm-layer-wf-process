@@ -21,6 +21,11 @@ public class CamundaVariablesDto {
     
     @Builder.Default
     private Map<String, Map<String, Object>> variables = new HashMap<>();
+
+    @JsonAnySetter
+    public void setVariable(String variableName, Map<String, Object> variableData) {
+        variables.put(variableName, variableData);
+    }
     
     @JsonAnyGetter
     public Map<String, Map<String, Object>> getVariables() {

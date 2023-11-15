@@ -1,0 +1,139 @@
+name: Manual create pre-release from dev
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Environment:'
+        type: choice
+        required: true
+        default: dev
+        options:
+        - dev
+      commit:
+        description: 'Pre-release type:'
+        type: choice
+        required: true
+        default: feat
+        options:
+        - feat
+        - fix
+ 
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  manual-create-pre-release:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev'
+    strategy:
+      matrix:
+        environment: ["${{ inputs.env }}"]
+
+    name: "manual-create-pre-release"
+    runs-on: ubuntu-latest
+    environment: ${{ matrix.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
+        with:
+          role-to-assume: ${{ secrets.IAM_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build docker image
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
+          DOCKER_IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -f src/main/docker/Dockerfile.native-micro -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
+
+      - name: Commit with "${{ inputs.commit }}:" prefix
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git pull
+          git add .
+          git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
+          git push
+
+      - name: Semantic Release
+        id: semantic-release-dryrun
+        uses: cycjimmy/semantic-release-action@bdd914ff2423e2792c73475f11e8da603182f32d
+        with:
+          dry_run: true
+          semantic_version: 19
+          extra_plugins: |
+            @semantic-release/release-notes-generator@10.0.3
+            @semantic-release/git@10.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit with "${{ inputs.commit }}:" prefix
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git pull
+          git add .
+          git commit --allow-empty -m "${{ inputs.commit }}: docker-image: v${{ steps.semantic-release-dryrun.outputs.new_release_version }}, chart: v${{ steps.semantic-release-dryrun.outputs.new_release_version }}"
+          git push
+
+      - name: Semantic Release
+        id: semantic-release
+        uses: cycjimmy/semantic-release-action@bdd914ff2423e2792c73475f11e8da603182f32d
+        with:
+          semantic_version: 19
+          extra_plugins: |
+            @semantic-release/release-notes-generator@10.0.3
+            @semantic-release/git@10.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update file pom.xml with the new version
+        if: steps.semantic-release.outputs.new_release_published == 'true'
+        run: |
+          mvn versions:set -DnewVersion=${{ steps.semantic-release.outputs.new_release_version }} --no-transfer-progress
+          git pull
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add pom.xml
+          git commit -m "pom.xml updated with new version ${{ steps.semantic-release.outputs.new_release_version }}"
+          git push
+
+      - name: Update file Chart.yaml with the new version
+        if: steps.semantic-release.outputs.new_release_published == 'true'
+        run: |
+          yq -i ".version = \"v${{ steps.semantic-release.outputs.new_release_version }}\"" "helm-chart/Chart.yaml"
+          git pull
+          git add "helm-chart/Chart.yaml"
+          git commit -m "Chart.yaml updated with new version v${{ steps.semantic-release.outputs.new_release_version }}"
+          git push
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
+        with:
+          role-to-assume: ${{ secrets.IAM_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Tag and push docker image on ECR
+        if: steps.semantic-release.outputs.new_release_published == 'true'
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
+          DOCKER_IMAGE_TAG: ${{ github.sha }}
+          ECR_IMAGE_TAG: "v${{ steps.semantic-release.outputs.new_release_version }}"
+        run: |
+          docker tag $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG $REGISTRY/$REPOSITORY:$ECR_IMAGE_TAG
+          docker push $REGISTRY/$REPOSITORY:$ECR_IMAGE_TAG

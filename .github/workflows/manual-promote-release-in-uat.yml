@@ -1,0 +1,143 @@
+name: Manual promote release in uat
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Which pre-release to promote in uat:'
+        type: string
+        required: true
+      commit:
+        description: 'Release type:'
+        type: choice
+        required: true
+        default: feat
+        options:
+        - feat
+        - fix
+        
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  manual-build:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/uat'
+    strategy:
+      matrix:
+        environment: [dev]
+
+    name: "manual-build"
+    runs-on: ubuntu-latest
+    environment: ${{ matrix.environment }}
+ 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+                          
+      - name: Commit with "${{ inputs.commit }}:" prefix
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git pull
+          git add .
+          git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
+          git push
+
+      - name: Semantic Release
+        id: semantic-release-dryrun
+        uses: cycjimmy/semantic-release-action@bdd914ff2423e2792c73475f11e8da603182f32d
+        with:
+          dry_run: true
+          semantic_version: 19
+          extra_plugins: |
+            @semantic-release/release-notes-generator@10.0.3
+            @semantic-release/git@10.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit with "${{ inputs.commit }}:" prefix
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git pull
+          git add .
+          git commit --allow-empty -m "${{ inputs.commit }}: docker-image: v${{ steps.semantic-release-dryrun.outputs.new_release_version }}, chart: v${{ steps.semantic-release-dryrun.outputs.new_release_version }}"
+          git push
+
+      - name: Semantic Release
+        id: semantic-release
+        uses: cycjimmy/semantic-release-action@bdd914ff2423e2792c73475f11e8da603182f32d
+        with:
+          semantic_version: 19
+          extra_plugins: |
+            @semantic-release/release-notes-generator@10.0.3
+            @semantic-release/git@10.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update file pom.xml with the new version
+        if: steps.semantic-release.outputs.new_release_published == 'true'
+        run: |
+          mvn versions:set -DnewVersion=${{ steps.semantic-release.outputs.new_release_version }} --no-transfer-progress
+          git pull
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add pom.xml
+          git commit -m "pom.xml updated with new version ${{ steps.semantic-release.outputs.new_release_version }}"
+          git push
+
+      - name: Update file Chart.yaml with the new version
+        if: steps.semantic-release.outputs.new_release_published == 'true'
+        run: |
+          yq -i ".version = \"v${{ steps.semantic-release.outputs.new_release_version }}\"" "helm-chart/Chart.yaml"
+          git pull
+          git add "helm-chart/Chart.yaml"
+          git commit -m "Chart.yaml updated with new version v${{ steps.semantic-release.outputs.new_release_version }}"
+          git push
+
+      - name: Configure dev AWS Credentials
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
+        with:
+          role-to-assume: ${{ secrets.IAM_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+ 
+      - name: Login to dev Amazon ECR
+        id: login-ecr-dev
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Copy docker image from dev ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr-dev.outputs.registry }}
+          REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
+          DEV_IMAGE_TAG: ${{ inputs.release }}
+        run: |
+          docker pull $REGISTRY/$REPOSITORY:$DEV_IMAGE_TAG
+
+      - name: Configure uat AWS Credentials
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
+        with:
+          role-to-assume: ${{ secrets.UAT_IAM_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to uat Amazon ECR
+        id: login-ecr-uat
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Push docker image in uat ECR
+        if: steps.semantic-release.outputs.new_release_published == 'true'
+        env:
+          UAT_REGISTRY: ${{ steps.login-ecr-uat.outputs.registry }}
+          DEV_REGISTRY: ${{ steps.login-ecr-dev.outputs.registry }}
+          UAT_REPOSITORY: ${{ vars.UAT_DOCKER_IMAGE_NAME}}
+          DEV_REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
+          UAT_IMAGE_TAG: "v${{ steps.semantic-release.outputs.new_release_version }}"
+          DEV_IMAGE_TAG: ${{ inputs.release }}
+        run: |
+          docker tag $DEV_REGISTRY/$DEV_REPOSITORY:$DEV_IMAGE_TAG $UAT_REGISTRY/$UAT_REPOSITORY:$UAT_IMAGE_TAG
+          docker push $UAT_REGISTRY/$UAT_REPOSITORY:$UAT_IMAGE_TAG
+

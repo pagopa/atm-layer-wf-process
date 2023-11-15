@@ -44,8 +44,6 @@ public class Utility {
             });
         }
 
-        log.info("created vars" + vars.toString());
-
         return vars;
     }
 
@@ -126,6 +124,11 @@ public class Utility {
 
     public static void populateDeviceInfoVariables(String transactionId, DeviceInfo deviceInfo,
             Map<String, Object> variables) {
+        
+        if (variables == null){
+            variables = new HashMap<>();
+        }
+
         variables.put(DeviceInfoEnum.TRANSACTION_ID.getValue(), transactionId);
         variables.put(DeviceInfoEnum.BANK_ID.getValue(), deviceInfo.getBankId());
         variables.put(DeviceInfoEnum.BRANCH_ID.getValue(), deviceInfo.getBranchId());

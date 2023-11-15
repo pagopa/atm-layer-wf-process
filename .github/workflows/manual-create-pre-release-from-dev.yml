@@ -23,9 +23,7 @@ defaults:
   run:
     shell: bash
 
-permissions:
-  id-token: write
-  contents: write
+permissions: write-all
 
 jobs:
   manual-create-pre-release:

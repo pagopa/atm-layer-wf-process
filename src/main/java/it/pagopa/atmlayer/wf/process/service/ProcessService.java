@@ -329,7 +329,6 @@ public class ProcessService {
      */
     public VariableResponse getTaskVariables(String taskId, List<String> variables,
             List<String> buttons) {
-
         RestResponse<CamundaVariablesDto> taskVariables;
 
         try {

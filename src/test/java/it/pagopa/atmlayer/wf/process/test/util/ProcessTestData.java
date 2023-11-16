@@ -47,6 +47,22 @@ public class ProcessTestData {
                 .opTimestamp(Date.from(Instant.now())).build();
     }
 
+    public static DeviceInfo getDeviceInfoWithoutBranchIdTerminalId() {
+        return DeviceInfo.builder().bankId(RandomStringUtils.random(5, false, true))
+                .channel(DeviceType.ATM)
+                .code(RandomStringUtils.random(5, false, true))
+                .opTimestamp(Date.from(Instant.now())).build();
+    }
+
+    public static DeviceInfo getDeviceInfoBranchIdTerminalIdEmpty() {
+        return DeviceInfo.builder().bankId(RandomStringUtils.random(5, false, true))
+                .branchId("")
+                .channel(DeviceType.ATM)
+                .code(RandomStringUtils.random(5, false, true))
+                .terminalId("")
+                .opTimestamp(Date.from(Instant.now())).build();
+    }
+
     public static Map<String, Object> getVariables() {
         Map<String, Object> variables = new HashMap<>();
 
@@ -64,6 +80,13 @@ public class ProcessTestData {
                 .businessKey(TRANSACTION_ID)
                 .processInstanceBusinessKey(FUNCTION_ID)
                 .variables(variables)
+                .build();
+    }
+
+    public static CamundaBodyRequestDto createRandomCamundaBodyRequestDtoWithoutVars() {
+        return CamundaBodyRequestDto.builder()
+                .businessKey(TRANSACTION_ID)
+                .processInstanceBusinessKey(FUNCTION_ID)
                 .build();
     }
 
@@ -102,9 +125,51 @@ public class ProcessTestData {
                 .build();
     }
 
+    public static TaskRequest createTaskRequestStartWithoutVariables() {
+        return TaskRequest.builder()
+                .transactionId(ProcessTestData.TRANSACTION_ID)
+                .functionId(ProcessTestData.FUNCTION_ID)
+                .deviceInfo(ProcessTestData.getDeviceInfo())
+                .build();
+    }
+
+    public static TaskRequest createTaskRequestStartDeviceInfoEmpty() {
+        return TaskRequest.builder()
+                .transactionId(ProcessTestData.TRANSACTION_ID)
+                .functionId(ProcessTestData.FUNCTION_ID)
+                .variables(ProcessTestData.getVariables())
+                .deviceInfo(ProcessTestData.getDeviceInfoBranchIdTerminalIdEmpty())
+                .build();
+    }
+
+    public static TaskRequest createTaskRequestStartDeviceInfoNull() {
+        return TaskRequest.builder()
+                .transactionId(ProcessTestData.TRANSACTION_ID)
+                .functionId(ProcessTestData.FUNCTION_ID)
+                .variables(ProcessTestData.getVariables())
+                .deviceInfo(ProcessTestData.getDeviceInfoWithoutBranchIdTerminalId())
+                .build();
+    }
+
     public static TaskRequest createTaskRequestNext() {
         return TaskRequest.builder()
                 .transactionId(ProcessTestData.TRANSACTION_ID)
+                .taskId(ProcessTestData.TASK_ID)
+                .variables(ProcessTestData.getVariables())
+                .deviceInfo(ProcessTestData.getDeviceInfo())
+                .build();
+    }
+
+    public static TaskRequest createTaskRequestNextWithoutVars() {
+        return TaskRequest.builder()
+                .transactionId(ProcessTestData.TRANSACTION_ID)
+                .taskId(ProcessTestData.TASK_ID)
+                .deviceInfo(ProcessTestData.getDeviceInfo())
+                .build();
+    }
+
+    public static TaskRequest createTaskRequestNextNoBusinessKey() {
+        return TaskRequest.builder()
                 .taskId(ProcessTestData.TASK_ID)
                 .variables(ProcessTestData.getVariables())
                 .deviceInfo(ProcessTestData.getDeviceInfo())
@@ -137,6 +202,20 @@ public class ProcessTestData {
     public static VariableRequest createVariableRequestWithoutButtons() {
         VariableRequest variableRequest = createVariableRequest();
         variableRequest.setButtons(null);
+
+        return variableRequest;
+    }
+
+    public static VariableRequest createVariableRequestWithVarsEmpty() {
+        VariableRequest variableRequest = createVariableRequest();
+        variableRequest.setVariables(new ArrayList<>());
+
+        return variableRequest;
+    }
+
+    public static VariableRequest createVariableRequestWithButtonsEmpty() {
+        VariableRequest variableRequest = createVariableRequest();
+        variableRequest.setButtons(new ArrayList<>());
 
         return variableRequest;
     }

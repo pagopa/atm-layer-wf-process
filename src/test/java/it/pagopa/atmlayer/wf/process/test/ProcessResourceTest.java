@@ -22,7 +22,10 @@ import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
 import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
 import it.pagopa.atmlayer.wf.process.resource.ProcessResource;
 import it.pagopa.atmlayer.wf.process.test.util.ProcessTestData;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @QuarkusTest
 @TestHTTPEndpoint(ProcessResource.class)
@@ -50,6 +53,105 @@ public class ProcessResourceTest {
                 Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
 
+                given()
+                                .body(ProcessTestData.createTaskRequestStart())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/start")
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testStartOkWithoutVars() {
+                Mockito.when(camundaRestClient.startInstance(Mockito.anyString(),
+                                Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createCamundaStartProcessInstanceDto()));
+                Mockito.when(modelRestClient.findBPMNByTriad(Mockito.anyString(), Mockito.anyString(),
+                                Mockito.anyString(), Mockito.anyString()))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createModelBpmnDto()));
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestStartWithoutVariables())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/start")
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testStartFindBpmnBadRequest() {
+                Mockito.when(camundaRestClient.startInstance(Mockito.anyString(),
+                                Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createCamundaStartProcessInstanceDto()));
+                Mockito.when(modelRestClient.findBPMNByTriad(Mockito.anyString(), Mockito.anyString(),
+                                Mockito.anyString(), Mockito.anyString()))
+                                .thenThrow(new WebApplicationException(Response.status(Status.BAD_REQUEST).build()));
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestStart())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/start")
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testStartFindBpmnInternalServerError() {
+                Mockito.when(camundaRestClient.startInstance(Mockito.anyString(),
+                                Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createCamundaStartProcessInstanceDto()));
+                Mockito.when(modelRestClient.findBPMNByTriad(Mockito.anyString(), Mockito.anyString(),
+                                Mockito.anyString(), Mockito.anyString()))
+                                .thenThrow(new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).build()));
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+                given()
+                                .body(ProcessTestData.createTaskRequestStart())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/start")
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testStartFindBpmnUnknownStatusCode() {
+                Mockito.when(camundaRestClient.startInstance(Mockito.anyString(),
+                                Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createCamundaStartProcessInstanceDto()));
+                Mockito.when(modelRestClient.findBPMNByTriad(Mockito.anyString(), Mockito.anyString(),
+                                Mockito.anyString(), Mockito.anyString()))
+                                .thenThrow(new WebApplicationException(Response.status(Status.BAD_GATEWAY).build()));
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestStart())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/start")
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testStartFindBpmnProcessingException() {
+                Mockito.when(camundaRestClient.startInstance(Mockito.anyString(),
+                                Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createCamundaStartProcessInstanceDto()));
+                Mockito.when(modelRestClient.findBPMNByTriad(Mockito.anyString(), Mockito.anyString(),
+                                Mockito.anyString(), Mockito.anyString()))
+                                .thenThrow(new ProcessingException("Test"));
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+                                
                 given()
                                 .body(ProcessTestData.createTaskRequestStart())
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -90,12 +192,25 @@ public class ProcessResourceTest {
         }
 
         @Test
-        public void testStartModelFindBpmnIdKo() {
+        public void testStartInstanceBadRequest() {
                 Mockito.when(camundaRestClient.startInstance(Mockito.anyString(),
                                 Mockito.any(CamundaBodyRequestDto.class)))
-                                .thenReturn(RestResponse.ok(ProcessTestData.createCamundaStartProcessInstanceDto()));
-                Mockito.when(modelRestClient.findBPMNByTriad(Mockito.anyString(), Mockito.anyString(),
-                                Mockito.anyString(), Mockito.anyString())).thenReturn(RestResponse.serverError());
+                                .thenThrow(new WebApplicationException(Response.status(Status.BAD_REQUEST).build()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestStart())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/start")
+                                .then()
+                                .statusCode(StatusCode.BAD_REQUEST);
+        }
+
+        @Test
+        public void testStartInstanceInternalServerError() {
+                Mockito.when(camundaRestClient.startInstance(Mockito.anyString(),
+                                Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenThrow(new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).build()));
 
                 given()
                                 .body(ProcessTestData.createTaskRequestStart())
@@ -104,6 +219,61 @@ public class ProcessResourceTest {
                                 .post("/start")
                                 .then()
                                 .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+        }
+
+        @Test
+        public void testStartInstanceUnknownError() {
+                Mockito.when(camundaRestClient.startInstance(Mockito.anyString(),
+                                Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenThrow(new WebApplicationException(Response.status(Status.BAD_GATEWAY).build()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestStart())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/start")
+                                .then()
+                                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+        }
+
+        @Test
+        public void testStartOkDeviceInfoEmpty() {
+                Mockito.when(camundaRestClient.startInstance(Mockito.anyString(),
+                                Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createCamundaStartProcessInstanceDto()));
+                Mockito.when(modelRestClient.findBPMNByTriad(Mockito.anyString(), Mockito.anyString(),
+                                Mockito.anyString(), Mockito.anyString()))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createModelBpmnDto()));
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestStartDeviceInfoEmpty())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/start")
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testStartOkDeviceInfoNull() {
+                Mockito.when(camundaRestClient.startInstance(Mockito.anyString(),
+                                Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createCamundaStartProcessInstanceDto()));
+                Mockito.when(modelRestClient.findBPMNByTriad(Mockito.anyString(), Mockito.anyString(),
+                                Mockito.anyString(), Mockito.anyString()))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createModelBpmnDto()));
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestStartDeviceInfoNull())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/start")
+                                .then()
+                                .statusCode(StatusCode.OK);
         }
 
         @Test
@@ -123,9 +293,89 @@ public class ProcessResourceTest {
         }
 
         @Test
+        public void testNextOkWithoutVars() {
+                Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok());
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestNextWithoutVars())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/next")
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
         public void testNextOkNoContent() {
                 Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.noContent());
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestNext())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/next")
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testNextOkCompleteBadRequest() {
+                Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenThrow(new WebApplicationException(Response.status(Status.BAD_REQUEST).build()));
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestNext())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/next")
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testNextOkCompleteInternalServerError() {
+                Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenThrow(new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).build()));
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestNext())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/next")
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testNextOkUnknownError() {
+                Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenThrow(new WebApplicationException(Response.status(Status.BAD_GATEWAY).build()));
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestNext())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/next")
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testNextOkProcessingError() {
+                Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenThrow(new ProcessingException("Test"));
                 Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
 
@@ -153,6 +403,19 @@ public class ProcessResourceTest {
                                 .post("/next")
                                 .then()
                                 .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testNextKoNoBusinessKey() {
+                Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok());
+                given()
+                                .body(ProcessTestData.createTaskRequestNextNoBusinessKey())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/next")
+                                .then()
+                                .statusCode(StatusCode.BAD_REQUEST);
         }
 
         @Test
@@ -211,6 +474,38 @@ public class ProcessResourceTest {
         }
 
         @Test
+        public void testNextRetrieveActiveTasksInternalServerError() {
+                Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok());
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenThrow(new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).build()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestNext())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/next")
+                                .then()
+                                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+        }
+
+        @Test
+        public void testNextRetrieveActiveTasksUnkonwnResponseCode() {
+                Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok());
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenThrow(new WebApplicationException(Response.status(Status.BAD_GATEWAY).build()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestNext())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/next")
+                                .then()
+                                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+        }
+
+        @Test
         public void testDeployKo() {
                 Mockito.when(camundaRestClient.deploy(Mockito.any(File.class))).thenReturn(RestResponse.ok());
 
@@ -223,10 +518,11 @@ public class ProcessResourceTest {
                                 .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
         }
 
+
         @Test
-        public void testVariablesOk() {
+        public void testVariablesBadRequest() {
                 Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString()))
-                                .thenReturn(RestResponse.ok(ProcessTestData.createCamundaVariablesDto()));
+                                .thenThrow(new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).build()));
 
                 given()
                                 .body(ProcessTestData.createVariableRequest())
@@ -234,7 +530,21 @@ public class ProcessResourceTest {
                                 .when()
                                 .post("/variables")
                                 .then()
-                                .statusCode(StatusCode.OK);
+                                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+        }
+
+        @Test
+        public void testVariablesUnknownResponseCode() {
+                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString()))
+                                .thenThrow(new WebApplicationException(Response.status(Status.BAD_GATEWAY).build()));
+
+                given()
+                                .body(ProcessTestData.createVariableRequest())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/variables")
+                                .then()
+                                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
         }
 
         @Test
@@ -258,6 +568,34 @@ public class ProcessResourceTest {
 
                 given()
                                 .body(ProcessTestData.createVariableRequestWithoutButtons())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/variables")
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testVariablesOkEmptyVariables() {
+                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString()))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createCamundaVariablesDto()));
+
+                given()
+                                .body(ProcessTestData.createVariableRequestWithVarsEmpty())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/variables")
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testVariablesOkEmptyButtons() {
+                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString()))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createCamundaVariablesDto()));
+
+                given()
+                                .body(ProcessTestData.createVariableRequestWithButtonsEmpty())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .when()
                                 .post("/variables")
@@ -290,5 +628,25 @@ public class ProcessResourceTest {
                                 .post("/variables")
                                 .then()
                                 .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+        }
+
+        @Test
+        public void testLogFilter(){
+                given()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/")
+                                .then()
+                                .statusCode(StatusCode.NOT_FOUND);
+        }
+
+        @Test
+        public void testLogFilterPost(){
+                given()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post()
+                                .then()
+                                .statusCode(StatusCode.NOT_FOUND);
         }
 }

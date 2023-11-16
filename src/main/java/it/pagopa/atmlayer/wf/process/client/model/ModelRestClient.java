@@ -12,6 +12,6 @@ import jakarta.ws.rs.PathParam;
 public interface ModelRestClient {
     
     @GET
-    @Path("bpmn/function/{functionType}/bank/{acquirerId}/branch/{branchId}/terminal/{terminalId}")
+    @Path("bpmn/process/function/{functionType}/bank/{acquirerId}/branch/{branchId}/terminal/{terminalId}")
     RestResponse<ModelBpmnDto> findBPMNByTriad(@PathParam("functionType") String functionType, @PathParam("acquirerId") String acquirerId, @PathParam("branchId") String branchId, @PathParam("terminalId") String terminalId);
 }

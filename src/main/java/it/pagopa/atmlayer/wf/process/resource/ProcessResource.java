@@ -61,8 +61,7 @@ public class ProcessResource {
             @Parameter(description = "Tipo di File (BPMN, DMN...)") @PathParam("resourceType") String resourceType) {
         log.info("Executing DEPLOY. . .");
         RestResponse<Object> response;
-        String fileName = new StringBuilder().append(UUID.randomUUID().toString()).append(Constants.BPMN_EXTENSION)
-                .toString();
+        String fileName = new StringBuilder().append(UUID.randomUUID().toString()).append(Constants.DOT).append(resourceType.toLowerCase()).toString();
 
         try {
             response = processService.deploy(requestUrl, fileName);

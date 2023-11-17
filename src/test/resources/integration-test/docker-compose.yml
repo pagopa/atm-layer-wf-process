@@ -13,20 +13,6 @@ services:
     networks:
       - my-network
 
-  createbuckets:
-    image: minio/mc
-    depends_on:
-      - minio
-    entrypoint: >
-      /bin/sh -c "
-      /usr/bin/mc alias set myminio http://minio:9000 key password;
-      /usr/bin/mc mb myminio/bucket-test;
-      /usr/bin/mc policy set public myminio/bucket-test;
-      exit 0;
-      "
-    networks:
-      - my-network
-
   mockoon:
     ports:
       - "3000:3000"

@@ -22,10 +22,8 @@ public class EnvironmentTestServicesResource {
         public Map<String, String> start() {
 
             dockerComposeContainer = new DockerComposeContainer<>(new File("src/test/resources/integration-test/docker-compose.yml"))
-                    .withExposedService("minio", 9000)
                     .withExposedService("mockoon", 3000);
 
-            dockerComposeContainer.withLogConsumer("minio", new Slf4jLogConsumer(LOGGER).withPrefix("minio"));
             dockerComposeContainer.withLogConsumer("mockoon", new Slf4jLogConsumer(LOGGER).withPrefix("mockoon"));
 
             dockerComposeContainer.start();

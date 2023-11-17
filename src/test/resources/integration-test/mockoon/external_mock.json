@@ -1,254 +1,188 @@
 {
-    "uuid": "1b75c481-dc3d-4b7d-960c-5f4d7ba427fe",
-    "lastMigration": 25,
-    "name": "External mock",
-    "endpointPrefix": "",
-    "latency": 0,
-    "port": 3000,
-    "hostname": "0.0.0.0",
-    "folders": [],
-    "routes": [
-        {
-            "uuid": "491ee80d-901e-4489-89b6-ea3b25eede46",
-            "documentation": "",
-            "method": "get",
-            "endpoint": "api/v1/model/bpmn/process/function/{functionType}/bank/{acquirerId}/branch/{branchId}/terminal/{terminalId}",
-            "responses": [
-                {
-                    "uuid": "a863b5e9-512b-4ea6-a4ca-c213c6717128",
-                    "body": "{\n  \"links\": [\n    {\n      \"method\": \"GET\",\n      \"href\": \"http://localhost:38080/rest-test/deployment/aDeploymentId\",\n      \"rel\": \"self\"\n    }\n  ],\n  \"id\": \"aDeploymentId\",\n  \"name\": \"aName\",\n  \"source\": \"process application\",\n  \"deploymentTime\": \"2013-01-23T13:59:43.000+0200\",\n  \"tenantId\": null,\n  \"deployedProcessDefinitions\": {\n    \"aProcDefId\": {\n      \"id\": \"aProcDefId\",\n      \"key\": \"aKey\",\n      \"category\": \"aCategory\",\n      \"description\": \"aDescription\",\n      \"name\": \"aName\",\n      \"version\": 42,\n      \"resource\": \"aResourceName\",\n      \"deploymentId\": \"aDeploymentId\",\n      \"diagram\": \"aResourceName.png\",\n      \"suspended\": true,\n      \"tenantId\": null,\n      \"versionTag\": null\n    }\n  },\n  \"deployedCaseDefinitions\": null,\n  \"deployedDecisionDefinitions\": null,\n  \"deployedDecisionRequirementsDefinitions\": null\n}",
-                    "latency": 0,
-                    "statusCode": 200,
-                    "label": "",
-                    "headers": [
-                        {
-                            "key": "",
-                            "value": ""
-                        }
-                    ],
-                    "bodyType": "INLINE",
-                    "filePath": "",
-                    "databucketID": "",
-                    "sendFileAsBody": false,
-                    "rules": [],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false,
-                    "fallbackTo404": false,
-                    "default": true
-                },
-                {
-                    "uuid": "c2eae041-c463-41d3-bc14-c1344e7ba300",
-                    "body": "{\r\n  \"bpmnId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n  \"modelVersion\": 0,\r\n  \"deployedFileName\": \"string\",\r\n  \"definitionKey\": \"string\",\r\n  \"functionType\": \"MENU\",\r\n  \"status\": \"CREATED\",\r\n  \"sha256\": \"string\",\r\n  \"definitionVersionCamunda\": 0,\r\n  \"camundaDefinitionId\": \"demo23:1:a2e4c482-6d8a-11ee-9c8f-005056ac9110\",\r\n  \"description\": \"string\",\r\n  \"resourceFile\": {\r\n    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n    \"resourceType\": \"BPMN\",\r\n    \"storageKey\": \"string\",\r\n    \"fileName\": \"string\",\r\n    \"extension\": \"string\",\r\n    \"createdAt\": \"2023-11-03T14:18:36.635+00:00\",\r\n    \"lastUpdatedAt\": \"2023-11-03T14:18:36.635+00:00\",\r\n    \"createdBy\": \"string\",\r\n    \"lastUpdatedBy\": \"string\"\r\n  },\r\n  \"resource\": \"string\",\r\n  \"deploymentId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n  \"createdAt\": \"2023-11-03T14:18:36.635+00:00\",\r\n  \"lastUpdatedAt\": \"2023-11-03T14:18:36.635+00:00\",\r\n  \"createdBy\": \"string\",\r\n  \"lastUpdatedBy\": \"string\"\r\n}",
-                    "latency": 0,
-                    "statusCode": 200,
-                    "label": "",
-                    "headers": [],
-                    "bodyType": "INLINE",
-                    "filePath": "",
-                    "databucketID": "",
-                    "sendFileAsBody": false,
-                    "rules": [],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false,
-                    "fallbackTo404": false,
-                    "default": false
-                }
-            ],
-            "enabled": true,
-            "responseMode": null
-        },
-        {
-            "uuid": "44674dd6-61ef-43f7-af6c-928b9cb79dd1",
-            "documentation": "",
-            "method": "post",
-            "endpoint": "api/v1/processes/process-definition/{id}/start",
-            "responses": [
-                {
-                    "uuid": "967377fa-4e8a-456f-b9ba-966fd8cf3f51",
-                    "body": "{\r\n\"links\": [\r\n{\r\n\"method\": \"GET\",\r\n\"href\": \"http://localhost:8080/rest-test/process-instance/anId\",\r\n\"rel\": \"self\"\r\n}\r\n],\r\n\"id\": \"anId\",\r\n\"definitionId\": \"aProcessDefinitionId\",\r\n\"businessKey\": \"test\",\r\n\"caseInstanceId\": null,\r\n\"tenantId\": null,\r\n\"ended\": false,\r\n\"suspended\": false\r\n}",
-                    "latency": 0,
-                    "statusCode": 200,
-                    "label": "",
-                    "headers": [],
-                    "bodyType": "INLINE",
-                    "filePath": "",
-                    "databucketID": "",
-                    "sendFileAsBody": false,
-                    "rules": [],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false,
-                    "fallbackTo404": false,
-                    "default": true
-                }
-            ],
-            "enabled": true,
-            "responseMode": null
-        },
-        {
-            "uuid": "a127191a-add1-4d5c-9a25-985f65ce53ed",
-            "documentation": "",
-            "method": "post",
-            "endpoint": "api/v1/processes/task",
-            "responses": [
-                {
-                    "uuid": "dad0f72d-0d5f-40ce-b643-3b31e565abb3",
-                    "body": "[\n  {\n    \"id\": \"anId\",\n    \"name\": \"aName\",\n    \"assignee\": \"anAssignee\",\n    \"created\": \"2013-01-23T13:42:42.453+0200\",\n    \"due\": \"2013-01-23T13:49:42.342+0200\",\n    \"followUp:\": \"2013-01-23T13:44:42.546+0200\",\n    \"lastUpdated:\": \"2013-01-23T13:44:42.546+0200\",\n    \"delegationState\": \"RESOLVED\",\n    \"description\": \"aDescription\",\n    \"executionId\": \"anExecution\",\n    \"owner\": \"anOwner\",\n    \"parentTaskId\": \"aParentId\",\n    \"priority\": 10,\n    \"processDefinitionId\": \"aProcessDefinitionId\",\n    \"processInstanceId\": \"aProcInstId\",\n    \"caseDefinitionId\": \"aCaseDefId\",\n    \"caseInstanceId\": \"aCaseInstId\",\n    \"caseExecutionId\": \"aCaseExecution\",\n    \"taskDefinitionKey\": \"aTaskDefinitionKey\",\n    \"suspended\": false,\n    \"formKey\": \"aFormKey\",\n    \"camundaFormRef\": {},\n    \"tenantId\": \"aTenantId\"\n  }\n]",
-                    "latency": 0,
-                    "statusCode": 200,
-                    "label": "",
-                    "headers": [],
-                    "bodyType": "INLINE",
-                    "filePath": "",
-                    "databucketID": "",
-                    "sendFileAsBody": false,
-                    "rules": [],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false,
-                    "fallbackTo404": false,
-                    "default": true
-                }
-            ],
-            "enabled": true,
-            "responseMode": null
-        },
-        {
-            "uuid": "345dc943-79ad-4fc9-a5f1-67c5a150c10a",
-            "documentation": "",
-            "method": "post",
-            "endpoint": "api/v1/processes/task/{id}/complete",
-            "responses": [
-                {
-                    "uuid": "acc6d6da-187e-4b5d-a0b3-28d1ed8f8c74",
-                    "body": "",
-                    "latency": 0,
-                    "statusCode": 204,
-                    "label": "",
-                    "headers": [],
-                    "bodyType": "INLINE",
-                    "filePath": "",
-                    "databucketID": "",
-                    "sendFileAsBody": false,
-                    "rules": [],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false,
-                    "fallbackTo404": false,
-                    "default": true
-                }
-            ],
-            "enabled": true,
-            "responseMode": null
-        },
-        {
-            "uuid": "15fd502f-01cd-43be-9cc9-4113fa563f17",
-            "documentation": "",
-            "method": "get",
-            "endpoint": "api/v1/processes/task/{id}/variables",
-            "responses": [
-                {
-                    "uuid": "9e62a678-3b10-48dc-8b45-7b977c61b83d",
-                    "body": "{\n  \"aVariableKey\": {\n    \"value\": {\n      \"prop1\": \"a\",\n      \"prop2\": \"b\"\n    },\n    \"type\": \"Object\",\n    \"valueInfo\": {\n      \"objectTypeName\": \"com.example.MyObject\",\n      \"serializationDataFormat\": \"application/xml\"\n    }\n  }\n}",
-                    "latency": 0,
-                    "statusCode": 200,
-                    "label": "",
-                    "headers": [],
-                    "bodyType": "INLINE",
-                    "filePath": "",
-                    "databucketID": "",
-                    "sendFileAsBody": false,
-                    "rules": [],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false,
-                    "fallbackTo404": false,
-                    "default": true
-                }
-            ],
-            "enabled": true,
-            "responseMode": null
-        },
-        {
-            "uuid": "d1b4563e-613d-4412-b7e0-8a57a1f124a2",
-            "documentation": "",
-            "method": "get",
-            "endpoint": "api/v1/processes/process-instance",
-            "responses": [
-                {
-                    "uuid": "0f6ada7b-e920-4974-8b27-077ddfcc6549",
-                    "body": "[\n  {\n    \"links\": [],\n    \"id\": \"anId\",\n    \"definitionId\": \"aProcessDefinitionId\",\n    \"businessKey\": \"test\",\n    \"caseInstanceId\": \"aCaseInstanceId\",\n    \"ended\": false,\n    \"suspended\": false,\n    \"tenantId\": null\n  }\n]",
-                    "latency": 0,
-                    "statusCode": 200,
-                    "label": "",
-                    "headers": [],
-                    "bodyType": "INLINE",
-                    "filePath": "",
-                    "databucketID": "",
-                    "sendFileAsBody": false,
-                    "rules": [],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false,
-                    "fallbackTo404": false,
-                    "default": true
-                }
-            ],
-            "enabled": true,
-            "responseMode": null
-        }
-    ],
-    "rootChildren": [
-        {
-            "type": "route",
-            "uuid": "491ee80d-901e-4489-89b6-ea3b25eede46"
-        },
-        {
-            "type": "route",
-            "uuid": "44674dd6-61ef-43f7-af6c-928b9cb79dd1"
-        },
-        {
-            "type": "route",
-            "uuid": "a127191a-add1-4d5c-9a25-985f65ce53ed"
-        },
-        {
-            "type": "route",
-            "uuid": "345dc943-79ad-4fc9-a5f1-67c5a150c10a"
-        },
-        {
-            "type": "route",
-            "uuid": "15fd502f-01cd-43be-9cc9-4113fa563f17"
-        },
-        {
-            "type": "route",
-            "uuid": "d1b4563e-613d-4412-b7e0-8a57a1f124a2"
-        }
-    ],
-    "proxyMode": false,
-    "proxyHost": "",
-    "proxyRemovePrefix": false,
-    "tlsOptions": {
-        "enabled": false,
-        "type": "CERT",
-        "pfxPath": "",
-        "certPath": "",
-        "keyPath": "",
-        "caPath": "",
-        "passphrase": ""
+    "info": {
+      "title": "External mock",
+      "version": "1.0.0"
     },
-    "cors": true,
-    "headers": [
-        {
-            "key": "Content-Type",
-            "value": "application/json"
+    "openapi": "3.0.0",
+    "paths": {
+      "/api/v1/model/bpmn/process/function/{functionType}/bank/{acquirerId}/branch/{branchId}/terminal/{terminalId}": {
+        "get": {
+          "description": "",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "links": [
+                    {
+                      "method": "GET",
+                      "href": "http://localhost:38080/rest-test/deployment/aDeploymentId",
+                      "rel": "self"
+                    }
+                  ],
+                  "id": "aDeploymentId",
+                  "name": "aName",
+                  "source": "process application",
+                  "deploymentTime": "2013-01-23T13:59:43.000+0200",
+                  "tenantId": null,
+                  "deployedProcessDefinitions": {
+                    "aProcDefId": {
+                      "id": "aProcDefId",
+                      "key": "aKey",
+                      "category": "aCategory",
+                      "description": "aDescription",
+                      "name": "aName",
+                      "version": 42,
+                      "resource": "aResourceName",
+                      "deploymentId": "aDeploymentId",
+                      "diagram": "aResourceName.png",
+                      "suspended": true,
+                      "tenantId": null,
+                      "versionTag": null
+                    }
+                  },
+                  "deployedCaseDefinitions": null,
+                  "deployedDecisionDefinitions": null,
+                  "deployedDecisionRequirementsDefinitions": null
+                }
+              },
+              "description": "",
+              "headers": {}
+            }
+          }
         }
-    ],
-    "proxyReqHeaders": [
-        {
-            "key": "",
-            "value": ""
+      },
+      "/api/v1/processes/process-definition/{id}/start": {
+        "post": {
+          "description": "",
+          "responses": {
+            "200": {
+              "links": [
+                {
+                  "method": "GET",
+                  "href": "http://localhost:8080/rest-test/process-instance/anId",
+                  "rel": "self"
+                }
+              ],
+              "id": "anId",
+              "definitionId": "aProcessDefinitionId",
+              "businessKey": "test",
+              "caseInstanceId": null,
+              "tenantId": null,
+              "ended": false,
+              "suspended": false
+            },
+            "description": "",
+            "headers": {}
+          }
         }
-    ],
-    "proxyResHeaders": [
-        {
-            "key": "",
-            "value": ""
+      },
+      "/api/v1/processes/process-instance": {
+        "get": {
+          "description": "",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": [
+                  {
+                    "links": [],
+                    "id": "anId",
+                    "definitionId": "aProcessDefinitionId",
+                    "businessKey": "test",
+                    "caseInstanceId": "aCaseInstanceId",
+                    "ended": false,
+                    "suspended": false,
+                    "tenantId": null
+                  }
+                ]
+              },
+              "description": "",
+              "headers": {}
+            }
+          }
         }
-    ],
-    "data": []
-}
+      },
+      "/api/v1/processes/task": {
+        "post": {
+          "description": "",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": [
+                  {
+                    "id": "anId",
+                    "name": "aName",
+                    "assignee": "anAssignee",
+                    "created": "2013-01-23T13:42:42.453+0200",
+                    "due": "2013-01-23T13:49:42.342+0200",
+                    "followUp": "2013-01-23T13:44:42.546+0200",
+                    "lastUpdated": "2013-01-23T13:44:42.546+0200",
+                    "delegationState": "RESOLVED",
+                    "description": "aDescription",
+                    "executionId": "anExecution",
+                    "owner": "anOwner",
+                    "parentTaskId": "aParentId",
+                    "priority": 10,
+                    "processDefinitionId": "aProcessDefinitionId",
+                    "processInstanceId": "aProcInstId",
+                    "caseDefinitionId": "aCaseDefId",
+                    "caseInstanceId": "aCaseInstId",
+                    "caseExecutionId": "aCaseExecution",
+                    "taskDefinitionKey": "aTaskDefinitionKey",
+                    "suspended": false,
+                    "formKey": "aFormKey",
+                    "camundaFormRef": {},
+                    "tenantId": "aTenantId"
+                  }
+                ]
+              },
+              "description": "",
+              "headers": {}
+            }
+          }
+        }
+      },
+      "/api/v1/processes/task/{id}/complete": {
+        "post": {
+          "description": "",
+          "responses": {
+            "204": {
+              "content": {},
+              "description": "",
+              "headers": {}
+            }
+          }
+        }
+      },
+      "/api/v1/processes/task/{id}/variables": {
+        "get": {
+          "description": "",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "aVariableKey": {
+                    "value": {
+                      "prop1": "a",
+                      "prop2": "b"
+                    },
+                    "type": "Object",
+                    "valueInfo": {
+                      "objectTypeName": "com.example.MyObject",
+                      "serializationDataFormat": "application/xml"
+                    }
+                  }
+                }
+              },
+              "description": "",
+              "headers": {}
+            }
+          }
+        }
+      }
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000/"
+      }
+    ]
+  }

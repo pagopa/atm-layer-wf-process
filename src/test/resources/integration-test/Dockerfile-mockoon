@@ -1,0 +1,14 @@
+FROM node:14-slim
+
+
+# Copia il file JSON Mockoon all'interno del container
+COPY /integration-test/mockoon/*.json /data
+
+# Installa Mockoon CLI globalmente
+RUN npm install -g @mockoon/cli
+
+# Espone la porta su cui Mockoon ascolterà le richieste
+EXPOSE 3000
+
+# Esegui Mockoon CLI all'avvio del container
+CMD ["mockoon-cli", "start", "-d", "/data", "-p", "3000"]

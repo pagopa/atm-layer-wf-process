@@ -46,7 +46,7 @@
                 }
               },
               "description": "",
-              "headers": {}
+              "headers": {"content-type" : "application/json"}
             }
           }
         }

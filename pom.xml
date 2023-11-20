@@ -21,7 +21,6 @@
     <surefire-plugin.version>3.1.2</surefire-plugin.version>
     <jakarta-validation.version>3.0.2</jakarta-validation.version>
     <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
-    <quarkus-amazon-services.version>2.4.5</quarkus-amazon-services.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -36,13 +35,6 @@
         <groupId>org.camunda.bpm</groupId>
         <artifactId>camunda-bom</artifactId>
         <version>${camunda.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>io.quarkiverse.amazonservices</groupId>
-        <artifactId>quarkus-amazon-services-bom</artifactId>
-        <version>${quarkus-amazon-services.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -105,26 +97,6 @@
       <groupId>org.testcontainers</groupId>
       <artifactId>testcontainers</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkiverse.amazonservices</groupId>
-      <artifactId>quarkus-amazon-s3</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>software.amazon.awssdk</groupId>
-      <artifactId>url-connection-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>software.amazon.awssdk.crt</groupId>
-      <artifactId>aws-crt</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>software.amazon.awssdk</groupId>
-      <artifactId>netty-nio-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkiverse.amazonservices</groupId>
-      <artifactId>quarkus-amazon-sts</artifactId>
     </dependency>
   </dependencies>
   <build>

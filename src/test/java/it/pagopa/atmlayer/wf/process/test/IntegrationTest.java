@@ -22,13 +22,13 @@ import static org.junit.Assert.assertTrue;
 public class IntegrationTest {
 
 
-    public static GenericContainer<?> newman;
+    public static GenericContainer<?> NEWMAN;
 
 
     @BeforeAll
     static void exposeTestPort() {
         Testcontainers.exposeHostPorts(8086);
-        newman = new GenericContainer<>(new ImageFromDockerfile()
+        NEWMAN = new GenericContainer<>(new ImageFromDockerfile()
                 .withDockerfile(Paths.get("src/test/resources/integration-test/Dockerfile-postman")))
                 .withFileSystemBind("src/test/resources/integration-test/output", "/output", BindMode.READ_WRITE)
                 .withAccessToHost(true)
@@ -38,9 +38,9 @@ public class IntegrationTest {
     @Test
     void executePostmanCollectionWithNewmann() {
 
-        newman.start();
-        log.info(newman.getLogs());
-        assertTrue(newman.getCurrentContainerInfo().getState().getExitCodeLong() == 0);
+        NEWMAN.start();
+        log.info(NEWMAN.getLogs());
+        assertTrue(NEWMAN.getCurrentContainerInfo().getState().getExitCodeLong() == 0);
     }
 
 }

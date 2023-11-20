@@ -57,7 +57,7 @@ jobs:
 
       - name: Update Kubernetes Config
         run: |
-          aws eks --region ${{ vars.AWS_REGION }} update-kubeconfig --name pagopa-dev-atm-layer-eks
+          aws eks --region ${{ vars.AWS_REGION }} update-kubeconfig --name pagopa-${{ inputs.env }}-atm-layer-eks
 
       - name: Install Helm
         run: |

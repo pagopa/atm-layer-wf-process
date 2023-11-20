@@ -19,7 +19,7 @@ spec:
         App: {{ .Values.deployment.name }}
         force-recreate: {{ randAlphaNum 5 | quote }}
     spec:
-      serviceAccountName: {{ include "chart-1.serviceAccountName" . }}
+      serviceAccountName: {{ include "atm-layer-wf-process.serviceAccountName" . }}
       volumes:
       - name: secrets-store-inline
         csi:
@@ -48,6 +48,8 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.camundaWebUser.credentialsSecretName }}
                   key: {{ .Values.camundaWebUser.credentialsSecretKeys.password }}
+            - name: MODEL_SERVICE_ADDRESS
+              value: "{{ .Values.modelServiceAddress }}"
           volumeMounts:
           - name: secrets-store-inline
             mountPath: "/mnt/secrets-store"

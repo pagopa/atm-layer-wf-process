@@ -14,7 +14,8 @@ public enum TaskVarsEnum {
     ON_TIMEOUT("onTimeout"),
     COMMAND("command"),
     RECEIPT_TEMPLATE("receipt_template"),
-    TIMEOUT("timeout");
+    TIMEOUT("timeout"),
+    DATA("data");
 
     private final String value;
 

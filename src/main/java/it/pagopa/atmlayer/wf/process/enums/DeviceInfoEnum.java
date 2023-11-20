@@ -27,10 +27,4 @@ public enum DeviceInfoEnum {
         return value;
     }
 
-    public static List<String> getValues() {
-        return Arrays.stream(TaskVarsEnum.values())
-                .map(TaskVarsEnum::getValue)
-                .collect(Collectors.toList());
-    }
-
 }

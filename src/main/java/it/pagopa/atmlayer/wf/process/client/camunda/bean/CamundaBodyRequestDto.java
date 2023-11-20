@@ -1,6 +1,5 @@
-package it.pagopa.atmlayer.wf.process.client.bean;
+package it.pagopa.atmlayer.wf.process.client.camunda.bean;
 
-import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,22 +13,18 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @RegisterForReflection
 @JsonInclude(Include.NON_NULL)
-public class CamundaStartProcessInstanceDto {
-
-    private Map<String, Object> variables;
+public class CamundaBodyRequestDto {
 
     private String businessKey;
 
-    private String caseInstanceId;
+    private String processInstanceBusinessKey;
 
-    private List<Object> startInstructions;
-
-    private boolean skipCustomListeners;
-
-    private boolean skipIoMappings;
+    private String taskId;
+    
+    private  Map<String, Map<String, Object>> variables;
 
 }

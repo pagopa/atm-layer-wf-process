@@ -15,7 +15,8 @@ on:
         options:
         - feat
         - fix
-        
+        - major
+
 defaults:
   run:
     shell: bash

@@ -9,9 +9,7 @@ defaults:
   run:
     shell: bash
 
-permissions:
-  id-token: write   # This is required for requesting the JWT
-  contents: read    # This is required for actions/checkout
+permissions: write-all
 
 jobs:
   build:
@@ -72,10 +70,10 @@ jobs:
           name: html-report
           path: src/test/resources/integration-test/output/result.html
 
-      - name: Build, tag, and push docker image to Amazon ECR
+      - name: Build docker image
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
-          IMAGE_TAG: ${{ github.sha }}
+          DOCKER_IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -f src/main/docker/Dockerfile.native-micro -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker build -f src/main/docker/Dockerfile.native-micro -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .

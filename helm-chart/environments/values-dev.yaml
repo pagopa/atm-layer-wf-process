@@ -29,6 +29,7 @@ camundaWebUser:
 
 secretProviderClass:
   name: atm-layer-wf-process-secrets
+  env: dev
 
 serviceAccount:
   # Specifies whether a service account should be created

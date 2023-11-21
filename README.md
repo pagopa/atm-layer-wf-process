@@ -45,7 +45,7 @@ This command will build a native image and deploy it into a container. Make sure
 * [VARIABLES] Retrieve variables of a specified task and filter them based on the ones you want.
 
 ### Build with
-[![Quarkus Badge](https://img.shields.io/badge/Quarkus-3.4.2-1488C6?style=for-the-badge&logo=quarkus)](https://quarkus.io/)
+[![Quarkus Badge](https://img.shields.io/badge/Quarkus-3.2.5.Final-1488C6?style=for-the-badge&logo=quarkus)](https://quarkus.io/)
 [![Java 17 Badge](https://img.shields.io/badge/Java-17-007396?style=for-the-badge&logo=java)](https://www.oracle.com/java/technologies/javase-jdk17-downloads.html)
 [![Camunda Badge](https://img.shields.io/badge/Camunda-7.20-2F73C9?style=for-the-badge&logo=camunda)](https://camunda.com/)
 

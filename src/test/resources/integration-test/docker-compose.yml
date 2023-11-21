@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  mockoon:
+    ports:
+      - "3000:3000"
+    build:
+      context: ../
+      dockerfile: ./integration-test/Dockerfile-mockoon
+    networks:
+      - my-network
+
+networks:
+  my-network:

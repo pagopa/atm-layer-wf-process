@@ -1,0 +1,16 @@
+FROM node:21
+
+COPY /postman /postman
+COPY /run-postman.sh /postman
+
+# Installa Newman, il runner di Postman
+RUN npm install -g newman
+RUN npm install -g newman-reporter-htmlextra
+
+RUN chmod 777 /postman/run-postman.sh \
+  && chown -R 1001 /postman/run-postman.sh \
+  && chmod -R "g+rwX" /postman/run-postman.sh \
+  && chown -R 1001:root /postman/run-postman.sh
+# Comando per eseguire la collection Postman
+USER 1001
+CMD ["/bin/bash","-c","./postman/run-postman.sh"]

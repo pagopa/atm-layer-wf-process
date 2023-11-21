@@ -1,10 +1,10 @@
-name: Manual build and deploy
+name: Manual deploy release
 
 on:
   workflow_dispatch:
     inputs:
       env:
-        description: 'Which environment to update.'
+        description: 'Environment:'
         type: choice
         required: true
         default: dev
@@ -12,6 +12,10 @@ on:
         - dev
         - uat
         - prod
+      release:
+        description: 'Which pre-release/release to deploy:'
+        type: string
+        required: true
 
 defaults:
   run:
@@ -19,23 +23,23 @@ defaults:
 
 permissions:
   id-token: write   # This is required for requesting the JWT
-  contents: read    # This is required for actions/checkout
+  contents: write    # This is required for actions/checkout
 
 jobs:
-  manual-build:
+  manual-deploy-release:
     if: github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
         environment: ["${{ inputs.env }}"]
 
-    name: "manual-build"
+    name: "manual-deploy-release"
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+        
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
         with:
@@ -45,15 +49,6 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build, tag, and push docker image to Amazon ECR
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -f src/main/docker/Dockerfile.native-micro -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
       - name: Update Kubernetes Config
         run: |
@@ -70,6 +65,6 @@ jobs:
           helm upgrade --install ${{ vars.DOCKER_IMAGE_NAME }} helm-chart/ \
           --namespace pagopa \
           -f helm-chart/environments/values-${{ inputs.env }}.yaml \
-          --set image.tag=${{ github.sha }} \
+          --set image.tag=${{ inputs.release }} \
           --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ vars.DOCKER_IMAGE_NAME }} \
           --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=${{ secrets.SERVICEACCOUNT_IAM_ROLE }}

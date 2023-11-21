@@ -247,6 +247,7 @@ public class ProcessService {
                  * and after a specified time.
                  */
                 camundaGetListResponse = retryActiveTasks(camundaGetListResponse, businessKey);
+                camundaGetListResponse = camundaGetListResponse.getEntity().isEmpty() ? RestResponse.status(102) : camundaGetListResponse;
             }
         }
 

@@ -4,8 +4,8 @@
   "name": "External mock",
   "endpointPrefix": "",
   "latency": 0,
-  "port": 8087,
-  "hostname": "http://host.testcontainers.internal",
+  "port": 3001,
+  "hostname": "",
   "folders": [],
   "routes": [
       {

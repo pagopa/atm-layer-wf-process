@@ -27,7 +27,7 @@ public class IntegrationTest {
 
     @BeforeAll
     static void exposeTestPort() {
-        Testcontainers.exposeHostPorts(8086);
+        Testcontainers.exposeHostPorts(8087);
         NEWMAN = new GenericContainer<>(new ImageFromDockerfile()
                 .withDockerfile(Paths.get("src/test/resources/integration-test/Dockerfile-postman")))
                 .withFileSystemBind("src/test/resources/integration-test/output", "/output", BindMode.READ_WRITE)

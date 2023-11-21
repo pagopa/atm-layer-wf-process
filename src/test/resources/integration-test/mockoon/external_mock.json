@@ -1,117 +1,269 @@
 {
-  "info": {
-      "title": "External mock",
-      "version": "1.0.0"
+  "uuid": "ac9973e5-cf0f-4bdd-9161-ad7d4aeb469f",
+  "lastMigration": 29,
+  "name": "External mock",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "f710464e-4c3e-4ae8-aba4-fcc02572c213",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "api/v1/model/bpmn/process/function/:functionType/bank/:acquirerId/branch/:branchId/terminal/:terminalId",
+      "responses": [
+        {
+          "uuid": "62e1700b-be7b-404a-be37-2e20f6b9c697",
+          "body": "{\n  \"bpmnId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n  \"modelVersion\": 0,\n  \"deployedFileName\": \"string\",\n  \"definitionKey\": \"string\",\n  \"functionType\": \"MENU\",\n  \"status\": \"CREATED\",\n  \"sha256\": \"string\",\n  \"definitionVersionCamunda\": 0,\n  \"camundaDefinitionId\": \"demo23:1:a2e4c482-6d8a-11ee-9c8f-005056ac9110\",\n  \"description\": \"string\",\n  \"resourceFile\": {\n    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n    \"resourceType\": \"BPMN\",\n    \"storageKey\": \"string\",\n    \"fileName\": \"string\",\n    \"extension\": \"string\",\n    \"createdAt\": \"2023-11-03T14:18:36.635+00:00\",\n    \"lastUpdatedAt\": \"2023-11-03T14:18:36.635+00:00\",\n    \"createdBy\": \"string\",\n    \"lastUpdatedBy\": \"string\"\n  },\n  \"resource\": \"string\",\n  \"deploymentId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n  \"createdAt\": \"2023-11-03T14:18:36.635+00:00\",\n  \"lastUpdatedAt\": \"2023-11-03T14:18:36.635+00:00\",\n  \"createdBy\": \"string\",\n  \"lastUpdatedBy\": \"string\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "8eff9970-7b19-429f-af0c-c81a0c2d89a5",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "api/v1/processes/process-definition/:id/start",
+      "responses": [
+        {
+          "uuid": "c0ab2316-8e1b-4387-9561-a7318fca7ad6",
+          "body": "{\n  \"links\": [\n    {\n      \"method\": \"GET\",\n      \"href\": \"http://localhost:8080/rest-test/process-instance/anId\",\n      \"rel\": \"self\"\n    }\n  ],\n  \"id\": \"anId\",\n  \"definitionId\": \"aProcessDefinitionId\",\n  \"businessKey\": \"test\",\n  \"caseInstanceId\": null,\n  \"tenantId\": null,\n  \"ended\": false,\n  \"suspended\": false\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "a4039117-c0b5-4596-b651-7c741afc8c82",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "api/v1/processes/process-instance",
+      "responses": [
+        {
+          "uuid": "c32a3310-bdb8-4c67-810d-56ed74310970",
+          "body": "[\n  {\n    \"links\": [],\n    \"id\": \"anId\",\n    \"definitionId\": \"aProcessDefinitionId\",\n    \"businessKey\": \"test\",\n    \"caseInstanceId\": \"aCaseInstanceId\",\n    \"ended\": false,\n    \"suspended\": false,\n    \"tenantId\": null\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "0bb664f2-9d2b-4233-9e9d-8f3db04ba6d0",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "api/v1/processes/task",
+      "responses": [
+        {
+          "uuid": "f892896c-d0c4-4874-9555-956cbe05e539",
+          "body": "[\n  {\n    \"id\": \"anId\",\n    \"name\": \"aName\",\n    \"assignee\": \"anAssignee\",\n    \"created\": \"2013-01-23T13:42:42.453+0200\",\n    \"due\": \"2013-01-23T13:49:42.342+0200\",\n    \"followUp:\": \"2013-01-23T13:44:42.546+0200\",\n    \"lastUpdated:\": \"2013-01-23T13:44:42.546+0200\",\n    \"delegationState\": \"RESOLVED\",\n    \"description\": \"aDescription\",\n    \"executionId\": \"anExecution\",\n    \"owner\": \"anOwner\",\n    \"parentTaskId\": \"aParentId\",\n    \"priority\": 10,\n    \"processDefinitionId\": \"aProcessDefinitionId\",\n    \"processInstanceId\": \"aProcInstId\",\n    \"caseDefinitionId\": \"aCaseDefId\",\n    \"caseInstanceId\": \"aCaseInstId\",\n    \"caseExecutionId\": \"aCaseExecution\",\n    \"taskDefinitionKey\": \"aTaskDefinitionKey\",\n    \"suspended\": false,\n    \"formKey\": \"aFormKey\",\n    \"camundaFormRef\": {},\n    \"tenantId\": \"aTenantId\"\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "c54da749-cf68-4ed3-af26-10e5d65da967",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "api/v1/processes/task/:id/complete",
+      "responses": [
+        {
+          "uuid": "f62fe8dc-fbe8-4538-98b7-e74ab52c713f",
+          "body": "",
+          "latency": 0,
+          "statusCode": 204,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "88f77117-f216-4a3b-b172-fd02cd3106f6",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "api/v1/processes/task/:id/variables",
+      "responses": [
+        {
+          "uuid": "029f01a7-6da8-4330-9625-8548a3fd5c6c",
+          "body": "{\n  \"aVariableKey\": {\n    \"value\": {\n      \"prop1\": \"a\",\n      \"prop2\": \"b\"\n    },\n    \"type\": \"Object\",\n    \"valueInfo\": {\n      \"objectTypeName\": \"com.example.MyObject\",\n      \"serializationDataFormat\": \"application/xml\"\n    }\n  }\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "f710464e-4c3e-4ae8-aba4-fcc02572c213"
+    },
+    {
+      "type": "route",
+      "uuid": "8eff9970-7b19-429f-af0c-c81a0c2d89a5"
+    },
+    {
+      "type": "route",
+      "uuid": "a4039117-c0b5-4596-b651-7c741afc8c82"
+    },
+    {
+      "type": "route",
+      "uuid": "0bb664f2-9d2b-4233-9e9d-8f3db04ba6d0"
+    },
+    {
+      "type": "route",
+      "uuid": "c54da749-cf68-4ed3-af26-10e5d65da967"
+    },
+    {
+      "type": "route",
+      "uuid": "88f77117-f216-4a3b-b172-fd02cd3106f6"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
   },
-  "openapi": "3.0.0",
-  "paths": {
-      "/api/v1/model/bpmn/process/function/{functionType}/bank/{acquirerId}/branch/{branchId}/terminal/{terminalId}": {
-          "get": {
-              "description": "",
-              "responses": {
-                  "200": {
-                      "content": {
-                          "application/json": {
-                              "example": "{\r\n  \"bpmnId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n  \"modelVersion\": 0,\r\n  \"deployedFileName\": \"string\",\r\n  \"definitionKey\": \"string\",\r\n  \"functionType\": \"MENU\",\r\n  \"status\": \"CREATED\",\r\n  \"sha256\": \"string\",\r\n  \"definitionVersionCamunda\": 0,\r\n  \"camundaDefinitionId\": \"demo23:1:a2e4c482-6d8a-11ee-9c8f-005056ac9110\",\r\n  \"description\": \"string\",\r\n  \"resourceFile\": {\r\n    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n    \"resourceType\": \"BPMN\",\r\n    \"storageKey\": \"string\",\r\n    \"fileName\": \"string\",\r\n    \"extension\": \"string\",\r\n    \"createdAt\": \"2023-11-03T14:18:36.635+00:00\",\r\n    \"lastUpdatedAt\": \"2023-11-03T14:18:36.635+00:00\",\r\n    \"createdBy\": \"string\",\r\n    \"lastUpdatedBy\": \"string\"\r\n  },\r\n  \"resource\": \"string\",\r\n  \"deploymentId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n  \"createdAt\": \"2023-11-03T14:18:36.635+00:00\",\r\n  \"lastUpdatedAt\": \"2023-11-03T14:18:36.635+00:00\",\r\n  \"createdBy\": \"string\",\r\n  \"lastUpdatedBy\": \"string\"\r\n}"
-                          }
-                      },
-                      "description": "",
-                      "headers": {
-                      }
-                  }
-              }
-          }
-      },
-      "/api/v1/processes/process-definition/{id}/start": {
-          "post": {
-              "description": "",
-              "responses": {
-                  "200": {
-                      "content": {
-                          "application/json": {
-                              "example": "{\r\n\"links\": [\r\n{\r\n\"method\": \"GET\",\r\n\"href\": \"http://localhost:8080/rest-test/process-instance/anId\",\r\n\"rel\": \"self\"\r\n}\r\n],\r\n\"id\": \"anId\",\r\n\"definitionId\": \"aProcessDefinitionId\",\r\n\"businessKey\": \"test\",\r\n\"caseInstanceId\": null,\r\n\"tenantId\": null,\r\n\"ended\": false,\r\n\"suspended\": false\r\n}"
-                          }
-                      },
-                      "description": "",
-                      "headers": {
-                      }
-                  }
-              }
-          }
-      },
-      "/api/v1/processes/process-instance": {
-          "get": {
-              "description": "",
-              "responses": {
-                  "200": {
-                      "content": {
-                          "application/json": {
-                              "example": "[\n  {\n    \"links\": [],\n    \"id\": \"anId\",\n    \"definitionId\": \"aProcessDefinitionId\",\n    \"businessKey\": \"test\",\n    \"caseInstanceId\": \"aCaseInstanceId\",\n    \"ended\": false,\n    \"suspended\": false,\n    \"tenantId\": null\n  }\n]"
-                          }
-                      },
-                      "description": "",
-                      "headers": {
-                      }
-                  }
-              }
-          }
-      },
-      "/api/v1/processes/task": {
-          "post": {
-              "description": "",
-              "responses": {
-                  "200": {
-                      "content": {
-                          "application/json": {
-                              "example": "[\n  {\n    \"id\": \"anId\",\n    \"name\": \"aName\",\n    \"assignee\": \"anAssignee\",\n    \"created\": \"2013-01-23T13:42:42.453+0200\",\n    \"due\": \"2013-01-23T13:49:42.342+0200\",\n    \"followUp:\": \"2013-01-23T13:44:42.546+0200\",\n    \"lastUpdated:\": \"2013-01-23T13:44:42.546+0200\",\n    \"delegationState\": \"RESOLVED\",\n    \"description\": \"aDescription\",\n    \"executionId\": \"anExecution\",\n    \"owner\": \"anOwner\",\n    \"parentTaskId\": \"aParentId\",\n    \"priority\": 10,\n    \"processDefinitionId\": \"aProcessDefinitionId\",\n    \"processInstanceId\": \"aProcInstId\",\n    \"caseDefinitionId\": \"aCaseDefId\",\n    \"caseInstanceId\": \"aCaseInstId\",\n    \"caseExecutionId\": \"aCaseExecution\",\n    \"taskDefinitionKey\": \"aTaskDefinitionKey\",\n    \"suspended\": false,\n    \"formKey\": \"aFormKey\",\n    \"camundaFormRef\": {},\n    \"tenantId\": \"aTenantId\"\n  }\n]"
-                          }
-                      },
-                      "description": "",
-                      "headers": {
-                      }
-                  }
-              }
-          }
-      },
-      "/api/v1/processes/task/{id}/complete": {
-          "post": {
-              "description": "",
-              "responses": {
-                  "204": {
-                      "content": {
-                          "application/json": {
-                              "example": {
-                              }
-                          }
-                      },
-                      "description": "",
-                      "headers": {
-                      }
-                  }
-              }
-          }
-      },
-      "/api/v1/processes/task/{id}/variables": {
-          "get": {
-              "description": "",
-              "responses": {
-                  "200": {
-                      "content": {
-                          "application/json": {
-                              "example": "{\n  \"aVariableKey\": {\n    \"value\": {\n      \"prop1\": \"a\",\n      \"prop2\": \"b\"\n    },\n    \"type\": \"Object\",\n    \"valueInfo\": {\n      \"objectTypeName\": \"com.example.MyObject\",\n      \"serializationDataFormat\": \"application/xml\"\n    }\n  }\n}"
-                          }
-                      },
-                      "description": "",
-                      "headers": {
-                      }
-                  }
-              }
-          }
-      }
-  },
-  "servers": [
-      {
-          "url": "http://localhost:3000/"
-      }
-  ]
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": []
 }

@@ -1,121 +1,79 @@
 {
-    "info": {
-      "title": "External mock",
-      "version": "1.0.0"
-    },
-    "openapi": "3.0.0",
-    "paths": {
-      "/api/v1/model/bpmn/process/function/{functionType}/bank/{acquirerId}/branch/{branchId}/terminal/{terminalId}": {
-        "get": {
-          "description": "",
-          "responses": {
-            "200": {
-              "content": {
-                "application/json": {
-                  "links": [
-                    {
-                      "method": "GET",
-                      "href": "http://localhost:38080/rest-test/deployment/aDeploymentId",
-                      "rel": "self"
-                    }
-                  ],
-                  "id": "aDeploymentId",
-                  "name": "aName",
-                  "source": "process application",
-                  "deploymentTime": "2013-01-23T13:59:43.000+0200",
-                  "tenantId": null,
-                  "deployedProcessDefinitions": {
-                    "aProcDefId": {
-                      "id": "aProcDefId",
-                      "key": "aKey",
-                      "category": "aCategory",
-                      "description": "aDescription",
-                      "name": "aName",
-                      "version": 42,
-                      "resource": "aResourceName",
-                      "deploymentId": "aDeploymentId",
-                      "diagram": "aResourceName.png",
-                      "suspended": true,
-                      "tenantId": null,
-                      "versionTag": null
-                    }
-                  },
-                  "deployedCaseDefinitions": null,
-                  "deployedDecisionDefinitions": null,
-                  "deployedDecisionRequirementsDefinitions": null
-                }
-              },
-              "description": "",
-              "headers": {"content-type" : "application/json"}
-            }
-          }
+  "uuid": "81b580dd-bffd-4b2c-a373-92b8a73782ee",
+  "lastMigration": 29,
+  "name": "Atm layer",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3001,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "5d1ce034-b37a-4556-9c83-2e5ebdc613dd",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "api/v1/model/bpmn/process/function/{functionType}/bank/{acquirerId}/branch/{branchId}/terminal/{terminalId}",
+      "responses": [
+        {
+          "uuid": "e8185899-7682-4525-a89f-251c4e6a2392",
+          "body": "{\"links\": [{\"method\": \"GET\",\"href\": \"http://localhost:38080/rest-test/deployment/aDeploymentId\",\"rel\": \"self\"}],\"id\": \"aDeploymentId\",\"name\": \"aName\",\"source\": \"process application\",\"deploymentTime\": \"2013-01-23T13:59:43.000+0200\",\"tenantId\": null,\"deployedProcessDefinitions\": {\"aProcDefId\": {\"id\": \"aProcDefId\",\"key\": \"aKey\",\"category\": \"aCategory\",\"description\": \"aDescription\",\"name\": \"aName\",\"version\": 42,\"resource\": \"aResourceName\",\"deploymentId\": \"aDeploymentId\",\"diagram\": \"aResourceName.png\",\"suspended\": true,\"tenantId\": null,\"versionTag\": null}},\"deployedCaseDefinitions\": null,\"deployedDecisionDefinitions\": null,\"deployedDecisionRequirementsDefinitions\": null}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
         }
-      },
-      "/api/v1/processes/process-definition/{id}/start": {
-        "post": {
-          "description": "",
-          "responses": {
-            "200": {
-              "content": {},
-              "description": "",
-              "headers": {}
-            }
-          }
-        }
-      },
-      "/api/v1/processes/process-instance": {
-        "get": {
-          "description": "",
-          "responses": {
-            "200": {
-              "content": {},
-              "description": "",
-              "headers": {}
-            }
-          }
-        }
-      },
-      "/api/v1/processes/task": {
-        "post": {
-          "description": "",
-          "responses": {
-            "200": {
-              "content": {},
-              "description": "",
-              "headers": {}
-            }
-          }
-        }
-      },
-      "/api/v1/processes/task/{id}/complete": {
-        "post": {
-          "description": "",
-          "responses": {
-            "204": {
-              "content": {},
-              "description": "",
-              "headers": {}
-            }
-          }
-        }
-      },
-      "/api/v1/processes/task/{id}/variables": {
-        "get": {
-          "description": "",
-          "responses": {
-            "200": {
-              "content": {},
-              "description": "",
-              "headers": {}
-            }
-          }
-        }
-      }
-    },
-    "servers": [
-      {
-        "url": "http://localhost:3000/"
-      }
-    ]
-  }
-  
+      ],
+      "enabled": true,
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "5d1ce034-b37a-4556-9c83-2e5ebdc613dd"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": []
+}

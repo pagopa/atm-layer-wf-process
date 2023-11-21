@@ -68,7 +68,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           results-file: src/test/resources/integration-test/output/result.json
-          report-name: 'Postman ${{ github.run_number }}'
+          report-name: 'Postman create pre-release: ${{ github.run_number }}'
           create-status-check: true
           create-pr-comment: true
           update-comment-if-one-exists: true

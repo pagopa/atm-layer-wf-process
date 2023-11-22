@@ -3,15 +3,6 @@ name: Manual deploy release
 on:
   workflow_dispatch:
     inputs:
-      env:
-        description: 'Environment:'
-        type: choice
-        required: true
-        default: dev
-        options:
-        - dev
-        - uat
-        - prod
       release:
         description: 'Which pre-release/release to deploy:'
         type: string
@@ -27,10 +18,10 @@ permissions:
 
 jobs:
   manual-deploy-release:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/uat' || github.ref == 'refs/heads/main'
     strategy:
       matrix:
-        environment: ["${{ inputs.env }}"]
+        environment: ["${{ github.ref == 'refs/heads/dev' && 'dev' || github.ref == 'refs/heads/uat' && 'uat' || github.ref == 'refs/heads/main' && 'prod' }}"]
 
     name: "manual-deploy-release"
     runs-on: ubuntu-latest
@@ -52,7 +43,7 @@ jobs:
 
       - name: Update Kubernetes Config
         run: |
-          aws eks --region ${{ vars.AWS_REGION }} update-kubeconfig --name pagopa-${{ inputs.env }}-atm-layer-eks
+          aws eks --region ${{ vars.AWS_REGION }} update-kubeconfig --name pagopa-${{ matrix.environment }}-atm-layer-eks
 
       - name: Install Helm
         run: |
@@ -64,7 +55,7 @@ jobs:
         run: |
           helm upgrade --install ${{ vars.DOCKER_IMAGE_NAME }} helm-chart/ \
           --namespace pagopa \
-          -f helm-chart/environments/values-${{ inputs.env }}.yaml \
+          -f helm-chart/environments/values-${{ matrix.environment }}.yaml \
           --set image.tag=${{ inputs.release }} \
           --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ vars.DOCKER_IMAGE_NAME }} \
           --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=${{ secrets.SERVICEACCOUNT_IAM_ROLE }}

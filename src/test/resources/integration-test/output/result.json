@@ -42,7 +42,7 @@
               "type": "text/javascript",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {\r",
-                "    pm.response.to.have.status(500);\r",
+                "    pm.response.to.have.status(200);\r",
                 "});"
               ],
               "_lastExecutionId": "be7a1ecb-7990-484f-836c-ce12cb5e83b1"
@@ -87,7 +87,7 @@
               "type": "text/javascript",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {\r",
-                "    pm.response.to.have.status(500);\r",
+                "    pm.response.to.have.status(200);\r",
                 "});"
               ],
               "_lastExecutionId": "1248a4e6-079a-4193-9413-e2288717c631"

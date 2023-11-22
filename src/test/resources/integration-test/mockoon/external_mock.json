@@ -51,7 +51,7 @@
             "responses": [
                 {
                     "uuid": "60e26896-981e-4a7e-9a73-e1506e7a3c5d",
-                    "body": "[\n  {\n    \"links\": [],\n    \"id\": \"anId\",\n    \"definitionId\": \"aProcessDefinitionId\",\n    \"businessKey\": \"test\",\n    \"caseInstanceId\": \"aCaseInstanceId\",\n    \"ended\": false,\n    \"suspended\": false,\n    \"tenantId\": null\n  }\n]\n",
+                    "body": "{\n  \"links\": [\n    {\n      \"method\": \"GET\",\n      \"href\": \"http://localhost:8080/rest-test/process-instance/aProcInstId\",\n      \"rel\": \"self\"\n    }\n  ],\n  \"id\": \"aProcInstId\",\n  \"definitionId\": \"aProcessDefinitionId\",\n  \"businessKey\": \"myBusinessKey\",\n  \"caseInstanceId\": null,\n  \"ended\": false,\n  \"suspended\": false,\n  \"tenantId\": null,\n  \"variables\": {\n    \"PRINTER\": {\n      \"type\": \"String\",\n      \"value\": \"OK\",\n    },\n    \"SCANNER\": {\n      \"type\": \"String\",\n      \"value\": \"OK\"\n    }\n  }\n}",
                     "latency": 0,
                     "statusCode": 200,
                     "label": "",

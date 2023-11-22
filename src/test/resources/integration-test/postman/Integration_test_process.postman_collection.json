@@ -110,7 +110,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "",
+					"raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-3adabfa508b8\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -118,10 +118,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/v1/processes/variables",
+					"raw": "http://localhost:8702/api/v1/processes/variables",
+					"protocol": "http",
 					"host": [
-						"{{baseUrl}}"
+						"localhost"
 					],
+					"port": "8702",
 					"path": [
 						"api",
 						"v1",

@@ -118,12 +118,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8702/api/v1/processes/variables",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/api/v1/processes/variables",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8702",
 					"path": [
 						"api",
 						"v1",

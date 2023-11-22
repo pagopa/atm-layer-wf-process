@@ -36,6 +36,8 @@ public class ProcessTestData {
 
     public static final String BPMN_ID = "TEST_BPMN_ID";
 
+    public static final String BUSINESS_KEY = "TEST_BUSINESS_KEY";
+
     private static Random random = new Random();
 
     public static DeviceInfo getDeviceInfo() {
@@ -244,7 +246,13 @@ public class ProcessTestData {
     }
 
     public static List<InstanceDto> createResponseInstance() {
-
         return List.of(new InstanceDto());
+    }
+
+    public static List<InstanceDto> createResponseInstanceProcessRetrieved() {
+        List<InstanceDto> instanceDtoList = new ArrayList<>();
+        instanceDtoList.add(InstanceDto.builder().businessKey(BUSINESS_KEY).build());
+
+        return instanceDtoList;
     }
 }

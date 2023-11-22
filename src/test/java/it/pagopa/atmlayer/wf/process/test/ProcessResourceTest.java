@@ -402,8 +402,25 @@ public class ProcessResourceTest {
                                 .when()
                                 .post("/next")
                                 .then()
-                                .statusCode(StatusCode.OK);
+                                .statusCode(StatusCode.ACCEPTED);
         }
+
+       /*  @Test
+        public void testNextOkWithNoTasksRetrievedWhileProcessing() {
+                Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok());
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(Collections.emptyList()));
+                Mockito.when(camundaRestClient.getInstanceActivity(Mockito.any(String.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createResponseInstanceProcessRetrieved()));
+                given()
+                                .body(ProcessTestData.createTaskRequestNext())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/next")
+                                .then()
+                                .statusCode();
+        } */
 
         @Test
         public void testNextKoNoBusinessKey() {

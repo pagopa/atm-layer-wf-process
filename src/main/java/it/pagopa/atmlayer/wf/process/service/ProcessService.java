@@ -2,12 +2,14 @@ package it.pagopa.atmlayer.wf.process.service;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.RestResponse.Status;
 
 import it.pagopa.atmlayer.wf.process.bean.DeviceInfo;
 import it.pagopa.atmlayer.wf.process.bean.Task;
@@ -176,11 +178,9 @@ public class ProcessService {
      */
     public RestResponse<TaskResponse> retrieveActiveTasks(String businessKey) {
         RestResponse<TaskResponse> response;
-        TaskResponse taskResponse;
 
         if (businessKey != null) {
-            taskResponse = getActiveTasks(businessKey);
-            response = RestResponse.ok(taskResponse);
+            response = getActiveTasks(businessKey);
         } else {
             throw new ProcessException(ProcessErrorEnum.BUSINESS_KEY_NOT_PRESENT);
         }
@@ -195,12 +195,11 @@ public class ProcessService {
      * @return A `RestResponse` containing the retrieved tasks.
      * @throws InterruptedException
      */
-    public TaskResponse getActiveTasks(String businessKey) {
-        TaskResponse taskResponse = null;
-        List<CamundaTaskDto> camundaTaskList = getList(businessKey);
+    public RestResponse<TaskResponse> getActiveTasks(String businessKey) {
+        RestResponse<List<CamundaTaskDto>> camundaTaskList = getList(businessKey);
 
         log.info("Retrieving active tasks. . .");
-        List<Task> activeTasks = camundaTaskList.stream()
+        List<Task> activeTasks = camundaTaskList.getEntity().stream()
                 .map(taskDto -> Task.builder()
                         .form(taskDto.getFormKey())
                         .id(taskDto.getId())
@@ -208,19 +207,19 @@ public class ProcessService {
                         .build())
                 .collect(Collectors.toList());
 
-        taskResponse = TaskResponse.builder().transactionId(businessKey).tasks(activeTasks).build();
-        log.info("Tasks retrieved!");
-
-        return taskResponse;
+        return RestResponse.status(Status.fromStatusCode(camundaTaskList.getStatus()),
+                TaskResponse.builder().transactionId(businessKey).tasks(activeTasks).build());
     }
 
     /**
-     * <p>Retrieve the list of task associated to the business key.</p>
+     * <p>
+     * Retrieve the list of task associated to the business key.
+     * </p>
      * 
      * @param businessKey
      * @return the list of camunda task associated to the businessKey
      */
-    private List<CamundaTaskDto> getList(String businessKey){
+    private RestResponse<List<CamundaTaskDto>> getList(String businessKey) {
         RestResponse<List<CamundaTaskDto>> camundaGetListResponse;
 
         try {
@@ -235,7 +234,7 @@ public class ProcessService {
             }
         }
 
-         if (camundaGetListResponse.getEntity().isEmpty()) {
+        if (camundaGetListResponse.getEntity().isEmpty()) {
             RestResponse<List<InstanceDto>> instanceResponse = camundaRestClient
                     .getInstanceActivity(businessKey);
             if (!instanceResponse.getEntity().isEmpty()) {
@@ -247,11 +246,13 @@ public class ProcessService {
                  * and after a specified time.
                  */
                 camundaGetListResponse = retryActiveTasks(camundaGetListResponse, businessKey);
-                camundaGetListResponse = camundaGetListResponse.getEntity().isEmpty() ? RestResponse.status(102) : camundaGetListResponse;
+                if (camundaGetListResponse.getEntity().isEmpty()) {
+                    camundaGetListResponse = RestResponse.status(Status.ACCEPTED, Collections.emptyList());
+                }
             }
         }
 
-        return camundaGetListResponse.getEntity();
+        return camundaGetListResponse;
     }
 
     /**

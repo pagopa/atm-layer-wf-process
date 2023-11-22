@@ -47,11 +47,11 @@
             "type": "http",
             "documentation": "",
             "method": "post",
-            "endpoint": "api/v1/processes/process-definition/:id/start",
+            "endpoint": "engine-rest/process-definition/:id/start",
             "responses": [
                 {
                     "uuid": "60e26896-981e-4a7e-9a73-e1506e7a3c5d",
-                    "body": "{\n  \"links\": [\n    {\n      \"method\": \"GET\",\n      \"href\": \"http://localhost:8080/rest-test/process-instance/aProcInstId\",\n      \"rel\": \"self\"\n    }\n  ],\n  \"id\": \"aProcInstId\",\n  \"definitionId\": \"aProcessDefinitionId\",\n  \"businessKey\": \"myBusinessKey\",\n  \"caseInstanceId\": null,\n  \"ended\": false,\n  \"suspended\": false,\n  \"tenantId\": null,\n  \"variables\": {\n    \"PRINTER\": {\n      \"type\": \"String\",\n      \"value\": \"OK\",\n    },\n    \"SCANNER\": {\n      \"type\": \"String\",\n      \"value\": \"OK\"\n    }\n  }\n}",
+                    "body": "{\n  \"links\": [\n    {\n      \"method\": \"GET\",\n      \"href\": \"http://localhost:8080/rest-test/process-instance/anId\",\n      \"rel\": \"self\"\n    }\n  ],\n  \"id\": \"anId\",\n  \"definitionId\": \"aProcessDefinitionId\",\n  \"businessKey\": \"myBusinessKey\",\n  \"caseInstanceId\": null,\n  \"tenantId\": null,\n  \"ended\": false,\n  \"suspended\": false\n}",
                     "latency": 0,
                     "statusCode": 200,
                     "label": "",
@@ -81,7 +81,7 @@
             "type": "http",
             "documentation": "",
             "method": "get",
-            "endpoint": "api/v1/processes/process-instance",
+            "endpoint": "engine-rest/process-instance",
             "responses": [
                 {
                     "uuid": "e274a439-adde-4446-866a-dae44a2e537f",
@@ -115,7 +115,7 @@
             "type": "http",
             "documentation": "",
             "method": "post",
-            "endpoint": "api/v1/processes/task",
+            "endpoint": "engine-rest/task",
             "responses": [
                 {
                     "uuid": "1e8915dd-541e-4e08-8aed-592e80b52dfd",
@@ -149,7 +149,7 @@
             "type": "http",
             "documentation": "",
             "method": "post",
-            "endpoint": "api/v1/processes/task/:id/complete",
+            "endpoint": "engine-rest/task/:id/complete",
             "responses": [
                 {
                     "uuid": "acc8a50e-550d-46ae-a260-56cc5e145424",
@@ -183,7 +183,7 @@
             "type": "http",
             "documentation": "",
             "method": "get",
-            "endpoint": "api/v1/processes/task/:id/variables",
+            "endpoint": "engine-rest/task/:id/variables",
             "responses": [
                 {
                     "uuid": "0a313d8c-eca8-4735-a685-bdb691ab451c",

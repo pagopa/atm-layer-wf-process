@@ -6,7 +6,7 @@
     },
     "item": [
       {
-        "id": "73d7e788-33c6-4f08-b8aa-0728cc86f2d2",
+        "id": "9435a0bc-d312-433f-8930-394bf122f0e3",
         "name": "Start - Processo correttamente iniziato",
         "request": {
           "url": {
@@ -38,20 +38,20 @@
           {
             "listen": "test",
             "script": {
-              "id": "c75ec905-95ef-4085-ac6a-a013e6306a7f",
+              "id": "ce5e6484-e57d-417d-90cb-5631712a294b",
               "type": "text/javascript",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {\r",
                 "    pm.response.to.have.status(200);\r",
                 "});"
               ],
-              "_lastExecutionId": "7a6fff0d-4f68-4548-ac01-7ce89a1f7234"
+              "_lastExecutionId": "625a13cc-ba7d-40a8-b5a4-c9669aff86a6"
             }
           }
         ]
       },
       {
-        "id": "cfcb2491-e078-4805-b90b-00164d2d7718",
+        "id": "600076fa-73a3-40cc-af6f-f686a86f8f80",
         "name": "Next - Task specificato completato corretamente e recuperati i task attivi",
         "request": {
           "url": {
@@ -83,14 +83,59 @@
           {
             "listen": "test",
             "script": {
-              "id": "2153f6fc-0705-4192-ac98-68a5e00b4d0a",
+              "id": "877a957a-4a40-403a-a8de-087334827314",
               "type": "text/javascript",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {\r",
                 "    pm.response.to.have.status(200);\r",
                 "});"
               ],
-              "_lastExecutionId": "1fac678f-cb90-430e-80b9-20e3d41c1cff"
+              "_lastExecutionId": "9478a432-db74-4296-bcf1-336bc747d970"
+            }
+          }
+        ]
+      },
+      {
+        "id": "b7d52e94-2543-4767-931e-145e66b4fa75",
+        "name": "Variables - Variabili dell'istanza di processo relative al task recuperate correttamente",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "variables"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-3adabfa508b8\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "f8fadf43-20af-41f4-9d9a-69c6d41ec36d",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {\r",
+                "    pm.response.to.have.status(200);\r",
+                "});"
+              ],
+              "_lastExecutionId": "dbb49820-355a-499d-935a-562652554b0b"
             }
           }
         ]
@@ -100,12 +145,12 @@
     "variable": [],
     "info": {
       "_postman_id": "fa41de07-c678-4c26-9e8f-4cb0ff0184f5",
-      "name": "Intergration_test_process",
+      "name": "Integration_test_process",
       "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     }
   },
   "environment": {
-    "id": "51333a65-1e79-4026-90b5-c141f4888679",
+    "id": "75c44b67-aa44-4d75-a8f1-bb0b1d3408cf",
     "values": [
       {
         "type": "any",
@@ -115,7 +160,7 @@
     ]
   },
   "globals": {
-    "id": "06bef254-5a75-4ce9-a0fe-41ca430e30f8",
+    "id": "e8850b6e-3659-4680-bf56-e6f8f4b27d3c",
     "values": []
   },
   "run": {
@@ -126,37 +171,37 @@
         "failed": 0
       },
       "items": {
-        "total": 2,
+        "total": 3,
         "pending": 0,
         "failed": 0
       },
       "scripts": {
-        "total": 2,
+        "total": 3,
         "pending": 0,
         "failed": 0
       },
       "prerequests": {
-        "total": 2,
+        "total": 3,
         "pending": 0,
         "failed": 0
       },
       "requests": {
-        "total": 2,
+        "total": 3,
         "pending": 0,
         "failed": 0
       },
       "tests": {
-        "total": 2,
+        "total": 3,
         "pending": 0,
         "failed": 0
       },
       "assertions": {
-        "total": 2,
+        "total": 3,
         "pending": 0,
         "failed": 0
       },
       "testScripts": {
-        "total": 2,
+        "total": 3,
         "pending": 0,
         "failed": 0
       },
@@ -167,10 +212,10 @@
       }
     },
     "timings": {
-      "responseAverage": 155.5,
-      "responseMin": 34,
-      "responseMax": 277,
-      "responseSd": 121.5,
+      "responseAverage": 135.33333333333334,
+      "responseMin": 24,
+      "responseMax": 357,
+      "responseSd": 156.74253482135035,
       "dnsAverage": 0,
       "dnsMin": 0,
       "dnsMax": 0,
@@ -179,25 +224,25 @@
       "firstByteMin": 0,
       "firstByteMax": 0,
       "firstByteSd": 0,
-      "started": 1700651941927,
-      "completed": 1700651942289
+      "started": 1700731352945,
+      "completed": 1700731353419
     },
     "executions": [
       {
         "cursor": {
           "position": 0,
           "iteration": 0,
-          "length": 2,
+          "length": 3,
           "cycles": 1,
           "empty": false,
           "eof": false,
           "bof": true,
           "cr": false,
-          "ref": "7f9c81cc-7373-41e4-a8e2-13e729c0b824",
-          "httpRequestId": "5acef867-3aa3-43d4-ba80-31c593f7bf06"
+          "ref": "20a59760-5bb1-47e5-913e-d74f395f1135",
+          "httpRequestId": "df24c2a5-bed2-4fe7-8c13-3c823670a0bf"
         },
         "item": {
-          "id": "73d7e788-33c6-4f08-b8aa-0728cc86f2d2",
+          "id": "9435a0bc-d312-433f-8930-394bf122f0e3",
           "name": "Start - Processo correttamente iniziato",
           "request": {
             "url": {
@@ -229,14 +274,14 @@
             {
               "listen": "test",
               "script": {
-                "id": "c75ec905-95ef-4085-ac6a-a013e6306a7f",
+                "id": "ce5e6484-e57d-417d-90cb-5631712a294b",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Status code is 200\", function () {\r",
-                  "    pm.response.to.have.status(500);\r",
+                  "    pm.response.to.have.status(200);\r",
                   "});"
                 ],
-                "_lastExecutionId": "7a6fff0d-4f68-4548-ac01-7ce89a1f7234"
+                "_lastExecutionId": "625a13cc-ba7d-40a8-b5a4-c9669aff86a6"
               }
             }
           ]
@@ -282,7 +327,7 @@
             },
             {
               "key": "Postman-Token",
-              "value": "bb46a511-4e49-49e7-8956-ccce6c853515",
+              "value": "0c081a3a-106b-43d7-b611-27d37b445944",
               "system": true
             },
             {
@@ -318,17 +363,17 @@
           }
         },
         "response": {
-          "id": "3cccc67d-705d-4a90-a50f-8d8e7de64ad8",
-          "status": "Internal Server Error",
-          "code": 500,
+          "id": "2bb3cd2f-66c1-4ff5-90cc-d7252e0c51de",
+          "status": "OK",
+          "code": 200,
           "header": [
+            {
+              "key": "content-length",
+              "value": "119"
+            },
             {
               "key": "Content-Type",
               "value": "application/json;charset=UTF-8"
-            },
-            {
-              "key": "content-length",
-              "value": "129"
             }
           ],
           "stream": {
@@ -337,139 +382,129 @@
               123,
               34,
               116,
-              121,
-              112,
-              101,
-              34,
-              58,
-              34,
-              71,
-              69,
-              78,
-              69,
-              82,
-              73,
-              67,
-              95,
-              69,
-              82,
-              82,
-              79,
-              82,
-              34,
-              44,
-              34,
-              101,
-              114,
-              114,
-              111,
-              114,
-              67,
-              111,
-              100,
-              101,
-              34,
-              58,
-              34,
-              71,
-              48,
-              49,
-              34,
-              44,
-              34,
-              109,
-              101,
-              115,
-              115,
-              97,
-              103,
-              101,
-              34,
-              58,
-              34,
-              65,
-              110,
-              32,
-              117,
-              110,
-              101,
-              120,
-              112,
-              101,
-              99,
-              116,
-              101,
-              100,
-              32,
-              101,
-              114,
-              114,
-              111,
-              114,
-              32,
-              104,
               97,
               115,
-              32,
-              111,
-              99,
-              99,
-              117,
-              114,
-              114,
-              101,
-              100,
-              44,
-              32,
+              107,
               115,
-              101,
-              101,
-              32,
-              108,
-              111,
-              103,
-              115,
-              32,
-              102,
-              111,
-              114,
-              32,
-              109,
-              111,
-              114,
-              101,
-              32,
+              34,
+              58,
+              91,
+              123,
+              34,
               105,
-              110,
+              100,
+              34,
+              58,
+              34,
+              53,
+              55,
+              99,
+              48,
+              101,
+              51,
+              55,
+              98,
+              45,
+              56,
+              55,
+              99,
+              53,
+              45,
+              49,
+              49,
+              101,
+              101,
+              45,
+              97,
+              99,
+              101,
+              101,
+              45,
+              51,
+              97,
+              100,
+              97,
+              98,
               102,
+              97,
+              53,
+              48,
+              56,
+              98,
+              56,
+              34,
+              44,
+              34,
+              102,
+              111,
+              114,
+              109,
+              34,
+              58,
+              34,
+              100,
+              97,
+              116,
+              105,
+              65,
+              118,
+              118,
+              105,
+              115,
               111,
               46,
+              104,
+              116,
+              109,
+              108,
               34,
               44,
               34,
-              115,
-              116,
-              97,
-              116,
-              117,
-              115,
-              67,
+              112,
+              114,
+              105,
               111,
-              100,
-              101,
+              114,
+              105,
+              116,
+              121,
               34,
               58,
               53,
               48,
-              48,
+              125,
+              93,
+              44,
+              34,
+              116,
+              114,
+              97,
+              110,
+              115,
+              97,
+              99,
+              116,
+              105,
+              111,
+              110,
+              73,
+              100,
+              34,
+              58,
+              34,
+              116,
+              101,
+              115,
+              116,
+              34,
               125
             ]
           },
           "cookie": [],
-          "responseTime": 277,
-          "responseSize": 129
+          "responseTime": 357,
+          "responseSize": 119
         },
-        "id": "73d7e788-33c6-4f08-b8aa-0728cc86f2d2",
+        "id": "9435a0bc-d312-433f-8930-394bf122f0e3",
         "assertions": [
           {
             "assertion": "Status code is 200",
@@ -479,15 +514,15 @@
       },
       {
         "cursor": {
-          "ref": "4375bbd2-046b-4c69-bebf-6e8a6540780a",
-          "length": 2,
+          "ref": "9672f9c0-afde-4d1a-b8e1-0307cb1915c3",
+          "length": 3,
           "cycles": 1,
           "position": 1,
           "iteration": 0,
-          "httpRequestId": "537c6ed7-bed0-4294-808d-9321d948a1ea"
+          "httpRequestId": "be7b6607-ed11-4295-9c82-1483cdc8c9ed"
         },
         "item": {
-          "id": "cfcb2491-e078-4805-b90b-00164d2d7718",
+          "id": "600076fa-73a3-40cc-af6f-f686a86f8f80",
           "name": "Next - Task specificato completato corretamente e recuperati i task attivi",
           "request": {
             "url": {
@@ -519,14 +554,14 @@
             {
               "listen": "test",
               "script": {
-                "id": "2153f6fc-0705-4192-ac98-68a5e00b4d0a",
+                "id": "877a957a-4a40-403a-a8de-087334827314",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Status code is 200\", function () {\r",
-                  "    pm.response.to.have.status(500);\r",
+                  "    pm.response.to.have.status(200);\r",
                   "});"
                 ],
-                "_lastExecutionId": "1fac678f-cb90-430e-80b9-20e3d41c1cff"
+                "_lastExecutionId": "9478a432-db74-4296-bcf1-336bc747d970"
               }
             }
           ]
@@ -572,7 +607,7 @@
             },
             {
               "key": "Postman-Token",
-              "value": "17b1bcf9-bdd6-437f-bb69-d82e091111cb",
+              "value": "867e2850-ea0a-45a5-af8e-aecabcb29850",
               "system": true
             },
             {
@@ -608,17 +643,17 @@
           }
         },
         "response": {
-          "id": "14c51ffd-a2d0-40ee-a444-fbe5e3529639",
-          "status": "Internal Server Error",
-          "code": 500,
+          "id": "c4241a1e-3cb2-4acc-85a6-07bf955a11bf",
+          "status": "OK",
+          "code": 200,
           "header": [
+            {
+              "key": "content-length",
+              "value": "119"
+            },
             {
               "key": "Content-Type",
               "value": "application/json;charset=UTF-8"
-            },
-            {
-              "key": "content-length",
-              "value": "129"
             }
           ],
           "stream": {
@@ -627,139 +662,346 @@
               123,
               34,
               116,
-              121,
-              112,
-              101,
-              34,
-              58,
-              34,
-              71,
-              69,
-              78,
-              69,
-              82,
-              73,
-              67,
-              95,
-              69,
-              82,
-              82,
-              79,
-              82,
-              34,
-              44,
-              34,
-              101,
-              114,
-              114,
-              111,
-              114,
-              67,
-              111,
-              100,
-              101,
-              34,
-              58,
-              34,
-              71,
-              48,
-              49,
-              34,
-              44,
-              34,
-              109,
-              101,
-              115,
-              115,
-              97,
-              103,
-              101,
-              34,
-              58,
-              34,
-              65,
-              110,
-              32,
-              117,
-              110,
-              101,
-              120,
-              112,
-              101,
-              99,
-              116,
-              101,
-              100,
-              32,
-              101,
-              114,
-              114,
-              111,
-              114,
-              32,
-              104,
               97,
               115,
-              32,
-              111,
-              99,
-              99,
-              117,
-              114,
-              114,
-              101,
-              100,
-              44,
-              32,
+              107,
               115,
-              101,
-              101,
-              32,
-              108,
-              111,
-              103,
-              115,
-              32,
-              102,
-              111,
-              114,
-              32,
-              109,
-              111,
-              114,
-              101,
-              32,
+              34,
+              58,
+              91,
+              123,
+              34,
               105,
-              110,
+              100,
+              34,
+              58,
+              34,
+              53,
+              55,
+              99,
+              48,
+              101,
+              51,
+              55,
+              98,
+              45,
+              56,
+              55,
+              99,
+              53,
+              45,
+              49,
+              49,
+              101,
+              101,
+              45,
+              97,
+              99,
+              101,
+              101,
+              45,
+              51,
+              97,
+              100,
+              97,
+              98,
               102,
+              97,
+              53,
+              48,
+              56,
+              98,
+              56,
+              34,
+              44,
+              34,
+              102,
+              111,
+              114,
+              109,
+              34,
+              58,
+              34,
+              100,
+              97,
+              116,
+              105,
+              65,
+              118,
+              118,
+              105,
+              115,
               111,
               46,
+              104,
+              116,
+              109,
+              108,
               34,
               44,
               34,
-              115,
-              116,
-              97,
-              116,
-              117,
-              115,
-              67,
+              112,
+              114,
+              105,
               111,
-              100,
-              101,
+              114,
+              105,
+              116,
+              121,
               34,
               58,
               53,
               48,
-              48,
+              125,
+              93,
+              44,
+              34,
+              116,
+              114,
+              97,
+              110,
+              115,
+              97,
+              99,
+              116,
+              105,
+              111,
+              110,
+              73,
+              100,
+              34,
+              58,
+              34,
+              116,
+              101,
+              115,
+              116,
+              34,
               125
             ]
           },
           "cookie": [],
-          "responseTime": 34,
-          "responseSize": 129
+          "responseTime": 24,
+          "responseSize": 119
         },
-        "id": "cfcb2491-e078-4805-b90b-00164d2d7718",
+        "id": "600076fa-73a3-40cc-af6f-f686a86f8f80",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "36b01106-f50f-4537-a6f0-78710cc73bd2",
+          "length": 3,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "0f0506c2-42b5-41df-9687-1a322626242e"
+        },
+        "item": {
+          "id": "b7d52e94-2543-4767-931e-145e66b4fa75",
+          "name": "Variables - Variabili dell'istanza di processo relative al task recuperate correttamente",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "variables"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-3adabfa508b8\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "f8fadf43-20af-41f4-9d9a-69c6d41ec36d",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "dbb49820-355a-499d-935a-562652554b0b"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "variables"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.33.0",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "35099a39-4c7f-4cb8-9e7f-19afa1fb3c6f",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "94",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-3adabfa508b8\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "d72ef1ed-1b38-4c21-b190-a6e8fb6413a6",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "56"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              118,
+              97,
+              114,
+              105,
+              97,
+              98,
+              108,
+              101,
+              115,
+              34,
+              58,
+              123,
+              34,
+              97,
+              86,
+              97,
+              114,
+              105,
+              97,
+              98,
+              108,
+              101,
+              75,
+              101,
+              121,
+              34,
+              58,
+              123,
+              34,
+              112,
+              114,
+              111,
+              112,
+              49,
+              34,
+              58,
+              34,
+              97,
+              34,
+              44,
+              34,
+              112,
+              114,
+              111,
+              112,
+              50,
+              34,
+              58,
+              34,
+              98,
+              34,
+              125,
+              125,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 25,
+          "responseSize": 56
+        },
+        "id": "b7d52e94-2543-4767-931e-145e66b4fa75",
         "assertions": [
           {
             "assertion": "Status code is 200",
@@ -769,7 +1011,7 @@
       }
     ],
     "transfers": {
-      "responseTotal": 258
+      "responseTotal": 294
     },
     "failures": [],
     "error": null

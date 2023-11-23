@@ -681,4 +681,62 @@ public class ProcessResourceTest {
                                 .then()
                                 .statusCode(StatusCode.NOT_FOUND);
         }
+
+        @Test
+        public void testResource(){
+                Mockito.when(camundaRestClient.getResources(Mockito.anyString())).thenReturn(RestResponse.ok(ProcessTestData.createCamundaResourceDtos()));
+                Mockito.when(camundaRestClient.getResourceBinary(Mockito.anyString(), Mockito.anyString())).thenReturn(RestResponse.ok(ProcessTestData.BPMN));
+
+                given()
+                                .when()
+                                .get("/deploy/{id}/data", ProcessTestData.DEPLOYMENT_ID)
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testResourceNotFound(){
+                Mockito.when(camundaRestClient.getResources(Mockito.anyString())).thenThrow(new WebApplicationException(Response.status(Status.NOT_FOUND).build()));
+
+                given()
+                                .when()
+                                .get("/deploy/{id}/data", ProcessTestData.DEPLOYMENT_ID)
+                                .then()
+                                .statusCode(StatusCode.NOT_FOUND);
+        }
+
+        @Test
+        public void testResourceUnknownResponseCode(){
+                Mockito.when(camundaRestClient.getResources(Mockito.anyString())).thenThrow(new WebApplicationException(Response.status(Status.CONFLICT).build()));
+
+                given()
+                                .when()
+                                .get("/deploy/{id}/data", ProcessTestData.DEPLOYMENT_ID)
+                                .then()
+                                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+        }
+
+        @Test
+        public void testResourceBinaryBadRequest(){
+                Mockito.when(camundaRestClient.getResources(Mockito.anyString())).thenReturn(RestResponse.ok(ProcessTestData.createCamundaResourceDtos()));
+                Mockito.when(camundaRestClient.getResourceBinary(Mockito.anyString(), Mockito.anyString())).thenThrow(new WebApplicationException(Response.status(Status.BAD_REQUEST).build()));
+
+                given()
+                                .when()
+                                .get("/deploy/{id}/data", ProcessTestData.DEPLOYMENT_ID)
+                                .then()
+                                .statusCode(StatusCode.BAD_REQUEST);
+        }
+
+        @Test
+        public void testResourceBinaryUnknownResponseCode(){
+                Mockito.when(camundaRestClient.getResources(Mockito.anyString())).thenReturn(RestResponse.ok(ProcessTestData.createCamundaResourceDtos()));
+                Mockito.when(camundaRestClient.getResourceBinary(Mockito.anyString(), Mockito.anyString())).thenThrow(new WebApplicationException(Response.status(Status.CONFLICT).build()));
+
+                given()
+                                .when()
+                                .get("/deploy/{id}/data", ProcessTestData.DEPLOYMENT_ID)
+                                .then()
+                                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+        }
 }

@@ -17,6 +17,7 @@ import it.pagopa.atmlayer.wf.process.bean.DeviceType;
 import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
 import it.pagopa.atmlayer.wf.process.bean.VariableRequest;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaResourceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
@@ -37,6 +38,12 @@ public class ProcessTestData {
     public static final String BPMN_ID = "TEST_BPMN_ID";
 
     public static final String BUSINESS_KEY = "TEST_BUSINESS_KEY";
+
+    public static final String RESOURCE_ID = "TEST_RESOURCE_ID";
+
+    public static final String BPMN = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><bpmn>test</bpmn>";
+
+    public static final String DEPLOYMENT_ID = "TEST_DEPLOYMENT_ID";
 
     private static Random random = new Random();
 
@@ -264,4 +271,13 @@ public class ProcessTestData {
 
         return instanceDtoList;
     }
+
+    public static List<CamundaResourceDto> createCamundaResourceDtos(){
+        List<CamundaResourceDto> camundaResourceDtoList = new ArrayList<>();
+        camundaResourceDtoList.add(CamundaResourceDto.builder().id(RESOURCE_ID).build());
+        
+        return camundaResourceDtoList;
+    }
+        
+    
 }

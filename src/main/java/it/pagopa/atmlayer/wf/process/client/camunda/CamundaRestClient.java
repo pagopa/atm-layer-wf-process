@@ -9,6 +9,7 @@ import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaResourceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
@@ -27,6 +28,14 @@ public interface CamundaRestClient {
     @POST
     @Path("/deployment/create")
     RestResponse<Object> deploy(@RestForm File data);
+
+    @GET
+    @Path("/deployment/{id}/resources")
+    RestResponse<List<CamundaResourceDto>> getResources(@PathParam("id") String id);
+
+    @GET
+    @Path("/deployment/{id}/resources/{resourceId}/data")
+    RestResponse<String> getResourceBinary(@PathParam("id") String id, @PathParam("resourceId") String resourceId);
 
     @POST
     @Path("/process-definition/{id}/start")
@@ -47,4 +56,5 @@ public interface CamundaRestClient {
     @GET
     @Path("/process-instance")
     RestResponse<List<InstanceDto>> getInstanceActivity(@QueryParam("businessKey") String businessKey);
+
 }

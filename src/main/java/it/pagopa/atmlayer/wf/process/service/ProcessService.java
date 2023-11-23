@@ -17,6 +17,7 @@ import it.pagopa.atmlayer.wf.process.bean.TaskResponse;
 import it.pagopa.atmlayer.wf.process.bean.VariableResponse;
 import it.pagopa.atmlayer.wf.process.client.camunda.CamundaRestClient;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaResourceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
@@ -74,6 +75,19 @@ public class ProcessService {
         }
 
         return camundaDeployResponse;
+    }
+
+    /**
+     * 
+     * Retrieves the BPMN binary resource for the associated id of the deployment.
+     * 
+     * @param id - the id of deployment
+     * @return bpmn file
+     */
+    public String getResource(String deploymentId) {
+        String resourceId = camundaGetResources(deploymentId);
+
+        return camundaGetResourceBinary(deploymentId, resourceId);
     }
 
     /**
@@ -419,6 +433,62 @@ public class ProcessService {
      */
     private RestResponse<CamundaVariablesDto> camundaGetTaskVariables(String taskId) {
         return camundaRestClient.getTaskVariables(taskId);
+    }
+
+    /**
+     * <p>
+     * <b>CAMUNDA COMMUNICATION</b>
+     * </p>
+     * 
+     * Retrieves the BPMN for the associated id of the deployment on Camunda.
+     * 
+     * @param id
+     * @return resourceId
+     */
+    private String camundaGetResources(String id) {
+        RestResponse<List<CamundaResourceDto>> camundaGetResourcesResponse;
+
+        try {
+            camundaGetResourcesResponse = camundaRestClient.getResources(id);
+        } catch (WebApplicationException e) {
+            if (e.getResponse().getStatus() == RestResponse.StatusCode.NOT_FOUND) {
+                log.error("Get resources failed! No deployment resources found for the given id deployment.");
+                throw new ProcessException(ProcessErrorEnum.RESOURCE_R01);
+            } else {
+                log.error("Unknown response status code: {}", e.getResponse().getStatus());
+                throw new ProcessException(ProcessErrorEnum.GENERIC);
+            }
+        }
+        return camundaGetResourcesResponse.getEntity().stream().findFirst().get().getId();
+    }
+
+    /**
+     * <p>
+     * <b>CAMUNDA COMMUNICATION</b>
+     * </p>
+     * 
+     * Retrieves the BPMN binary resource for the associated deploymentId and
+     * resourceId on Camunda.
+     * 
+     * @param id
+     * @return resourceId
+     */
+    private String camundaGetResourceBinary(String deploymentId, String resourceId) {
+        RestResponse<String> camundaGetResourceBinaryResponse;
+
+        try {
+            camundaGetResourceBinaryResponse = camundaRestClient.getResourceBinary(deploymentId, resourceId);
+        } catch (WebApplicationException e) {
+            if (e.getResponse().getStatus() == RestResponse.StatusCode.BAD_REQUEST) {
+                log.error("Get resources failed! No deployment resources found for the given id deployment.");
+                throw new ProcessException(ProcessErrorEnum.RESOURCE_R02);
+            } else {
+                log.error("Unknown response status code: {}", e.getResponse().getStatus());
+                throw new ProcessException(ProcessErrorEnum.GENERIC);
+            }
+        }
+
+        return camundaGetResourceBinaryResponse.getEntity();
     }
 
 }

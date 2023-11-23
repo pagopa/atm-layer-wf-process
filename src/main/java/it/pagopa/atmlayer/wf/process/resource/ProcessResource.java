@@ -1,5 +1,6 @@
 package it.pagopa.atmlayer.wf.process.resource;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -22,9 +23,11 @@ import it.pagopa.atmlayer.wf.process.util.Constants;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 
@@ -72,6 +75,37 @@ public class ProcessResource {
         } finally {
             // Delete of temp bpmn used for deploy on Camunda platform
             Utility.deleteFileIfExists(fileName);
+        }
+
+        return response;
+    }
+
+    /**
+     * Endpoint to get a BPMN resource from Camunda.
+     *
+     * @param id The deploymentId.
+     * @return A `RestResponse` containing the resource BPMN.
+     */
+    @Operation(summary = "Recupera file BPMN.", description = "Recupera file BPMN per il dato deploymentId.")
+    @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce il file BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.class)))
+    @APIResponse(responseCode = "400", description = "BAD_REQUEST. Risorsa BPMN non trovata.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+    
+    @APIResponse(responseCode = "404", description = "NOT_FOUND. Deployments non trovati.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+    @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante il deploy del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+    @GET
+    @Path("/deploy/{id}/data")
+    @Produces(MediaType.APPLICATION_XML)
+    public RestResponse<String> resource(@PathParam("id") String id) {
+        log.info("Executing RESOURCE. . .");
+        RestResponse<String> response;
+
+        try {
+            response = RestResponse.ok(processService.getResource(id));
+        } catch (ProcessException e) {
+            throw e;
+        } catch (RuntimeException e) {
+            log.error("Generic exception occured while processing get resource bpmn: ", e);
+            throw new ProcessException(ProcessErrorEnum.GENERIC);
         }
 
         return response;

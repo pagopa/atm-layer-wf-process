@@ -437,13 +437,28 @@ public class ProcessResourceTest {
 
         @Test
         public void testNextMissingTaskId() {
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
                 given()
                                 .body(ProcessTestData.createTaskRequestNextMissingTaskId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .when()
                                 .post("/next")
                                 .then()
-                                .statusCode(StatusCode.BAD_REQUEST);
+                                .statusCode(StatusCode.OK);
+        }
+
+        @Test
+        public void testNextEmptyTaskId() {
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+                given()
+                                .body(ProcessTestData.createTaskRequestEmptyMissingTaskId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/next")
+                                .then()
+                                .statusCode(StatusCode.OK);
         }
 
         @Test

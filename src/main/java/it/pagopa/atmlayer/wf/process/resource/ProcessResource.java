@@ -136,19 +136,16 @@ public class ProcessResource {
             /*
              * Checking presence of taskId for complete
              */
-            if (request.getTaskId() == null) {
-                log.error("Next failed! taskId is missing.");
-                throw new ProcessException(ProcessErrorEnum.TASK_ID_NOT_PRESENT);
-            } else {
+            if (request.getTaskId() != null && !request.getTaskId().isEmpty()) {
                 /*
                  * Complete camunda task
                  */
                 processService.complete(request.getTaskId(), request.getVariables());
-                /*
-                *  Retrieve active tasks
-                */
-                response = processService.retrieveActiveTasks(request.getTransactionId());
             }
+            /*
+            *  Retrieve active tasks
+            */
+            response = processService.retrieveActiveTasks(request.getTransactionId());           
         } catch (ProcessException e) {
             throw e;
         } catch (RuntimeException e) {

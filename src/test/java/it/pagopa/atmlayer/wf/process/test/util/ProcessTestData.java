@@ -230,6 +230,15 @@ public class ProcessTestData {
                 .build();
     }
 
+    public static TaskRequest createTaskRequestEmptyMissingTaskId() {
+        return TaskRequest.builder()
+                .taskId("")
+                .transactionId(ProcessTestData.TRANSACTION_ID)
+                .variables(ProcessTestData.getVariables())
+                .deviceInfo(ProcessTestData.getDeviceInfo())
+                .build();
+    }
+
     public static List<CamundaTaskDto> createListCamundaTaskDto() {
         List<CamundaTaskDto> tasks = new ArrayList<>();
         tasks.add(CamundaTaskDto.builder().id(TASK_ID + "1").build());

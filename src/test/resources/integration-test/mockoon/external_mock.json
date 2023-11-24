@@ -217,7 +217,7 @@
             "type": "http",
             "documentation": "",
             "method": "get",
-            "endpoint": "engine-rest/deployment/{id}/resources",
+            "endpoint": "engine-rest/deployment/:id/resources",
             "responses": [
                 {
                     "uuid": "9962baab-3742-4645-9173-e75426d81acc",
@@ -251,7 +251,7 @@
             "type": "http",
             "documentation": "",
             "method": "get",
-            "endpoint": "engine-rest/deployment/{id}/resources/{resourceId}/data",
+            "endpoint": "engine-rest/deployment/:id/resources/:resourceId/data",
             "responses": [
                 {
                     "uuid": "4d87a284-b309-42f4-b1e2-124a77830cec",

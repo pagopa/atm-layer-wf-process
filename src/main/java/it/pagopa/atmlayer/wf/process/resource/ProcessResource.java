@@ -65,7 +65,8 @@ public class ProcessResource {
         log.info("Executing DEPLOY. . .");
         RestResponse<Object> response;
 
-        String fileName = new StringBuilder().append(UUID.randomUUID().toString()).append(Constants.DOT).append(resourceType != null ? resourceType.toLowerCase() : Constants.BPMN).toString();
+        String fileName = new StringBuilder().append(UUID.randomUUID().toString()).append(Constants.DOT)
+                .append(resourceType != null ? resourceType.toLowerCase() : Constants.BPMN).toString();
 
         try {
             response = processService.deploy(requestUrl, fileName);
@@ -89,7 +90,7 @@ public class ProcessResource {
     @Operation(summary = "Recupera file BPMN.", description = "Recupera file BPMN per il dato deploymentId.")
     @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce il file BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.class)))
     @APIResponse(responseCode = "400", description = "BAD_REQUEST. Risorsa BPMN non trovata.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
-    
+
     @APIResponse(responseCode = "404", description = "NOT_FOUND. Deployments non trovati.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante il deploy del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @GET
@@ -134,7 +135,6 @@ public class ProcessResource {
              */
             processService.start(request.getTransactionId(), request.getFunctionId(), request.getDeviceInfo(),
                     request.getVariables());
-
             /*
              * Retrieve active tasks
              */
@@ -177,9 +177,9 @@ public class ProcessResource {
                 processService.complete(request.getTaskId(), request.getVariables());
             }
             /*
-            *  Retrieve active tasks
-            */
-            response = processService.retrieveActiveTasks(request.getTransactionId());           
+             * Retrieve active tasks
+             */
+            response = processService.retrieveActiveTasks(request.getTransactionId());
         } catch (ProcessException e) {
             throw e;
         } catch (RuntimeException e) {

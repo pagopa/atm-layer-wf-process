@@ -128,13 +128,13 @@ public class ProcessService {
         } catch (WebApplicationException e) {
             switch (e.getResponse().getStatus()) {
                 case RestResponse.StatusCode.BAD_REQUEST -> {
-                    log.error("Find Bpmn id failed! No runnable BPMN found for selection.");
+                    log.warn("Find Bpmn id failed! No runnable BPMN found for selection.");
                 }
                 case RestResponse.StatusCode.INTERNAL_SERVER_ERROR -> {
-                    log.error("Find Bpmn id failed! A model generic error occured.");
+                    log.warn("Find Bpmn id failed! A model generic error occured.");
                 }
                 default -> {
-                    log.error("Unknown response status code: {}", e.getResponse().getStatus());
+                    log.warn("Unknown response status code: {}", e.getResponse().getStatus());
                 }
             }
         } catch (ProcessingException e) {

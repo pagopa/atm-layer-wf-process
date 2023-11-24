@@ -218,7 +218,7 @@ public class ProcessResourceTest {
                                 .when()
                                 .post("/start")
                                 .then()
-                                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+                                .statusCode(StatusCode.SERVICE_UNAVAILABLE);
         }
 
         @Test
@@ -405,22 +405,22 @@ public class ProcessResourceTest {
                                 .statusCode(StatusCode.ACCEPTED);
         }
 
-       /*  @Test
-        public void testNextOkWithNoTasksRetrievedWhileProcessing() {
+        @Test
+        public void testNextOkBpmnCompleted() {
                 Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.ok());
                 Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.ok(Collections.emptyList()));
                 Mockito.when(camundaRestClient.getInstanceActivity(Mockito.any(String.class)))
-                                .thenReturn(RestResponse.ok(ProcessTestData.createResponseInstanceProcessRetrieved()));
+                                .thenReturn(RestResponse.ok(ProcessTestData.createEmptyResponseInstance()));
                 given()
                                 .body(ProcessTestData.createTaskRequestNext())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .when()
                                 .post("/next")
                                 .then()
-                                .statusCode();
-        } */
+                                .statusCode(StatusCode.OK);
+        }
 
         @Test
         public void testNextKoNoBusinessKey() {
@@ -518,7 +518,7 @@ public class ProcessResourceTest {
                                 .when()
                                 .post("/next")
                                 .then()
-                                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+                                .statusCode(StatusCode.SERVICE_UNAVAILABLE);
         }
 
         @Test
@@ -552,7 +552,7 @@ public class ProcessResourceTest {
 
 
         @Test
-        public void testVariablesBadRequest() {
+        public void testVariablesServiceUnavailable() {
                 Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString()))
                                 .thenThrow(new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).build()));
 
@@ -562,7 +562,7 @@ public class ProcessResourceTest {
                                 .when()
                                 .post("/variables")
                                 .then()
-                                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+                                .statusCode(StatusCode.SERVICE_UNAVAILABLE);
         }
 
         @Test
@@ -732,6 +732,18 @@ public class ProcessResourceTest {
         public void testResourceBinaryUnknownResponseCode(){
                 Mockito.when(camundaRestClient.getResources(Mockito.anyString())).thenReturn(RestResponse.ok(ProcessTestData.createCamundaResourceDtos()));
                 Mockito.when(camundaRestClient.getResourceBinary(Mockito.anyString(), Mockito.anyString())).thenThrow(new WebApplicationException(Response.status(Status.CONFLICT).build()));
+
+                given()
+                                .when()
+                                .get("/deploy/{id}/data", ProcessTestData.DEPLOYMENT_ID)
+                                .then()
+                                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+        }
+
+        @Test
+        public void testResourceBinaryRuntimeException(){
+                Mockito.when(camundaRestClient.getResources(Mockito.anyString())).thenReturn(RestResponse.ok(ProcessTestData.createCamundaResourceDtos()));
+                Mockito.when(camundaRestClient.getResourceBinary(Mockito.anyString(), Mockito.anyString())).thenThrow(new RuntimeException());
 
                 given()
                                 .when()

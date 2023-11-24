@@ -11,10 +11,10 @@ import jakarta.ws.rs.core.MediaType;
 
 @QuarkusTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class LogFilterTest {
-    
-    @Test
-        public void testLogFilter(){
+class LogFilterTest {
+
+        @Test
+        void testLogFilter() {
                 given()
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .when()
@@ -24,7 +24,7 @@ public class LogFilterTest {
         }
 
         @Test
-        public void testLogFilterPost(){
+        void testLogFilterPost() {
                 given()
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .when()

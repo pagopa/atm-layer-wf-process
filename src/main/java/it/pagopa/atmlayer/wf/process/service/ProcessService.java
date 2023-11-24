@@ -26,6 +26,7 @@ import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
 import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
 import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
 import it.pagopa.atmlayer.wf.process.exception.ProcessException;
+import it.pagopa.atmlayer.wf.process.util.Logging;
 import it.pagopa.atmlayer.wf.process.util.Properties;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -127,15 +128,13 @@ public class ProcessService {
                     deviceInfo.getBranchId(), deviceInfo.getTerminalId());
         } catch (WebApplicationException e) {
             switch (e.getResponse().getStatus()) {
-                case RestResponse.StatusCode.BAD_REQUEST -> {
+                case RestResponse.StatusCode.BAD_REQUEST ->
                     log.warn("Find Bpmn id failed! No runnable BPMN found for selection.");
-                }
-                case RestResponse.StatusCode.INTERNAL_SERVER_ERROR -> {
+
+                case RestResponse.StatusCode.INTERNAL_SERVER_ERROR ->
                     log.warn("Find Bpmn id failed! A model generic error occured.");
-                }
-                default -> {
-                    log.warn("Unknown response status code: {}", e.getResponse().getStatus());
-                }
+
+                default -> log.warn(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
             }
         } catch (ProcessingException e) {
             log.warn("Connection refused with model service");
@@ -176,7 +175,7 @@ public class ProcessService {
                     throw new ProcessException(ProcessErrorEnum.START_C02);
                 }
                 default -> {
-                    log.error("Unknown response status code: {}", e.getResponse().getStatus());
+                    log.error(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
                     throw new ProcessException(ProcessErrorEnum.GENERIC);
                 }
             }
@@ -243,7 +242,7 @@ public class ProcessService {
                 log.error("Get list of tasks failed!");
                 throw new ProcessException(ProcessErrorEnum.GET_LIST_C03);
             } else {
-                log.error("Unknown response status code: {}", e.getResponse().getStatus());
+                log.error(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         }
@@ -298,7 +297,7 @@ public class ProcessService {
                     log.error("Get list of tasks failed!");
                     throw new ProcessException(ProcessErrorEnum.GET_LIST_C03);
                 } else {
-                    log.error("Unknown response status code: {}", e.getResponse().getStatus());
+                    log.error(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
                     throw new ProcessException(ProcessErrorEnum.GENERIC);
                 }
             }
@@ -320,15 +319,12 @@ public class ProcessService {
             log.info("Task completed! taskId: {}", taskId);
         } catch (WebApplicationException e) {
             switch (e.getResponse().getStatus()) {
-                case RestResponse.StatusCode.BAD_REQUEST -> {
-                    log.warn("Complete task failed! Invalid variable.");
-                }
-                case RestResponse.StatusCode.INTERNAL_SERVER_ERROR -> {
+                case RestResponse.StatusCode.BAD_REQUEST -> log.warn("Complete task failed! Invalid variable.");
+
+                case RestResponse.StatusCode.INTERNAL_SERVER_ERROR ->
                     log.warn("Complete task failed! Task not exists or not corresponding to the specified instance.");
-                }
-                default -> {
-                    log.warn("Unknown response status code: {}", e.getResponse().getStatus());
-                }
+
+                default -> log.warn(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
             }
         } catch (ProcessingException e) {
             log.warn("Connection refused on Camunda service...");
@@ -355,7 +351,7 @@ public class ProcessService {
                 log.error("Retrieve variables failed! Task id is null or does ont exist.");
                 throw new ProcessException(ProcessErrorEnum.VARIABLES_C06);
             } else {
-                log.error("Unknown response status code: {}", e.getResponse().getStatus());
+                log.error(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         }
@@ -455,7 +451,7 @@ public class ProcessService {
                 log.error("Get resources failed! No deployment resources found for the given id deployment.");
                 throw new ProcessException(ProcessErrorEnum.RESOURCE_R01);
             } else {
-                log.error("Unknown response status code: {}", e.getResponse().getStatus());
+                log.error(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         }
@@ -483,7 +479,7 @@ public class ProcessService {
                 log.error("Get resources failed! No deployment resources found for the given id deployment.");
                 throw new ProcessException(ProcessErrorEnum.RESOURCE_R02);
             } else {
-                log.error("Unknown response status code: {}", e.getResponse().getStatus());
+                log.error(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         }

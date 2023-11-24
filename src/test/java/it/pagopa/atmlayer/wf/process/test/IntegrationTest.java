@@ -14,12 +14,12 @@ import org.testcontainers.images.builder.ImageFromDockerfile;
 import java.nio.file.Paths;
 import java.time.Duration;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 @QuarkusTest
 @QuarkusTestResource(value = EnvironmentTestServicesResource.DockerCompose.class, restrictToAnnotatedClass = true)
 @Slf4j
-public class IntegrationTest {
+class IntegrationTest {
 
 
     public static GenericContainer<?> NEWMAN;
@@ -40,7 +40,7 @@ public class IntegrationTest {
 
         NEWMAN.start();
         log.info(NEWMAN.getLogs());
-        assertTrue(NEWMAN.getCurrentContainerInfo().getState().getExitCodeLong() == 0);
+        assertEquals(Long.valueOf(0), NEWMAN.getCurrentContainerInfo().getState().getExitCodeLong());
     }
 
 }

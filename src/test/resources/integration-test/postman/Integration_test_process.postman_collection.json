@@ -131,6 +131,97 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Deploy - Deploy del bpmn fallito per errore durante download",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 500\", function () {\r",
+							"    pm.response.to.have.status(500);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "url",
+							"value": "http://ddddaaafff.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/processes/deploy/:resourceType",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"processes",
+						"deploy",
+						":resourceType"
+					],
+					"variable": [
+						{
+							"key": "resourceType",
+							"value": "BPMN"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resource - Recupera il bpmn associato al deployment ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/processes/deploy/:id/data",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"processes",
+						"deploy",
+						":id",
+						"data"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "test"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

@@ -70,7 +70,7 @@ public class Utility {
         ObjectMapper om = new ObjectMapper();
 
         try {
-            result = om.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+            result = om.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             log.error("Error during Json processing log!");
         }

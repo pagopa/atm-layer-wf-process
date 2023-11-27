@@ -58,7 +58,7 @@ public class ProcessResource {
     @Operation(summary = "Esegue il 'deploy' di un flusso BPMN", description = "Esegue il deploy di un flusso BPMN nel motore di workflow (es. Camunda)")
     @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce l'ID della risorsa creata nel motore di workflow.", content = @Content(schema = @Schema(implementation = RestResponse.class)))
     @APIResponse(responseCode = "400", description = "BAD_REQUEST. Nel caso di richiesta errata.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
-    @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante il deploy del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+    @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore generico.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @POST
     @Path("/deploy/{resourceType:.*}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -95,7 +95,7 @@ public class ProcessResource {
     @APIResponse(responseCode = "400", description = "BAD_REQUEST. Risorsa BPMN non trovata.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
 
     @APIResponse(responseCode = "404", description = "NOT_FOUND. Deployments non trovati.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
-    @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante il deploy del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+    @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore generico.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @GET
     @Path("/deploy/{id}/data")
     @Produces(MediaType.APPLICATION_XML)
@@ -124,7 +124,8 @@ public class ProcessResource {
     @Operation(summary = "Esegue la 'start' dell'istanza di processo del flusso BPMN", description = "Esegue la 'start' dell'istanza di processo del flusso BPMN nel motore di workflow (es. Camunda) e restituisce la lista dei task attivi.")
     @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la lista dei task attivi del workflow.", content = @Content(schema = @Schema(implementation = TaskResponse.class)))
     @APIResponse(responseCode = "400", description = "BAD_REQUEST. Nel caso di 'businessKey' errata.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
-    @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante la start dell'istanza di processo del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+    @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore generico.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+    @APIResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE. Nel caso di errore durante la start dell'istanza di processo del flusso BPMN ritornato da Camunda.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @POST
     @Path("/start")
     public RestResponse<TaskResponse> startProcess(
@@ -161,7 +162,8 @@ public class ProcessResource {
     @Operation(summary = "Esegue il 'next' task dell'istanza di processo del flusso BPMN", description = "Esegue il 'next' task dell'istanza di processo del flusso BPMN nel motore di workflow (es. Camunda) e restituisce la lista dei task attivi.")
     @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la lista dei task attivi del workflow, dopo il completamento del task corrente.", content = @Content(schema = @Schema(implementation = TaskResponse.class)))
     @APIResponse(responseCode = "400", description = "BAD_REQUEST. Nel caso di 'taskId' nullo.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
-    @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante l'elaborazione dell'istanza di processo del flusso BPMN.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+    @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore generico.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+    @APIResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE. Nel caso di errore durante il completamento del task ritornato da Camunda.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @POST
     @Path("/next")
     public RestResponse<TaskResponse> next(
@@ -202,6 +204,7 @@ public class ProcessResource {
     @Operation(summary = "Recupera le variabili dell'istanza di processo e filtra le stesse in base a quelle richieste dal task aggiungendovi le TaskVars")
     @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la mappa delle variabili filtrate e le Taskvars del task corrente del workflow.", content = @Content(schema = @Schema(implementation = VariableResponse.class)))
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante l'elaborazione.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
+    @APIResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE. Nel caso di errore durante il recupero delle variabili ritornato da Camunda.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @POST
     @Path("/variables")
     public RestResponse<VariableResponse> variables(VariableRequest request) {

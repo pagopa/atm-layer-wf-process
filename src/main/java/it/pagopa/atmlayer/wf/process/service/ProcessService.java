@@ -38,7 +38,7 @@ public interface ProcessService {
      * Retrieves the BPMN binary resource for the associated id of the deployment.
      * 
      * @param id - the id of deployment
-     * @return bpmn file
+     * @return A `RestResponse` containing the resource file in xml format.
      */
     RestResponse<String> getResource(String deploymentId);
 
@@ -57,7 +57,7 @@ public interface ProcessService {
      * identified by the business key.
      * 
      * @param businessKey
-     * @return RestResponse<TaskResponse>
+     * @return A `RestResponse` containing the active tasks.
      */
     RestResponse<TaskResponse> retrieveActiveTasks(String businessKey);
 
@@ -67,7 +67,6 @@ public interface ProcessService {
      *
      * @param taskId    The ID of the task to complete.
      * @param variables The variables to associate with the completion.
-     * @return `true` if the task is completed successfully, `false` otherwise.
      */
     void complete(String taskId, Map<String, Object> variables);
 
@@ -78,7 +77,7 @@ public interface ProcessService {
      * @param taskId    The id of the task from which I will retrieve the variables.
      * @param variables The additional variables to retrieve
      * @param buttons   The buttons to retrieve
-     * @return
+     * @return A `RestResponse` containing the variables and buttons needed and the default variables and buttons.
      */
     RestResponse<VariableResponse> getTaskVariables(String taskId, List<String> variables, List<String> buttons);
 

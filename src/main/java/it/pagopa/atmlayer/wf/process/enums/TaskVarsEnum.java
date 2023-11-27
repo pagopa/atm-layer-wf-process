@@ -10,10 +10,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 public enum TaskVarsEnum {
 
     ON_ERROR("onError"),
-    OUTCOME_VAR_NAME("outcome_var_name"),
+    OUTCOME_VAR_NAME("outcomeVarName"),
     ON_TIMEOUT("onTimeout"),
     COMMAND("command"),
-    RECEIPT_TEMPLATE("receipt_template"),
+    RECEIPT_TEMPLATE("receiptTemplate"),
     TIMEOUT("timeout"),
     DATA("data");
 

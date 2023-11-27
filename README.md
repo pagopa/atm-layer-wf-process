@@ -43,6 +43,7 @@ This command will build a native image and deploy it into a container. Make sure
 * [START] Start and instance of a deployed diagram and retrieve the active tasks.
 * [NEXT] Complete a task, move on to another and retrieve the active tasks.
 * [VARIABLES] Retrieve variables of a specified task and filter them based on the ones you want.
+* [RESOURCE] Get the resource XML of deployment through the deployment ID.
 
 ### Build with
 [![Quarkus Badge](https://img.shields.io/badge/Quarkus-3.2.5.Final-1488C6?style=for-the-badge&logo=quarkus)](https://quarkus.io/)

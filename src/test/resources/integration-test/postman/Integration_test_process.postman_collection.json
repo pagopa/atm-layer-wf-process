@@ -133,7 +133,7 @@
 			"response": []
 		},
 		{
-			"name": "Deploy - Deploy del bpmn fallito per errore durante download",
+			"name": "Deploy - Deploy del bpmn, dmn o form",
 			"event": [
 				{
 					"listen": "test",

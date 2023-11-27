@@ -4,6 +4,9 @@ import lombok.Getter;
 
 import org.jboss.resteasy.reactive.RestResponse;
 
+/**
+ * Enum which maps the Process error state.
+ */
 @Getter
 public enum ProcessErrorEnum {
 

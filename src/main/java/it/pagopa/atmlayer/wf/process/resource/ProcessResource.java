@@ -1,6 +1,5 @@
 package it.pagopa.atmlayer.wf.process.resource;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -34,10 +33,14 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * @author Pasquale Sansonna
  * 
- *         <p>
- *         This class defines REST endpoints for managing BPM processes through
- *         Camunda.
- *         </p>
+ * <p>The {@code ProcessResource} class defines REST endpoints for managing BPM processes through Camunda.
+ * It provides operations for deploying BPMN process definitions, retrieving BPMN resources, starting process instances,
+ * completing tasks, and handling variables within the workflow. </p>
+ *
+ * <p>The class is designed to handle BPM process-related operations and interacts with the Camunda workflow engine
+ * through the injected {@link it.pagopa.atmlayer.wf.process.service.impl.ProcessServiceImpl} instance. </p>
+ * 
+ * @see it.pagopa.atmlayer.wf.process.service.impl.ProcessServiceImpl
  */
 @Slf4j
 @Path("/api/v1/processes")
@@ -101,7 +104,7 @@ public class ProcessResource {
         RestResponse<String> response;
 
         try {
-            response = RestResponse.ok(processService.getResource(id));
+            response = processService.getResource(id);
         } catch (ProcessException e) {
             throw e;
         } catch (RuntimeException e) {
@@ -150,7 +153,7 @@ public class ProcessResource {
     }
 
     /**
-     * Endpoint to complete a Camunda task and to retireve active tasks.
+     * Endpoint to complete a Camunda task and to retrieve active tasks.
      *
      * @param request The task request.
      * @return A `RestResponse` containing information about active tasks.
@@ -190,6 +193,12 @@ public class ProcessResource {
         return response;
     }
 
+    /**
+     * Endpoint to retrieve the variables of a task.
+     * 
+     * @param request
+     * @return A `RestResponse` containing variables of the task.
+    */
     @Operation(summary = "Recupera le variabili dell'istanza di processo e filtra le stesse in base a quelle richieste dal task aggiungendovi le TaskVars")
     @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la mappa delle variabili filtrate e le Taskvars del task corrente del workflow.", content = @Content(schema = @Schema(implementation = VariableResponse.class)))
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante l'elaborazione.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
@@ -200,8 +209,7 @@ public class ProcessResource {
         RestResponse<VariableResponse> response;
 
         try {
-            response = RestResponse.ok(
-                    processService.getTaskVariables(request.getTaskId(), request.getVariables(), request.getButtons()));
+            response = processService.getTaskVariables(request.getTaskId(), request.getVariables(), request.getButtons());
         } catch (ProcessException e) {
             throw e;
         } catch (RuntimeException e) {

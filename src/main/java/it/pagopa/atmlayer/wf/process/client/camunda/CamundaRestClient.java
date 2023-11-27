@@ -21,6 +21,23 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 
+/**
+ * @author Pasquale Sansonna
+ * 
+ * <p>The {@code CamundaRestClient} interface defines the contract for interacting with the Camunda
+ * workflow engine through RESTful web services. It includes methods for deploying BPMN process
+ * definitions, retrieving resources associated with a deployment, starting process instances,
+ * completing tasks, and retrieving variables. </p>
+ *
+ *
+ * @see CamundaBasicAuthFilter
+ * @see it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto
+ * @see it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaResourceDto
+ * @see it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto
+ * @see it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto
+ * @see it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto
+ * @see it.pagopa.atmlayer.wf.process.client.camunda.bean.InstanceDto
+ */
 @RegisterRestClient(configKey = "camunda-rest-client")
 @RegisterProvider(CamundaBasicAuthFilter.class)
 public interface CamundaRestClient {

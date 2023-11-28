@@ -19,7 +19,7 @@ jobs:
           java-version: '17'
           distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
+ 
       - name: Test and Integration tests
         run: |
           mvn test -Dquarkus.package.type=native -Dquarkus.application.name=atm-layer-wf-process -Dquarkus.profile=prod

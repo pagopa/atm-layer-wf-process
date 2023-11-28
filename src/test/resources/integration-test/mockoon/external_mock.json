@@ -330,7 +330,7 @@
                     "sendFileAsBody": false,
                     "rules": [
                         {
-                            "target": "body",
+                            "target": "params",
                             "modifier": "id",
                             "value": "57c0e37b-87c5-11ee-acee-3adabfa508b8",
                             "invert": false,

@@ -6,7 +6,7 @@
     },
     "item": [
       {
-        "id": "48ef11b0-9f2d-4632-8e4e-ea58e98dd324",
+        "id": "5bfe9f0e-bef4-4a99-b87b-aff4fb22fb8b",
         "name": "Start - Processo correttamente iniziato",
         "request": {
           "url": {
@@ -38,20 +38,110 @@
           {
             "listen": "test",
             "script": {
-              "id": "c5a85817-68f6-4d2e-9847-a9a280c3a84c",
+              "id": "55c3ca58-ad75-4d0d-9dbc-dda2ef19c79a",
               "type": "text/javascript",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {\r",
                 "    pm.response.to.have.status(200);\r",
                 "});"
               ],
-              "_lastExecutionId": "b27b2059-7da5-4f82-b003-7e6b34fd2d1a"
+              "_lastExecutionId": "2fead66c-49dd-4d60-98f7-ad7a931b29cd"
             }
           }
         ]
       },
       {
-        "id": "4e8bbe13-8d19-4e1b-a719-d86103681a51",
+        "id": "23838250-413e-4747-a81e-28ba785eeb77",
+        "name": "Start - Errore su Camunda, processo non startato correttamente",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "start"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"22222\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "74e2a019-eab9-470d-9a1a-833e62dc8598",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 503\", function () {\r",
+                "    pm.response.to.have.status(503);\r",
+                "});"
+              ],
+              "_lastExecutionId": "2b966417-bd65-4994-bbf5-2c7c2c065a89"
+            }
+          }
+        ]
+      },
+      {
+        "id": "69307a57-ee20-401e-bb0a-888cf204c40f",
+        "name": "Start - Model recupero bpmn id fallito, utilizzo functionId",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "start"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"11111\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "c1ebf15a-6090-4b7b-aa92-74fe35581666",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {\r",
+                "    pm.response.to.have.status(200);\r",
+                "});"
+              ],
+              "_lastExecutionId": "87076395-595d-44e7-8e41-f2b573acc781"
+            }
+          }
+        ]
+      },
+      {
+        "id": "2c39fe01-a7f0-4b49-a104-cfbca162b5ec",
         "name": "Next - Task specificato completato corretamente e recuperati i task attivi",
         "request": {
           "url": {
@@ -70,7 +160,7 @@
           "method": "POST",
           "body": {
             "mode": "raw",
-            "raw": "{\r\n    \"taskId\": \"4badbbab-846e-11ee-8aec-f296510bbaa3\",\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"00000\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
+            "raw": "{\r\n    \"taskId\": \"4badbbab-846e-11ee-8aec-f296510bbaa3\",\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"55555\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
             "options": {
               "raw": {
                 "language": "json"
@@ -83,20 +173,65 @@
           {
             "listen": "test",
             "script": {
-              "id": "33bffc87-54d4-4868-97e8-7e85a2629409",
+              "id": "dbf72c1d-1884-48b4-94c4-266fcc4a0227",
               "type": "text/javascript",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {\r",
                 "    pm.response.to.have.status(200);\r",
                 "});"
               ],
-              "_lastExecutionId": "03ec6e9a-940d-406f-9c98-dca352da8fd5"
+              "_lastExecutionId": "7b7e9db6-dc06-40c5-9bce-cb2d4ecd6ab1"
             }
           }
         ]
       },
       {
-        "id": "cbc8acea-1922-4408-87af-8022b33f991c",
+        "id": "e54f71da-a284-4491-a093-5178f0e0a49f",
+        "name": "Next - Task non specificato, recupero dei task attivi",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "next"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"33333\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "f8377d31-df52-4032-ae0b-1f2bd762e32b",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {\r",
+                "    pm.response.to.have.status(200);\r",
+                "});"
+              ],
+              "_lastExecutionId": "b10723ee-849c-45e3-ab93-1cc0da8fc918"
+            }
+          }
+        ]
+      },
+      {
+        "id": "5991963c-a8d9-4108-93f4-2061deab66fa",
         "name": "Variables - Variabili dell'istanza di processo relative al task recuperate correttamente",
         "request": {
           "url": {
@@ -128,20 +263,65 @@
           {
             "listen": "test",
             "script": {
-              "id": "3bcd5535-c7a0-4483-9fcc-c34c22c2dc86",
+              "id": "00b7ba5a-b52c-4d2b-a05f-ebd7c4510ac3",
               "type": "text/javascript",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {\r",
                 "    pm.response.to.have.status(200);\r",
                 "});"
               ],
-              "_lastExecutionId": "2e17bf2b-218d-4a43-b345-c07f860cd26b"
+              "_lastExecutionId": "efa88f1d-b80e-4ce3-83cc-82f1b492928c"
             }
           }
         ]
       },
       {
-        "id": "797661b4-004d-4443-97de-cba8de8ce612",
+        "id": "55fd2726-2d07-41ba-93a8-3258ee57285b",
+        "name": "Variables - Errore su Camunda, task specificato non esistente.",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "variables"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-0000000000\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "e3675650-686d-46d1-bab7-18d0e1eea458",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 503\", function () {\r",
+                "    pm.response.to.have.status(503);\r",
+                "});"
+              ],
+              "_lastExecutionId": "201c6c0c-046a-4d6c-9ae8-40062b211245"
+            }
+          }
+        ]
+      },
+      {
+        "id": "d92f2034-3950-4ef6-9694-27b9228bad83",
         "name": "Deploy - Deploy del bpmn, dmn o form",
         "request": {
           "url": {
@@ -186,20 +366,78 @@
           {
             "listen": "test",
             "script": {
-              "id": "6a2d92c2-027f-40c0-9ea5-ef2bb0df68a4",
+              "id": "a85ab1d4-1706-405d-80dc-782163a827b8",
               "type": "text/javascript",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {\r",
                 "    pm.response.to.have.status(200);\r",
                 "});"
               ],
-              "_lastExecutionId": "03ae7c01-08f3-471d-8610-9f2a94b636e1"
+              "_lastExecutionId": "d35c8876-1683-45f8-9040-e09d9e2a40c2"
             }
           }
         ]
       },
       {
-        "id": "28b91366-815d-41f7-91bd-02e361a60eaa",
+        "id": "9d7c05a2-dab9-4ce3-9e7f-4160e722f67f",
+        "name": "Deploy - Errore per download della risorsa fallito",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "deploy",
+              ":resourceType"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": [
+              {
+                "type": "any",
+                "value": "BPMN",
+                "key": "resourceType"
+              }
+            ]
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "urlencoded",
+            "urlencoded": [
+              {
+                "key": "url",
+                "value": "http://test:3000/download"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "6102e9e6-9b95-414e-991a-3e2ac3107c26",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 500\", function () {\r",
+                "    pm.response.to.have.status(500);\r",
+                "});"
+              ],
+              "_lastExecutionId": "b1636b08-5c33-4745-8938-bd66a6b2c8c6"
+            }
+          }
+        ]
+      },
+      {
+        "id": "19502dbb-d00b-4be6-bd25-28f0dff61b1d",
         "name": "Resource - Recupera il bpmn associato al deployment ID",
         "request": {
           "url": {
@@ -230,14 +468,58 @@
           {
             "listen": "test",
             "script": {
-              "id": "a5942b45-9650-4550-8f72-b8890cd269b7",
+              "id": "c52e7569-a630-49a5-8ac0-21aceddd4bad",
               "type": "text/javascript",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {\r",
                 "    pm.response.to.have.status(200);\r",
                 "});"
               ],
-              "_lastExecutionId": "c115fea1-7e1e-4575-a25c-9746066fbced"
+              "_lastExecutionId": "1f3c858c-9cc9-4270-87e6-0431dc89ab02"
+            }
+          }
+        ]
+      },
+      {
+        "id": "c50936d0-02a5-4881-a917-ee83f2b4eefa",
+        "name": "Resource - Risorsa non trovata",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "deploy",
+              ":id",
+              "data"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": [
+              {
+                "type": "any",
+                "value": "test_not_found",
+                "key": "id"
+              }
+            ]
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "c64543af-8cfa-4709-8f66-0914d4c9e71a",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 404\", function () {\r",
+                "    pm.response.to.have.status(404);\r",
+                "});"
+              ],
+              "_lastExecutionId": "ec637de5-6aca-4409-9313-a717075b864c"
             }
           }
         ]
@@ -252,7 +534,7 @@
     }
   },
   "environment": {
-    "id": "29601b3c-3c61-464b-9925-2b9a7e01b406",
+    "id": "4878fc56-b790-4e47-abb9-bbb0bffa7715",
     "values": [
       {
         "type": "any",
@@ -262,7 +544,7 @@
     ]
   },
   "globals": {
-    "id": "608a0e05-26d6-481b-9088-193816e5da4c",
+    "id": "dfc94d6b-ca75-433c-8d9b-81e54dd74b6e",
     "values": []
   },
   "run": {
@@ -273,37 +555,37 @@
         "failed": 0
       },
       "items": {
-        "total": 5,
+        "total": 11,
         "pending": 0,
         "failed": 0
       },
       "scripts": {
-        "total": 5,
+        "total": 11,
         "pending": 0,
         "failed": 0
       },
       "prerequests": {
-        "total": 5,
+        "total": 11,
         "pending": 0,
         "failed": 0
       },
       "requests": {
-        "total": 5,
+        "total": 11,
         "pending": 0,
         "failed": 0
       },
       "tests": {
-        "total": 5,
+        "total": 11,
         "pending": 0,
         "failed": 0
       },
       "assertions": {
-        "total": 5,
+        "total": 11,
         "pending": 0,
         "failed": 0
       },
       "testScripts": {
-        "total": 5,
+        "total": 11,
         "pending": 0,
         "failed": 0
       },
@@ -314,10 +596,10 @@
       }
     },
     "timings": {
-      "responseAverage": 86.2,
-      "responseMin": 22,
-      "responseMax": 315,
-      "responseSd": 114.77874367669304,
+      "responseAverage": 49.63636363636363,
+      "responseMin": 11,
+      "responseMax": 327,
+      "responseSd": 88.16129095663524,
       "dnsAverage": 0,
       "dnsMin": 0,
       "dnsMax": 0,
@@ -326,25 +608,25 @@
       "firstByteMin": 0,
       "firstByteMax": 0,
       "firstByteSd": 0,
-      "started": 1701163698004,
-      "completed": 1701163698539
+      "started": 1701181749609,
+      "completed": 1701181750338
     },
     "executions": [
       {
         "cursor": {
           "position": 0,
           "iteration": 0,
-          "length": 5,
+          "length": 11,
           "cycles": 1,
           "empty": false,
           "eof": false,
           "bof": true,
           "cr": false,
-          "ref": "f2cb5bbe-a93d-4437-b728-85e5ac7e97a2",
-          "httpRequestId": "b98a7e47-b76a-416e-b4df-139b031172ef"
+          "ref": "4bc79ef0-6082-43d6-93ac-96389757fa0f",
+          "httpRequestId": "c8ab3649-45d2-442a-bd45-618e9a7b8df5"
         },
         "item": {
-          "id": "48ef11b0-9f2d-4632-8e4e-ea58e98dd324",
+          "id": "5bfe9f0e-bef4-4a99-b87b-aff4fb22fb8b",
           "name": "Start - Processo correttamente iniziato",
           "request": {
             "url": {
@@ -376,14 +658,14 @@
             {
               "listen": "test",
               "script": {
-                "id": "c5a85817-68f6-4d2e-9847-a9a280c3a84c",
+                "id": "55c3ca58-ad75-4d0d-9dbc-dda2ef19c79a",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Status code is 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});"
                 ],
-                "_lastExecutionId": "b27b2059-7da5-4f82-b003-7e6b34fd2d1a"
+                "_lastExecutionId": "2fead66c-49dd-4d60-98f7-ad7a931b29cd"
               }
             }
           ]
@@ -429,7 +711,7 @@
             },
             {
               "key": "Postman-Token",
-              "value": "47974364-386e-4765-8c94-4bf558058dec",
+              "value": "0d93e8fe-2d41-4da7-965e-d37065f0a307",
               "system": true
             },
             {
@@ -465,7 +747,7 @@
           }
         },
         "response": {
-          "id": "d253b7fb-112d-4764-94b3-8f3e5dc837c3",
+          "id": "7a841495-c05e-4e40-a1f0-b5ab3705c310",
           "status": "OK",
           "code": 200,
           "header": [
@@ -603,10 +885,10 @@
             ]
           },
           "cookie": [],
-          "responseTime": 315,
+          "responseTime": 327,
           "responseSize": 119
         },
-        "id": "48ef11b0-9f2d-4632-8e4e-ea58e98dd324",
+        "id": "5bfe9f0e-bef4-4a99-b87b-aff4fb22fb8b",
         "assertions": [
           {
             "assertion": "Status code is 200",
@@ -616,15 +898,584 @@
       },
       {
         "cursor": {
-          "ref": "8c05bc8b-3d8a-44f5-877b-87a1c8c11f8b",
-          "length": 5,
+          "ref": "fade5314-2fd4-4ea4-a368-8eaec8e9ccfd",
+          "length": 11,
           "cycles": 1,
           "position": 1,
           "iteration": 0,
-          "httpRequestId": "ab374ba1-7489-4376-841b-d9beb130debe"
+          "httpRequestId": "4d93e83d-f2b7-4c96-9833-c69e6f4eaa7e"
         },
         "item": {
-          "id": "4e8bbe13-8d19-4e1b-a719-d86103681a51",
+          "id": "23838250-413e-4747-a81e-28ba785eeb77",
+          "name": "Start - Errore su Camunda, processo non startato correttamente",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "start"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"22222\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "74e2a019-eab9-470d-9a1a-833e62dc8598",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 503\", function () {\r",
+                  "    pm.response.to.have.status(503);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "2b966417-bd65-4994-bbf5-2c7c2c065a89"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "start"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.33.0",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "1e7a4b2f-9b46-41d3-9dac-c591f1176a4c",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "367",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"22222\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "ffeab0c5-cf5a-448b-8a40-b83154c35f90",
+          "status": "Service Unavailable",
+          "code": 503,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            },
+            {
+              "key": "content-length",
+              "value": "128"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              83,
+              84,
+              65,
+              82,
+              84,
+              95,
+              73,
+              78,
+              83,
+              84,
+              65,
+              78,
+              67,
+              69,
+              95,
+              70,
+              65,
+              73,
+              76,
+              85,
+              82,
+              69,
+              34,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              34,
+              67,
+              48,
+              50,
+              34,
+              44,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              84,
+              104,
+              101,
+              32,
+              105,
+              110,
+              115,
+              116,
+              97,
+              110,
+              99,
+              101,
+              32,
+              99,
+              111,
+              117,
+              108,
+              100,
+              32,
+              110,
+              111,
+              116,
+              32,
+              98,
+              101,
+              32,
+              99,
+              114,
+              101,
+              97,
+              116,
+              101,
+              100,
+              32,
+              115,
+              117,
+              99,
+              99,
+              101,
+              115,
+              115,
+              102,
+              117,
+              108,
+              108,
+              121,
+              46,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              53,
+              48,
+              51,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 26,
+          "responseSize": 128
+        },
+        "id": "23838250-413e-4747-a81e-28ba785eeb77",
+        "assertions": [
+          {
+            "assertion": "Status code is 503",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "f566f5ae-775e-45f8-b7f8-fe23ffc03635",
+          "length": 11,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "fafccb7f-e48b-4a66-bf4b-c92ed718cc55"
+        },
+        "item": {
+          "id": "69307a57-ee20-401e-bb0a-888cf204c40f",
+          "name": "Start - Model recupero bpmn id fallito, utilizzo functionId",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "start"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"11111\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "c1ebf15a-6090-4b7b-aa92-74fe35581666",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "87076395-595d-44e7-8e41-f2b573acc781"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "start"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.33.0",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "c7de61e4-99cc-40dd-9592-fac45948e8d0",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "367",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"11111\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "ac084cc9-d28e-40df-80cd-72668c4b96ee",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "119"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              97,
+              115,
+              107,
+              115,
+              34,
+              58,
+              91,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              53,
+              55,
+              99,
+              48,
+              101,
+              51,
+              55,
+              98,
+              45,
+              56,
+              55,
+              99,
+              53,
+              45,
+              49,
+              49,
+              101,
+              101,
+              45,
+              97,
+              99,
+              101,
+              101,
+              45,
+              51,
+              97,
+              100,
+              97,
+              98,
+              102,
+              97,
+              53,
+              48,
+              56,
+              98,
+              56,
+              34,
+              44,
+              34,
+              102,
+              111,
+              114,
+              109,
+              34,
+              58,
+              34,
+              100,
+              97,
+              116,
+              105,
+              65,
+              118,
+              118,
+              105,
+              115,
+              111,
+              46,
+              104,
+              116,
+              109,
+              108,
+              34,
+              44,
+              34,
+              112,
+              114,
+              105,
+              111,
+              114,
+              105,
+              116,
+              121,
+              34,
+              58,
+              53,
+              48,
+              125,
+              93,
+              44,
+              34,
+              116,
+              114,
+              97,
+              110,
+              115,
+              97,
+              99,
+              116,
+              105,
+              111,
+              110,
+              73,
+              100,
+              34,
+              58,
+              34,
+              116,
+              101,
+              115,
+              116,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 28,
+          "responseSize": 119
+        },
+        "id": "69307a57-ee20-401e-bb0a-888cf204c40f",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "20c3272a-dd52-497c-bbbd-08b060eaf790",
+          "length": 11,
+          "cycles": 1,
+          "position": 3,
+          "iteration": 0,
+          "httpRequestId": "975d3ad9-c536-4417-8bcb-613b0a8e0fa8"
+        },
+        "item": {
+          "id": "2c39fe01-a7f0-4b49-a104-cfbca162b5ec",
           "name": "Next - Task specificato completato corretamente e recuperati i task attivi",
           "request": {
             "url": {
@@ -643,7 +1494,7 @@
             "method": "POST",
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"taskId\": \"4badbbab-846e-11ee-8aec-f296510bbaa3\",\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"00000\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
+              "raw": "{\r\n    \"taskId\": \"4badbbab-846e-11ee-8aec-f296510bbaa3\",\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"55555\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -656,14 +1507,14 @@
             {
               "listen": "test",
               "script": {
-                "id": "33bffc87-54d4-4868-97e8-7e85a2629409",
+                "id": "dbf72c1d-1884-48b4-94c4-266fcc4a0227",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Status code is 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});"
                 ],
-                "_lastExecutionId": "03ec6e9a-940d-406f-9c98-dca352da8fd5"
+                "_lastExecutionId": "7b7e9db6-dc06-40c5-9bce-cb2d4ecd6ab1"
               }
             }
           ]
@@ -709,7 +1560,7 @@
             },
             {
               "key": "Postman-Token",
-              "value": "b02526f7-c4ec-48bf-97ae-c88df11c4c39",
+              "value": "f532fcfb-aec6-4fa6-9d83-001b01aee563",
               "system": true
             },
             {
@@ -736,7 +1587,7 @@
           "method": "POST",
           "body": {
             "mode": "raw",
-            "raw": "{\r\n    \"taskId\": \"4badbbab-846e-11ee-8aec-f296510bbaa3\",\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"00000\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
+            "raw": "{\r\n    \"taskId\": \"4badbbab-846e-11ee-8aec-f296510bbaa3\",\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"55555\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
             "options": {
               "raw": {
                 "language": "json"
@@ -745,7 +1596,7 @@
           }
         },
         "response": {
-          "id": "0786eef3-967e-46f1-8f4e-bd3ed2e56adc",
+          "id": "f3892cc3-51f8-41f9-abb0-7b7c7b7c23ec",
           "status": "OK",
           "code": 200,
           "header": [
@@ -886,7 +1737,7 @@
           "responseTime": 24,
           "responseSize": 119
         },
-        "id": "4e8bbe13-8d19-4e1b-a719-d86103681a51",
+        "id": "2c39fe01-a7f0-4b49-a104-cfbca162b5ec",
         "assertions": [
           {
             "assertion": "Status code is 200",
@@ -896,15 +1747,295 @@
       },
       {
         "cursor": {
-          "ref": "377b8a76-bd29-4292-b288-307d69ac85f6",
-          "length": 5,
+          "ref": "63d571d6-7392-40c6-ad49-7c8d65da2175",
+          "length": 11,
           "cycles": 1,
-          "position": 2,
+          "position": 4,
           "iteration": 0,
-          "httpRequestId": "5238b382-04b2-4c47-94a0-d7c5de7b9b9e"
+          "httpRequestId": "93936475-f9b9-4924-9077-83e52b094817"
         },
         "item": {
-          "id": "cbc8acea-1922-4408-87af-8022b33f991c",
+          "id": "e54f71da-a284-4491-a093-5178f0e0a49f",
+          "name": "Next - Task non specificato, recupero dei task attivi",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "next"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"33333\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "f8377d31-df52-4032-ae0b-1f2bd762e32b",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "b10723ee-849c-45e3-ab93-1cc0da8fc918"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "next"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.33.0",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "e5b392cf-000b-4be2-9edd-aee8fb2daee2",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "448",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"33333\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "2f34de70-0881-42eb-9142-30d57bf5f7b9",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "119"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              97,
+              115,
+              107,
+              115,
+              34,
+              58,
+              91,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              53,
+              55,
+              99,
+              48,
+              101,
+              51,
+              55,
+              98,
+              45,
+              56,
+              55,
+              99,
+              53,
+              45,
+              49,
+              49,
+              101,
+              101,
+              45,
+              97,
+              99,
+              101,
+              101,
+              45,
+              51,
+              97,
+              100,
+              97,
+              98,
+              102,
+              97,
+              53,
+              48,
+              56,
+              98,
+              56,
+              34,
+              44,
+              34,
+              102,
+              111,
+              114,
+              109,
+              34,
+              58,
+              34,
+              100,
+              97,
+              116,
+              105,
+              65,
+              118,
+              118,
+              105,
+              115,
+              111,
+              46,
+              104,
+              116,
+              109,
+              108,
+              34,
+              44,
+              34,
+              112,
+              114,
+              105,
+              111,
+              114,
+              105,
+              116,
+              121,
+              34,
+              58,
+              53,
+              48,
+              125,
+              93,
+              44,
+              34,
+              116,
+              114,
+              97,
+              110,
+              115,
+              97,
+              99,
+              116,
+              105,
+              111,
+              110,
+              73,
+              100,
+              34,
+              58,
+              34,
+              116,
+              101,
+              115,
+              116,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 14,
+          "responseSize": 119
+        },
+        "id": "e54f71da-a284-4491-a093-5178f0e0a49f",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "5700c9c8-fd5e-4e04-825c-d7d10242f447",
+          "length": 11,
+          "cycles": 1,
+          "position": 5,
+          "iteration": 0,
+          "httpRequestId": "cfc8565b-6495-408d-9703-4389c9ce1b34"
+        },
+        "item": {
+          "id": "5991963c-a8d9-4108-93f4-2061deab66fa",
           "name": "Variables - Variabili dell'istanza di processo relative al task recuperate correttamente",
           "request": {
             "url": {
@@ -936,14 +2067,14 @@
             {
               "listen": "test",
               "script": {
-                "id": "3bcd5535-c7a0-4483-9fcc-c34c22c2dc86",
+                "id": "00b7ba5a-b52c-4d2b-a05f-ebd7c4510ac3",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Status code is 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});"
                 ],
-                "_lastExecutionId": "2e17bf2b-218d-4a43-b345-c07f860cd26b"
+                "_lastExecutionId": "efa88f1d-b80e-4ce3-83cc-82f1b492928c"
               }
             }
           ]
@@ -989,7 +2120,7 @@
             },
             {
               "key": "Postman-Token",
-              "value": "17d7ca99-2fe6-42f3-9448-05da5215d980",
+              "value": "eb0e8ca8-b077-4be6-b71b-9f2e7522af83",
               "system": true
             },
             {
@@ -1025,7 +2156,7 @@
           }
         },
         "response": {
-          "id": "50dbcc0a-2bde-4e59-9543-8f69b2b14062",
+          "id": "2698f326-7cb6-416e-bc31-0a00a54024a2",
           "status": "OK",
           "code": 200,
           "header": [
@@ -1104,7 +2235,7 @@
           "responseTime": 23,
           "responseSize": 57
         },
-        "id": "cbc8acea-1922-4408-87af-8022b33f991c",
+        "id": "5991963c-a8d9-4108-93f4-2061deab66fa",
         "assertions": [
           {
             "assertion": "Status code is 200",
@@ -1114,15 +2245,293 @@
       },
       {
         "cursor": {
-          "ref": "7aca05c3-8835-44b1-b8f2-2579e7a4a573",
-          "length": 5,
+          "ref": "d80029a1-f982-48ca-bc47-eb0aa4614bb8",
+          "length": 11,
           "cycles": 1,
-          "position": 3,
+          "position": 6,
           "iteration": 0,
-          "httpRequestId": "86df78d6-27e6-43e6-95bf-db054286e3fc"
+          "httpRequestId": "ca3937ec-662a-4fde-bc49-68e18b5e869f"
         },
         "item": {
-          "id": "797661b4-004d-4443-97de-cba8de8ce612",
+          "id": "55fd2726-2d07-41ba-93a8-3258ee57285b",
+          "name": "Variables - Errore su Camunda, task specificato non esistente.",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "variables"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-0000000000\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "e3675650-686d-46d1-bab7-18d0e1eea458",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 503\", function () {\r",
+                  "    pm.response.to.have.status(503);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "201c6c0c-046a-4d6c-9ae8-40062b211245"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "variables"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.33.0",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "7aa8dcc1-eca3-4e2a-9cba-2a096a37f358",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "92",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-0000000000\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "24e639b8-92ac-4b1b-851f-6657549e704c",
+          "status": "Service Unavailable",
+          "code": 503,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            },
+            {
+              "key": "content-length",
+              "value": "117"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              86,
+              65,
+              82,
+              73,
+              65,
+              66,
+              76,
+              69,
+              83,
+              95,
+              84,
+              65,
+              83,
+              75,
+              95,
+              78,
+              79,
+              84,
+              95,
+              69,
+              88,
+              73,
+              83,
+              84,
+              34,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              34,
+              67,
+              48,
+              54,
+              34,
+              44,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              84,
+              97,
+              115,
+              107,
+              32,
+              105,
+              100,
+              32,
+              105,
+              115,
+              32,
+              110,
+              117,
+              108,
+              108,
+              32,
+              111,
+              114,
+              32,
+              100,
+              111,
+              101,
+              115,
+              32,
+              110,
+              111,
+              116,
+              32,
+              101,
+              120,
+              105,
+              115,
+              116,
+              115,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              53,
+              48,
+              51,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 12,
+          "responseSize": 117
+        },
+        "id": "55fd2726-2d07-41ba-93a8-3258ee57285b",
+        "assertions": [
+          {
+            "assertion": "Status code is 503",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "d2855569-dd01-4f5f-9602-fef5ddcbc9ea",
+          "length": 11,
+          "cycles": 1,
+          "position": 7,
+          "iteration": 0,
+          "httpRequestId": "4d251404-1ef5-4118-9593-35ca770494d5"
+        },
+        "item": {
+          "id": "d92f2034-3950-4ef6-9694-27b9228bad83",
           "name": "Deploy - Deploy del bpmn, dmn o form",
           "request": {
             "url": {
@@ -1167,14 +2576,14 @@
             {
               "listen": "test",
               "script": {
-                "id": "6a2d92c2-027f-40c0-9ea5-ef2bb0df68a4",
+                "id": "a85ab1d4-1706-405d-80dc-782163a827b8",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Status code is 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});"
                 ],
-                "_lastExecutionId": "03ae7c01-08f3-471d-8610-9f2a94b636e1"
+                "_lastExecutionId": "d35c8876-1683-45f8-9040-e09d9e2a40c2"
               }
             }
           ]
@@ -1220,7 +2629,7 @@
             },
             {
               "key": "Postman-Token",
-              "value": "7027462e-05c2-415b-b03d-274e8b31af31",
+              "value": "2b749faf-3463-4932-a17b-e38b45ba2d4a",
               "system": true
             },
             {
@@ -1256,7 +2665,7 @@
           }
         },
         "response": {
-          "id": "579e5163-fa0d-43fc-b290-8f8a1c2f0c10",
+          "id": "61bdc339-cb11-4cbd-bcf9-557898c300e1",
           "status": "OK",
           "code": 200,
           "header": [
@@ -1274,7 +2683,7 @@
             },
             {
               "key": "Date",
-              "value": "Tue, 28 Nov 2023 09:28:18 GMT"
+              "value": "Tue, 28 Nov 2023 14:29:10 GMT"
             },
             {
               "key": "Keep-Alive",
@@ -1286,10 +2695,10 @@
             "data": []
           },
           "cookie": [],
-          "responseTime": 47,
+          "responseTime": 43,
           "responseSize": 0
         },
-        "id": "797661b4-004d-4443-97de-cba8de8ce612",
+        "id": "d92f2034-3950-4ef6-9694-27b9228bad83",
         "assertions": [
           {
             "assertion": "Status code is 200",
@@ -1299,15 +2708,318 @@
       },
       {
         "cursor": {
-          "ref": "1f534f2d-b316-4f6e-a8bd-1e62b7f542e3",
-          "length": 5,
+          "ref": "f99da799-4518-4fc8-aa20-3ffe58974f0f",
+          "length": 11,
           "cycles": 1,
-          "position": 4,
+          "position": 8,
           "iteration": 0,
-          "httpRequestId": "63aa19c0-f1a1-4188-a45e-d0254fb97ba2"
+          "httpRequestId": "e7a7ea39-4792-4866-a282-c03069f60fc9"
         },
         "item": {
-          "id": "28b91366-815d-41f7-91bd-02e361a60eaa",
+          "id": "9d7c05a2-dab9-4ce3-9e7f-4160e722f67f",
+          "name": "Deploy - Errore per download della risorsa fallito",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "deploy",
+                ":resourceType"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "type": "any",
+                  "value": "BPMN",
+                  "key": "resourceType"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "url",
+                  "value": "http://test:3000/download"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "6102e9e6-9b95-414e-991a-3e2ac3107c26",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 500\", function () {\r",
+                  "    pm.response.to.have.status(500);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "b1636b08-5c33-4745-8938-bd66a6b2c8c6"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "deploy",
+              "BPMN"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.33.0",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "d1de6a95-afe1-4112-9a3b-fbe64a89e6cc",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "39",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "urlencoded",
+            "urlencoded": [
+              {
+                "key": "url",
+                "value": "http://test:3000/download"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "ff686f23-5ec3-4ac8-9308-0c39b56adeed",
+          "status": "Internal Server Error",
+          "code": 500,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            },
+            {
+              "key": "content-length",
+              "value": "129"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              71,
+              69,
+              78,
+              69,
+              82,
+              73,
+              67,
+              95,
+              69,
+              82,
+              82,
+              79,
+              82,
+              34,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              34,
+              71,
+              48,
+              49,
+              34,
+              44,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              65,
+              110,
+              32,
+              117,
+              110,
+              101,
+              120,
+              112,
+              101,
+              99,
+              116,
+              101,
+              100,
+              32,
+              101,
+              114,
+              114,
+              111,
+              114,
+              32,
+              104,
+              97,
+              115,
+              32,
+              111,
+              99,
+              99,
+              117,
+              114,
+              114,
+              101,
+              100,
+              44,
+              32,
+              115,
+              101,
+              101,
+              32,
+              108,
+              111,
+              103,
+              115,
+              32,
+              102,
+              111,
+              114,
+              32,
+              109,
+              111,
+              114,
+              101,
+              32,
+              105,
+              110,
+              102,
+              111,
+              46,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              53,
+              48,
+              48,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 13,
+          "responseSize": 129
+        },
+        "id": "9d7c05a2-dab9-4ce3-9e7f-4160e722f67f",
+        "assertions": [
+          {
+            "assertion": "Status code is 500",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "d7d0c557-9203-4f0b-8971-e96e96289b37",
+          "length": 11,
+          "cycles": 1,
+          "position": 9,
+          "iteration": 0,
+          "httpRequestId": "d56d00b5-19ef-4d81-8b58-b7c08a914768"
+        },
+        "item": {
+          "id": "19502dbb-d00b-4be6-bd25-28f0dff61b1d",
           "name": "Resource - Recupera il bpmn associato al deployment ID",
           "request": {
             "url": {
@@ -1338,14 +3050,14 @@
             {
               "listen": "test",
               "script": {
-                "id": "a5942b45-9650-4550-8f72-b8890cd269b7",
+                "id": "c52e7569-a630-49a5-8ac0-21aceddd4bad",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Status code is 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});"
                 ],
-                "_lastExecutionId": "c115fea1-7e1e-4575-a25c-9746066fbced"
+                "_lastExecutionId": "1f3c858c-9cc9-4270-87e6-0431dc89ab02"
               }
             }
           ]
@@ -1388,7 +3100,7 @@
             },
             {
               "key": "Postman-Token",
-              "value": "02834e48-af64-4c00-a832-e52f1b308c42",
+              "value": "b84e7911-f0dc-43f3-a391-5739df5a21d2",
               "system": true
             },
             {
@@ -1410,7 +3122,7 @@
           "method": "GET"
         },
         "response": {
-          "id": "e193c81a-aeca-4350-b1fd-5ccbc76baa22",
+          "id": "25b3c081-c31a-45a0-bba4-4b1006972de9",
           "status": "OK",
           "code": 200,
           "header": [
@@ -2226,20 +3938,237 @@
             ]
           },
           "cookie": [],
-          "responseTime": 22,
+          "responseTime": 25,
           "responseSize": 797
         },
-        "id": "28b91366-815d-41f7-91bd-02e361a60eaa",
+        "id": "19502dbb-d00b-4be6-bd25-28f0dff61b1d",
         "assertions": [
           {
             "assertion": "Status code is 200",
             "skipped": false
           }
         ]
+      },
+      {
+        "cursor": {
+          "ref": "ef33c9b6-74d5-4f25-8cfb-47495ad40c9d",
+          "length": 11,
+          "cycles": 1,
+          "position": 10,
+          "iteration": 0,
+          "httpRequestId": "fbac1fbf-2f7c-4cd2-9eb9-f451a14cebf7"
+        },
+        "item": {
+          "id": "c50936d0-02a5-4881-a917-ee83f2b4eefa",
+          "name": "Resource - Risorsa non trovata",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "deploy",
+                ":id",
+                "data"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "type": "any",
+                  "value": "test_not_found",
+                  "key": "id"
+                }
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "c64543af-8cfa-4709-8f66-0914d4c9e71a",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "ec637de5-6aca-4409-9313-a717075b864c"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "deploy",
+              "test_not_found",
+              "data"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.33.0",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "d553f8cd-1a88-4a23-a4bf-98b9fb582807",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "48c7faf5-d8c8-4864-af63-03f39da8d311",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/xml;charset=UTF-8"
+            },
+            {
+              "key": "content-length",
+              "value": "74"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              105,
+              116,
+              46,
+              112,
+              97,
+              103,
+              111,
+              112,
+              97,
+              46,
+              97,
+              116,
+              109,
+              108,
+              97,
+              121,
+              101,
+              114,
+              46,
+              119,
+              102,
+              46,
+              112,
+              114,
+              111,
+              99,
+              101,
+              115,
+              115,
+              46,
+              101,
+              120,
+              99,
+              101,
+              112,
+              116,
+              105,
+              111,
+              110,
+              46,
+              98,
+              101,
+              97,
+              110,
+              46,
+              80,
+              114,
+              111,
+              99,
+              101,
+              115,
+              115,
+              69,
+              114,
+              114,
+              111,
+              114,
+              82,
+              101,
+              115,
+              112,
+              111,
+              110,
+              115,
+              101,
+              64,
+              54,
+              56,
+              49,
+              52,
+              97,
+              53,
+              51,
+              57
+            ]
+          },
+          "cookie": [],
+          "responseTime": 11,
+          "responseSize": 74
+        },
+        "id": "c50936d0-02a5-4881-a917-ee83f2b4eefa",
+        "assertions": [
+          {
+            "assertion": "Status code is 404",
+            "skipped": false
+          }
+        ]
       }
     ],
     "transfers": {
-      "responseTotal": 1092
+      "responseTotal": 1778
     },
     "failures": [],
     "error": null

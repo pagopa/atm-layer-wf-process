@@ -181,12 +181,22 @@ public class Utility {
         VariableResponseBuilder variableResponseBuilder = VariableResponse.builder();
     
         // Filter variables
-        variables = (variables != null && !variables.isEmpty()) ? variables : TaskVarsEnum.getValues();
+        if (variables != null) {
+            variables.addAll(TaskVarsEnum.getValues());
+        } else {
+            variables = TaskVarsEnum.getValues();
+        }
+        
         CamundaVariablesDto variablesFilteredList = Utility.filterCamundaVariables(taskVariables, variables);
         variableResponseBuilder.variables(Utility.mapVariablesResponse(variablesFilteredList));
     
         // Filter buttons
-        buttons = (buttons != null && !buttons.isEmpty()) ? buttons : TaskButtonsEnum.getValues();
+        if (buttons != null) {
+            buttons.addAll(TaskButtonsEnum.getValues());
+        } else {
+            buttons = TaskButtonsEnum.getValues();
+        } 
+
         CamundaVariablesDto buttonsFilteredList = Utility.filterCamundaVariables(taskVariables, buttons);
         variableResponseBuilder.buttons(Utility.mapVariablesResponse(buttonsFilteredList));
     

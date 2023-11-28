@@ -63,7 +63,7 @@ public class ProcessServiceImpl implements ProcessService {
             log.info("BPMN deployed!");
         } catch (WebApplicationException e) {
             log.error("Deploy bpmn failed! The service may be unreachable or an error occured:", e);
-            throw new ProcessException(ProcessErrorEnum.GENERIC);
+            throw new ProcessException(ProcessErrorEnum.DEPLOY_D01);
         }
 
         return camundaDeployResponse;

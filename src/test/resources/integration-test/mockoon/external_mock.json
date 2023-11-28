@@ -31,11 +31,81 @@
                     "filePath": "",
                     "databucketID": "",
                     "sendFileAsBody": false,
-                    "rules": [],
+                    "rules": [
+                        {
+                            "target": "params",
+                            "modifier": "acquirerId",
+                            "value": "00000",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
                     "rulesOperator": "OR",
                     "disableTemplating": false,
                     "fallbackTo404": false,
                     "default": true,
+                    "crudKey": "id"
+                },
+                {
+                    "uuid": "81add873-13ee-48ff-afcb-216522f6ad97",
+                    "body": "{\n  \"type\": \"VALIDATION_ERROR\",\n  \"errorCode\": \"ATML_01\",\n  \"status\": 400,\n  \"message\": \"No runnable BPMN found for selection.\"\n}",
+                    "latency": 0,
+                    "statusCode": 400,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "params",
+                            "modifier": "acquirerId",
+                            "value": "11111",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
+                    "crudKey": "id"
+                },
+                {
+                    "uuid": "969dcd70-544f-4777-86c4-c62def5e5851",
+                    "body": "{\n  \"bpmnId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n  \"modelVersion\": 0,\n  \"deployedFileName\": \"string\",\n  \"definitionKey\": \"string\",\n  \"functionType\": \"MENU\",\n  \"status\": \"CREATED\",\n  \"sha256\": \"string\",\n  \"definitionVersionCamunda\": 0,\n  \"camundaDefinitionId\": \"aaa:1:a2e4c482-6d8a-11ee-9c8f-005056ac9110\",\n  \"description\": \"string\",\n  \"resourceFile\": {\n    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n    \"resourceType\": \"BPMN\",\n    \"storageKey\": \"string\",\n    \"fileName\": \"string\",\n    \"extension\": \"string\",\n    \"createdAt\": \"2023-11-03T14:18:36.635+00:00\",\n    \"lastUpdatedAt\": \"2023-11-03T14:18:36.635+00:00\",\n    \"createdBy\": \"string\",\n    \"lastUpdatedBy\": \"string\"\n  },\n  \"resource\": \"string\",\n  \"deploymentId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n  \"createdAt\": \"2023-11-03T14:18:36.635+00:00\",\n  \"lastUpdatedAt\": \"2023-11-03T14:18:36.635+00:00\",\n  \"createdBy\": \"string\",\n  \"lastUpdatedBy\": \"string\"\n}",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "body",
+                            "modifier": "acquirerId",
+                            "value": "22222",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
                     "crudKey": "id"
                 }
             ],
@@ -70,6 +140,32 @@
                     "disableTemplating": false,
                     "fallbackTo404": false,
                     "default": true,
+                    "crudKey": "id"
+                },
+                {
+                    "uuid": "7853cd7b-458b-4d2b-a576-7221af796ed9",
+                    "body": "{}",
+                    "latency": 0,
+                    "statusCode": 500,
+                    "label": "",
+                    "headers": [],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "params",
+                            "modifier": "id",
+                            "value": "aaa:1:a2e4c482-6d8a-11ee-9c8f-005056ac9110",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
                     "crudKey": "id"
                 }
             ],
@@ -189,7 +285,7 @@
                     "uuid": "0a313d8c-eca8-4735-a685-bdb691ab451c",
                     "body": "{\n  \"aVariableKey\": {\n    \"value\": {\n      \"prop1\": \"a\"\n    },\n    \"type\": \"Object\",\n    \"valueInfo\": {\n      \"objectTypeName\": \"com.example.MyObject\",\n      \"serializationDataFormat\": \"application/xml\"\n    }\n  }\n}",
                     "latency": 0,
-                    "statusCode": 200,
+                    "statusCode": 500,
                     "label": "",
                     "headers": [
                         {
@@ -201,7 +297,15 @@
                     "filePath": "",
                     "databucketID": "",
                     "sendFileAsBody": false,
-                    "rules": [],
+                    "rules": [
+                        {
+                            "target": "params",
+                            "modifier": "id",
+                            "value": "57c0e37b-87c5-11ee-acee-0000000000",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
                     "rulesOperator": "OR",
                     "disableTemplating": false,
                     "fallbackTo404": false,
@@ -240,6 +344,32 @@
                     "disableTemplating": false,
                     "fallbackTo404": false,
                     "default": true,
+                    "crudKey": "id"
+                },
+                {
+                    "uuid": "62e91a19-0838-4275-8c11-2817a7d073f0",
+                    "body": "{}",
+                    "latency": 0,
+                    "statusCode": 404,
+                    "label": "",
+                    "headers": [],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "params",
+                            "modifier": "id",
+                            "value": "test_not_found",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
                     "crudKey": "id"
                 }
             ],

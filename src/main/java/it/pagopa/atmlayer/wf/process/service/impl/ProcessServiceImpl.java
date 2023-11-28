@@ -37,7 +37,7 @@ import jakarta.ws.rs.WebApplicationException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * ProcessService implementation.
+ * ProcessService implementation
  */
 @Slf4j
 @ApplicationScoped

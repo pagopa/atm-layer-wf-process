@@ -95,7 +95,7 @@
                     "sendFileAsBody": false,
                     "rules": [
                         {
-                            "target": "body",
+                            "target": "params",
                             "modifier": "acquirerId",
                             "value": "22222",
                             "invert": false,
@@ -283,7 +283,7 @@
             "responses": [
                 {
                     "uuid": "0a313d8c-eca8-4735-a685-bdb691ab451c",
-                    "body": "{\n  \"aVariableKey\": {\n    \"value\": {\n      \"prop1\": \"a\"\n    },\n    \"type\": \"Object\",\n    \"valueInfo\": {\n      \"objectTypeName\": \"com.example.MyObject\",\n      \"serializationDataFormat\": \"application/xml\"\n    }\n  }\n}",
+                    "body": "",
                     "latency": 0,
                     "statusCode": 500,
                     "label": "",
@@ -310,6 +310,37 @@
                     "disableTemplating": false,
                     "fallbackTo404": false,
                     "default": true,
+                    "crudKey": "id"
+                },
+                {
+                    "uuid": "aac51e32-2409-4a1f-a42c-d4e292eab54d",
+                    "body": "{\n  \"aVariableKey\": {\n    \"value\": {\n      \"prop1\": \"a\"\n    },\n    \"type\": \"Object\",\n    \"valueInfo\": {\n      \"objectTypeName\": \"com.example.MyObject\",\n      \"serializationDataFormat\": \"application/xml\"\n    }\n  }\n}",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "body",
+                            "modifier": "id",
+                            "value": "57c0e37b-87c5-11ee-acee-3adabfa508b8",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
                     "crudKey": "id"
                 }
             ],

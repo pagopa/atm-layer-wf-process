@@ -28,7 +28,7 @@ jobs:
         id: jacoco
         uses: madrapps/jacoco-report@7a334255fbce42f385d7567c25d986a9c62e2971
         with:
-          paths: target/jacoco-report/jacoco.xml
+          paths: src/test/jacoco.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 90
           title: jacoco

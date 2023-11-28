@@ -57,7 +57,7 @@ jobs:
           update-comment-if-one-exists: true
           ignore-test-failures: true
           timezone: 'europe/rome'
- 
+
       - name: Fail if there were errors in the postman tests
         if: steps.process-postman.outputs.test-outcome == 'Failed'
         run: |

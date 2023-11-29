@@ -3,13 +3,6 @@ name: Manual create pre-release from dev
 on:
   workflow_dispatch:
     inputs:
-      env:
-        description: 'Environment:'
-        type: choice
-        required: true
-        default: dev
-        options:
-        - dev
       commit:
         description: 'Pre-release type:'
         type: choice
@@ -31,7 +24,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev'
     strategy:
       matrix:
-        environment: ["${{ inputs.env }}"]
+        environment: [dev]
 
     name: "manual-create-pre-release"
     runs-on: ubuntu-latest

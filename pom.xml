@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.pagopa.atmlayer</groupId>
   <artifactId>workflow-process</artifactId>
-  <version>1.0.0-dev.11</version>
+  <version>1.0.0-dev.12</version>
   <properties>
     <jacoco.version>0.8.11</jacoco.version>
     <camunda.version>7.20.0</camunda.version>

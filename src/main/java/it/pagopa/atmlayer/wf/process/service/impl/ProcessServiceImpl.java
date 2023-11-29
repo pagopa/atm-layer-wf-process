@@ -113,7 +113,8 @@ public class ProcessServiceImpl implements ProcessService {
 
         deviceInfo = Utility.constructModelDeviceInfo(deviceInfo);
         try {
-            log.info("FIND BPMN BY TRIAD REQUEST: [ functionId: "+ functionId + ", bankId: " + deviceInfo.getBankId() + ", branchId: "+ deviceInfo.getBranchId() + ", terminalId: "+ deviceInfo.getTerminalId() + " ]");
+            log.info("FIND BPMN BY TRIAD REQUEST: [ functionId: " + functionId + ", bankId: " + deviceInfo.getBankId()
+                    + ", branchId: " + deviceInfo.getBranchId() + ", terminalId: " + deviceInfo.getTerminalId() + " ]");
             modelFindBpmnIdResponse = modelRestClient.findBPMNByTriad(functionId, deviceInfo.getBankId(),
                     deviceInfo.getBranchId(), deviceInfo.getTerminalId());
         } catch (WebApplicationException e) {
@@ -197,13 +198,17 @@ public class ProcessServiceImpl implements ProcessService {
     private RestResponse<TaskResponse> getActiveTasks(String businessKey) {
         RestResponse<List<CamundaTaskDto>> camundaTaskList = getList(businessKey);
 
-        log.debug("Retrieving active tasks. . .");
+        log.info("Retrieving active tasks. . .");
         List<Task> activeTasks = camundaTaskList.getEntity().stream()
-                .map(taskDto -> Task.builder()
-                        .form(taskDto.getFormKey())
-                        .id(taskDto.getId())
-                        .priority(taskDto.getPriority())
-                        .build())
+                .map(taskDto -> {
+                    log.info("ID: {} ", taskDto.getId());
+
+                    return Task.builder()
+                            .form(taskDto.getFormKey())
+                            .id(taskDto.getId())
+                            .priority(taskDto.getPriority())
+                            .build();
+                })
                 .collect(Collectors.toList());
 
         return RestResponse.status(Status.fromStatusCode(camundaTaskList.getStatus()),
@@ -222,9 +227,8 @@ public class ProcessServiceImpl implements ProcessService {
         RestResponse<List<CamundaTaskDto>> camundaGetListResponse;
 
         try {
-            log.info("GET LIST REQUEST: [ businessKey: "+ businessKey + " ]");
+            log.info("GET LIST REQUEST: [ businessKey: " + businessKey + " ]");
             camundaGetListResponse = camundaGetTaskList(businessKey);
-            log.info("List of task retrieved!");
         } catch (WebApplicationException e) {
             if (e.getResponse().getStatus() == RestResponse.StatusCode.INTERNAL_SERVER_ERROR) {
                 log.error("Get list of tasks failed!");
@@ -361,7 +365,8 @@ public class ProcessServiceImpl implements ProcessService {
                 .businessKey(transactionId)
                 .variables(Utility.generateBodyRequestVariables(variables))
                 .build();
-        log.info("START INSTANCE REQUEST: [ functionId: {} ", functionId, ", body: [{}]", body, "]");
+        log.info("START INSTANCE REQUEST: functionId: {} ", functionId);
+        log.info("body: [{}]", body);
         return camundaRestClient.startInstance(functionId, body);
     }
 
@@ -396,7 +401,8 @@ public class ProcessServiceImpl implements ProcessService {
         CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
                 .variables(Utility.generateBodyRequestVariables(variables))
                 .build();
-        log.info("COMPLETE REQUEST: [ taskId: {}", taskId, ", body: [{}]", body, " ]");
+        log.info("COMPLETE REQUEST: taskId: {}", taskId);
+        log.info("body: [{}]", body);
         return camundaRestClient.complete(taskId, body);
     }
 
@@ -459,7 +465,8 @@ public class ProcessServiceImpl implements ProcessService {
         RestResponse<String> camundaGetResourceBinaryResponse;
 
         try {
-            log.info("GET RESOURCE BINARY REQUEST: [ deploymentId: {}", deploymentId, ", resourceId: ", resourceId, " ]");
+            log.info("GET RESOURCE BINARY REQUEST: [ deploymentId: {}", deploymentId, ", resourceId: ", resourceId,
+                    " ]");
             camundaGetResourceBinaryResponse = camundaRestClient.getResourceBinary(deploymentId, resourceId);
             log.info("Resource xml retrieved!");
         } catch (WebApplicationException e) {

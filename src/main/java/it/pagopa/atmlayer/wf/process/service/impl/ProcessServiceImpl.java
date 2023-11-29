@@ -57,7 +57,7 @@ public class ProcessServiceImpl implements ProcessService {
      * {@inheritDoc}
      */
     public RestResponse<Object> deploy(String requestUrl, String fileName) throws IOException {
-        log.info("DEPLOY REQUEST: [ requestUrl: " + requestUrl + ", fileName: " + fileName + " ]");
+        log.info("CAMUNDA DEPLOY sending request with params: [ requestUrl: " + requestUrl + ", fileName: " + fileName + " ]");
         RestResponse<Object> camundaDeployResponse;
 
         try {
@@ -113,7 +113,7 @@ public class ProcessServiceImpl implements ProcessService {
 
         deviceInfo = Utility.constructModelDeviceInfo(deviceInfo);
         try {
-            log.info("FIND BPMN BY TRIAD REQUEST: [ functionId: " + functionId + ", bankId: " + deviceInfo.getBankId()
+            log.info("MODEL FIND BPMN BY TRIAD REQUEST sending request with params: [ functionId: " + functionId + ", bankId: " + deviceInfo.getBankId()
                     + ", branchId: " + deviceInfo.getBranchId() + ", terminalId: " + deviceInfo.getTerminalId() + " ]");
             modelFindBpmnIdResponse = modelRestClient.findBPMNByTriad(functionId, deviceInfo.getBankId(),
                     deviceInfo.getBranchId(), deviceInfo.getTerminalId());
@@ -227,7 +227,7 @@ public class ProcessServiceImpl implements ProcessService {
         RestResponse<List<CamundaTaskDto>> camundaGetListResponse;
 
         try {
-            log.info("GET LIST REQUEST: [ businessKey: " + businessKey + " ]");
+            log.info("CAMUNDA GET LIST sending request with params: [ businessKey: " + businessKey + " ]");
             camundaGetListResponse = camundaGetTaskList(businessKey);
         } catch (WebApplicationException e) {
             if (e.getResponse().getStatus() == RestResponse.StatusCode.INTERNAL_SERVER_ERROR) {
@@ -332,7 +332,7 @@ public class ProcessServiceImpl implements ProcessService {
 
         try {
             taskVariables = camundaGetTaskVariables(taskId);
-            log.info("Retrieve variables completed!");
+            log.info("Variables: [{}]", taskVariables.getEntity());
         } catch (WebApplicationException e) {
             if (e.getResponse().getStatus() == RestResponse.StatusCode.INTERNAL_SERVER_ERROR) {
                 log.error("Retrieve variables failed! Task id is null or does ont exist.");
@@ -365,8 +365,7 @@ public class ProcessServiceImpl implements ProcessService {
                 .businessKey(transactionId)
                 .variables(Utility.generateBodyRequestVariables(variables))
                 .build();
-        log.info("START INSTANCE REQUEST: functionId: {} ", functionId);
-        log.info("body: [{}]", body);
+        log.info("CAMUNDA START INSTANCE sending request with params: [functionId: {}, body: {}]", functionId, body);
         return camundaRestClient.startInstance(functionId, body);
     }
 
@@ -401,8 +400,7 @@ public class ProcessServiceImpl implements ProcessService {
         CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
                 .variables(Utility.generateBodyRequestVariables(variables))
                 .build();
-        log.info("COMPLETE REQUEST: taskId: {}", taskId);
-        log.info("body: [{}]", body);
+        log.info("CAMUNDA COMPLETE sending request with params: [taskId: {}, body: {}]", taskId, body);
         return camundaRestClient.complete(taskId, body);
     }
 
@@ -417,7 +415,7 @@ public class ProcessServiceImpl implements ProcessService {
      * @return A `RestResponse` containing variables.
      */
     private RestResponse<CamundaVariablesDto> camundaGetTaskVariables(String taskId) {
-        log.info("GET TASK VARIABLES REQUEST: [ taskId: {}", taskId, " ]");
+        log.info("CAMUNDA GET TASK VARIABLES sending request with params: [ taskId: {}", taskId, " ]");
         return camundaRestClient.getTaskVariables(taskId);
     }
 
@@ -435,7 +433,7 @@ public class ProcessServiceImpl implements ProcessService {
         RestResponse<List<CamundaResourceDto>> camundaGetResourcesResponse;
 
         try {
-            log.info("GET RESOURCES REQUEST: [ id: {} " + id + " ]");
+            log.info("CAMUNDA GET RESOURCES sending request with params: [ id: {} " + id + " ]");
             camundaGetResourcesResponse = camundaRestClient.getResources(id);
             log.info("Resources retrieved!");
         } catch (WebApplicationException e) {
@@ -465,7 +463,7 @@ public class ProcessServiceImpl implements ProcessService {
         RestResponse<String> camundaGetResourceBinaryResponse;
 
         try {
-            log.info("GET RESOURCE BINARY REQUEST: [ deploymentId: {}", deploymentId, ", resourceId: ", resourceId,
+            log.info("CAMUNDA GET RESOURCE BINARY sending request with params: [ deploymentId: {}", deploymentId, ", resourceId: ", resourceId,
                     " ]");
             camundaGetResourceBinaryResponse = camundaRestClient.getResourceBinary(deploymentId, resourceId);
             log.info("Resource xml retrieved!");

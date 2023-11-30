@@ -92,9 +92,9 @@ public class ProcessResource {
      * @param id The deploymentId.
      * @return A `RestResponse` containing the resource BPMN.
      */
-    @Operation(summary = "Recupera file BPMN.", description = "Recupera file BPMN per il dato deploymentId.")
-    @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce il file BPMN.", content = @Content(mediaType = "application/xml", schema = @Schema(implementation = String.class)))
-    @APIResponse(responseCode = "400", description = "BAD_REQUEST. Risorsa BPMN non trovata.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
+    @Operation(summary = "Recupera risorsa BPMN/FORM/DMN.", description = "Recupera file BPMN per il dato deploymentId.")
+    @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce il file in formato Xml.", content = @Content(mediaType = "application/xml", schema = @Schema(implementation = String.class)))
+    @APIResponse(responseCode = "400", description = "BAD_REQUEST. Risorsa non trovata.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @APIResponse(responseCode = "404", description = "NOT_FOUND. Deployments non trovati.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore generico.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @GET
@@ -204,7 +204,7 @@ public class ProcessResource {
      * @param request
      * @return A `RestResponse` containing variables of the task.
     */
-    @Operation(summary = "Recupera le variabili dell'istanza di processo e filtra le stesse in base a quelle richieste dal task aggiungendovi le TaskVars")
+    @Operation(summary = "Recupera le variabili dell'istanza di processo e filtra le stesse in base a quelle richieste dal task aggiungendovi le variabili e i bottoni di default.")
     @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la mappa delle variabili filtrate e le Taskvars del task corrente del workflow.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = VariableResponse.class)))
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante l'elaborazione.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @APIResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE. Nel caso di errore durante il recupero delle variabili ritornato da Camunda.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))

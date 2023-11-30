@@ -56,7 +56,7 @@ public class ProcessResource {
      * @param request The task request.
      * @return A `RestResponse` containing the deployment outcome.
      */
-    @Operation(summary = "Esegue il 'deploy' di un flusso BPMN", description = "Esegue il deploy di un flusso BPMN nel motore di workflow (es. Camunda)")
+    @Operation(summary = "Esegue il 'deploy' di una risorsa.", description = "Esegue il deploy di una risorsa nel motore di workflow (es. Camunda)")
     @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce l'ID della risorsa creata nel motore di workflow.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @APIResponse(responseCode = "400", description = "BAD_REQUEST. Nel caso di richiesta errata.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore generico.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))

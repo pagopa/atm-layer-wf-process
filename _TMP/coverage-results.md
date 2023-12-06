@@ -158,7 +158,7 @@
         
 #### All Lines Covered!
         
-- Line #73
+- Line #74
 ```
                 .append(resourceType != null ? resourceType.toLowerCase() : Constants.BPMN).toString();
 ```

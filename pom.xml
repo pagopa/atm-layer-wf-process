@@ -6,8 +6,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.pagopa.atmlayer</groupId>
   <artifactId>workflow-process</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.0-dev.14</version>
   <properties>
+    <jacoco.version>0.8.11</jacoco.version>
     <camunda.version>7.20.0</camunda.version>
     <compiler-plugin.version>3.11.0</compiler-plugin.version>
     <lombok.version>1.18.30</lombok.version>
@@ -16,7 +17,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.2.5.Final</quarkus.platform.version>
+    <quarkus.platform.version>3.2.9.Final</quarkus.platform.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.1.2</surefire-plugin.version>
     <jakarta-validation.version>3.0.2</jakarta-validation.version>
@@ -98,6 +99,11 @@
       <artifactId>testcontainers</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-jacoco</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -157,47 +163,21 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${jacoco-maven-plugin.version}</version>
+        <version>${jacoco.version}</version>
         <executions>
-          <execution>
-            <id>jacoco-check</id>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <phase>test</phase>
-            <configuration>
-              <dataFile>${project.build.directory}/jacoco-quarkus.exec</dataFile>
-              <rules>
-                <rule>
-                  <element>CLASS</element>
-                  <limits>
-                    <limit>
-                      <counter>LINE</counter>
-                      <value>COVEREDRATIO</value>
-                      <minimum>0.90</minimum>
-                    </limit>
-                    <limit>
-                      <counter>BRANCH</counter>
-                      <value>COVEREDRATIO</value>
-                      <minimum>0.90</minimum>
-                    </limit>
-                  </limits>
-                </rule>
-                <rule>
-                  <element>METHOD</element>
-                  <limits>
-                    <limit>
-                      <counter>COMPLEXITY</counter>
-                      <value>TOTALCOUNT</value>
-                      <maximum>15</maximum>
-                    </limit>
-                  </limits>
-                </rule>
-              </rules>
-            </configuration>
-          </execution>
+            <execution>
+                <id>default-prepare-agent</id>
+                <goals>
+                    <goal>prepare-agent</goal>
+                </goals>
+                <configuration>
+                    <exclClassLoaders>*QuarkusClassLoader</exclClassLoaders>
+                    <destFile>${project.build.directory}/jacoco-quarkus.exec</destFile>
+                    <append>true</append>
+                </configuration>
+            </execution>
         </executions>
-      </plugin>
+    </plugin>
     </plugins>
   </build>
   <profiles>

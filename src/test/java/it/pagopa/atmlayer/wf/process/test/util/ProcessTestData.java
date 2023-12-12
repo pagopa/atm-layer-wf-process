@@ -17,6 +17,7 @@ import it.pagopa.atmlayer.wf.process.bean.DeviceType;
 import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
 import it.pagopa.atmlayer.wf.process.bean.VariableRequest;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaResourceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
@@ -35,6 +36,14 @@ public class ProcessTestData {
     public static final String TASK_ID = "TEST_TASK_ID";
 
     public static final String BPMN_ID = "TEST_BPMN_ID";
+
+    public static final String BUSINESS_KEY = "TEST_BUSINESS_KEY";
+
+    public static final String RESOURCE_ID = "TEST_RESOURCE_ID";
+
+    public static final String BPMN = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><bpmn>test</bpmn>";
+
+    public static final String DEPLOYMENT_ID = "TEST_DEPLOYMENT_ID";
 
     private static Random random = new Random();
 
@@ -228,6 +237,15 @@ public class ProcessTestData {
                 .build();
     }
 
+    public static TaskRequest createTaskRequestEmptyMissingTaskId() {
+        return TaskRequest.builder()
+                .taskId("")
+                .transactionId(ProcessTestData.TRANSACTION_ID)
+                .variables(ProcessTestData.getVariables())
+                .deviceInfo(ProcessTestData.getDeviceInfo())
+                .build();
+    }
+
     public static List<CamundaTaskDto> createListCamundaTaskDto() {
         List<CamundaTaskDto> tasks = new ArrayList<>();
         tasks.add(CamundaTaskDto.builder().id(TASK_ID + "1").build());
@@ -244,7 +262,22 @@ public class ProcessTestData {
     }
 
     public static List<InstanceDto> createResponseInstance() {
-
         return List.of(new InstanceDto());
     }
+
+    public static List<InstanceDto> createResponseInstanceProcessRetrieved() {
+        List<InstanceDto> instanceDtoList = new ArrayList<>();
+        instanceDtoList.add(InstanceDto.builder().businessKey(BUSINESS_KEY).build());
+
+        return instanceDtoList;
+    }
+
+    public static List<CamundaResourceDto> createCamundaResourceDtos(){
+        List<CamundaResourceDto> camundaResourceDtoList = new ArrayList<>();
+        camundaResourceDtoList.add(CamundaResourceDto.builder().id(RESOURCE_ID).build());
+        
+        return camundaResourceDtoList;
+    }
+        
+    
 }

@@ -7,7 +7,7 @@ import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
 @OpenAPIDefinition(
-		info = @Info(title = "Workflow Process API", description = "Run the workflow based on BPMN model", version = "1.0.0")
+		info = @Info(title = "Workflow Process API", description = "Interagisce con Camunda per l'esecuzione del flusso BPMN.", version = "1.0.0")
 )
 @ApplicationPath("/")
 public class ProcessMicroservice extends Application {

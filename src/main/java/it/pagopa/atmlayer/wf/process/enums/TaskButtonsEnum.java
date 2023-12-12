@@ -8,21 +8,14 @@ import jakarta.enterprise.context.ApplicationScoped;
 import lombok.AllArgsConstructor;
 
 /**
- * Enum which represents the info of device peripherals.
+ * Enum which represents the info of buttons.
  */
 @ApplicationScoped
 @AllArgsConstructor
-public enum TaskVarsEnum {
+public enum TaskButtonsEnum {
 
-    ON_ERROR("onError"),
-    OUTCOME_VAR_NAME("outcomeVarName"),
-    ON_TIMEOUT("onTimeout"),
-    COMMAND("command"),
-    RECEIPT_TEMPLATE("receiptTemplate"),
-    TIMEOUT("timeout"),
-    DATA("data"),
-    TEMPLATE("template"),
-    EPP_MODE("eppMode");
+    EPP_ENTER("eppEnter"),
+    EPP_CANCEL("eppCancel");
 
     private final String value;
 
@@ -31,8 +24,8 @@ public enum TaskVarsEnum {
     }
 
     public static List<String> getValues() {
-        return Arrays.stream(TaskVarsEnum.values())
-                .map(TaskVarsEnum::getValue)
+        return Arrays.stream(TaskButtonsEnum.values())
+                .map(TaskButtonsEnum::getValue)
                 .collect(Collectors.toList());
     }
 }

@@ -10,10 +10,10 @@ import io.quarkus.test.junit.QuarkusTest;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 
 @QuarkusTest
-public class UtilityTest {
+class UtilityTest {
     
     @Test
-    public void testDeleteFileIfExists() throws IOException {
+    void testDeleteFileIfExists() throws IOException {
 
         String testFilePath = "test.txt";
 

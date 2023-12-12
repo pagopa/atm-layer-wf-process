@@ -1,11 +1,10 @@
 package it.pagopa.atmlayer.wf.process.enums;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import jakarta.enterprise.context.ApplicationScoped;
 
+/**
+ * Enum which contains the device info passed to Camunda.
+ */
 @ApplicationScoped
 public enum DeviceInfoEnum {
     

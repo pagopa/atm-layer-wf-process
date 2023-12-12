@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @QuarkusTest
-public class EnvironmentTestServicesResource {
+class EnvironmentTestServicesResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(EnvironmentTestServicesResource.class);
 
     public static class DockerCompose implements QuarkusTestResourceLifecycleManager {

@@ -9,6 +9,7 @@ import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
+import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaResourceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
@@ -20,6 +21,23 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 
+/**
+ * @author Pasquale Sansonna
+ * 
+ * <p>The {@code CamundaRestClient} interface defines the contract for interacting with the Camunda
+ * workflow engine through RESTful web services. It includes methods for deploying BPMN process
+ * definitions, retrieving resources associated with a deployment, starting process instances,
+ * completing tasks, and retrieving variables. </p>
+ *
+ *
+ * @see CamundaBasicAuthFilter
+ * @see it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto
+ * @see it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaResourceDto
+ * @see it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaStartProcessInstanceDto
+ * @see it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto
+ * @see it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto
+ * @see it.pagopa.atmlayer.wf.process.client.camunda.bean.InstanceDto
+ */
 @RegisterRestClient(configKey = "camunda-rest-client")
 @RegisterProvider(CamundaBasicAuthFilter.class)
 public interface CamundaRestClient {
@@ -27,6 +45,14 @@ public interface CamundaRestClient {
     @POST
     @Path("/deployment/create")
     RestResponse<Object> deploy(@RestForm File data);
+
+    @GET
+    @Path("/deployment/{id}/resources")
+    RestResponse<List<CamundaResourceDto>> getResources(@PathParam("id") String id);
+
+    @GET
+    @Path("/deployment/{id}/resources/{resourceId}/data")
+    RestResponse<String> getResourceBinary(@PathParam("id") String id, @PathParam("resourceId") String resourceId);
 
     @POST
     @Path("/process-definition/{id}/start")
@@ -47,4 +73,5 @@ public interface CamundaRestClient {
     @GET
     @Path("/process-instance")
     RestResponse<List<InstanceDto>> getInstanceActivity(@QueryParam("businessKey") String businessKey);
+
 }

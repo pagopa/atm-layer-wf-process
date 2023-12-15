@@ -1,181 +1,577 @@
 {
-  "info": {
-      "title": "External mock",
-      "version": "1.0.0"
-  },
-  "openapi": "3.0.0",
-  "paths": {
-      "/api/v1/model/bpmn/process/function/{functionType}/bank/{acquirerId}/branch/{branchId}/terminal/{terminalId}": {
-          "get": {
-              "description": "",
-              "parameters": [
-                  {
-                      "in": "path",
-                      "name": "functionType",
-                      "required": true,
-                      "schema": {
-                          "type": "string"
-                      }
-                  },
-                  {
-                      "in": "path",
-                      "name": "acquirerId",
-                      "required": true,
-                      "schema": {
-                          "type": "string"
-                      }
-                  },
-                  {
-                      "in": "path",
-                      "name": "branchId",
-                      "required": true,
-                      "schema": {
-                          "type": "string"
-                      }
-                  },
-                  {
-                      "in": "path",
-                      "name": "terminalId",
-                      "required": true,
-                      "schema": {
-                          "type": "string"
-                      }
-                  }
-              ],
-              "responses": {
-                  "200": {
-                      "content": {
-                          "application/json": {
-                              "example": "{\n  \"bpmnId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n  \"modelVersion\": 0,\n  \"deployedFileName\": \"string\",\n  \"definitionKey\": \"string\",\n  \"functionType\": \"MENU\",\n  \"status\": \"CREATED\",\n  \"sha256\": \"string\",\n  \"definitionVersionCamunda\": 0,\n  \"camundaDefinitionId\": \"demo23:1:a2e4c482-6d8a-11ee-9c8f-005056ac9110\",\n  \"description\": \"string\",\n  \"resourceFile\": {\n    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n    \"resourceType\": \"BPMN\",\n    \"storageKey\": \"string\",\n    \"fileName\": \"string\",\n    \"extension\": \"string\",\n    \"createdAt\": \"2023-11-03T14:18:36.635+00:00\",\n    \"lastUpdatedAt\": \"2023-11-03T14:18:36.635+00:00\",\n    \"createdBy\": \"string\",\n    \"lastUpdatedBy\": \"string\"\n  },\n  \"resource\": \"string\",\n  \"deploymentId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n  \"createdAt\": \"2023-11-03T14:18:36.635+00:00\",\n  \"lastUpdatedAt\": \"2023-11-03T14:18:36.635+00:00\",\n  \"createdBy\": \"string\",\n  \"lastUpdatedBy\": \"string\"\n}"
-                          }
-                      },
-                      "description": "",
-                      "headers": {
-                      }
-                  }
-              }
-          }
-      },
-      "/api/v1/processes/process-definition/{id}/start": {
-          "post": {
-              "description": "",
-              "parameters": [
-                  {
-                      "in": "path",
-                      "name": "id",
-                      "required": true,
-                      "schema": {
-                          "type": "string"
-                      }
-                  }
-              ],
-              "responses": {
-                  "200": {
-                      "content": {
-                          "application/json": {
-                              "example": "{\n  \"links\": [\n    {\n      \"method\": \"GET\",\n      \"href\": \"http://localhost:8080/rest-test/process-instance/anId\",\n      \"rel\": \"self\"\n    }\n  ],\n  \"id\": \"anId\",\n  \"definitionId\": \"aProcessDefinitionId\",\n  \"businessKey\": \"test\",\n  \"caseInstanceId\": null,\n  \"tenantId\": null,\n  \"ended\": false,\n  \"suspended\": false\n}"
-                          }
-                      },
-                      "description": "",
-                      "headers": {
-                      }
-                  }
-              }
-          }
-      },
-      "/api/v1/processes/process-instance": {
-          "get": {
-              "description": "",
-              "responses": {
-                  "200": {
-                      "content": {
-                          "application/json": {
-                              "example": "[\n  {\n    \"links\": [],\n    \"id\": \"anId\",\n    \"definitionId\": \"aProcessDefinitionId\",\n    \"businessKey\": \"test\",\n    \"caseInstanceId\": \"aCaseInstanceId\",\n    \"ended\": false,\n    \"suspended\": false,\n    \"tenantId\": null\n  }\n]"
-                          }
-                      },
-                      "description": "",
-                      "headers": {
-                      }
-                  }
-              }
-          }
-      },
-      "/api/v1/processes/task": {
-          "post": {
-              "description": "",
-              "responses": {
-                  "200": {
-                      "content": {
-                          "application/json": {
-                              "example": "[\n  {\n    \"id\": \"anId\",\n    \"name\": \"aName\",\n    \"assignee\": \"anAssignee\",\n    \"created\": \"2013-01-23T13:42:42.453+0200\",\n    \"due\": \"2013-01-23T13:49:42.342+0200\",\n    \"followUp:\": \"2013-01-23T13:44:42.546+0200\",\n    \"lastUpdated:\": \"2013-01-23T13:44:42.546+0200\",\n    \"delegationState\": \"RESOLVED\",\n    \"description\": \"aDescription\",\n    \"executionId\": \"anExecution\",\n    \"owner\": \"anOwner\",\n    \"parentTaskId\": \"aParentId\",\n    \"priority\": 10,\n    \"processDefinitionId\": \"aProcessDefinitionId\",\n    \"processInstanceId\": \"aProcInstId\",\n    \"caseDefinitionId\": \"aCaseDefId\",\n    \"caseInstanceId\": \"aCaseInstId\",\n    \"caseExecutionId\": \"aCaseExecution\",\n    \"taskDefinitionKey\": \"aTaskDefinitionKey\",\n    \"suspended\": false,\n    \"formKey\": \"aFormKey\",\n    \"camundaFormRef\": {},\n    \"tenantId\": \"aTenantId\"\n  }\n]"
-                          }
-                      },
-                      "description": "",
-                      "headers": {
-                      }
-                  }
-              }
-          }
-      },
-      "/api/v1/processes/task/{id}/complete": {
-          "post": {
-              "description": "",
-              "parameters": [
-                  {
-                      "in": "path",
-                      "name": "id",
-                      "required": true,
-                      "schema": {
-                          "type": "string"
-                      }
-                  }
-              ],
-              "responses": {
-                  "204": {
-                      "content": {
-                          "application/json": {
-                              "example": {
-                              }
-                          }
-                      },
-                      "description": "",
-                      "headers": {
-                      }
-                  }
-              }
-          }
-      },
-      "/api/v1/processes/task/{id}/variables": {
-          "get": {
-              "description": "",
-              "parameters": [
-                  {
-                      "in": "path",
-                      "name": "id",
-                      "required": true,
-                      "schema": {
-                          "type": "string"
-                      }
-                  }
-              ],
-              "responses": {
-                  "200": {
-                      "content": {
-                          "application/json": {
-                              "example": "{\n  \"aVariableKey\": {\n    \"value\": {\n      \"prop1\": \"a\",\n      \"prop2\": \"b\"\n    },\n    \"type\": \"Object\",\n    \"valueInfo\": {\n      \"objectTypeName\": \"com.example.MyObject\",\n      \"serializationDataFormat\": \"application/xml\"\n    }\n  }\n}"
-                          }
-                      },
-                      "description": "",
-                      "headers": {
-                      }
-                  }
-              }
-          }
-      }
-  },
-  "servers": [
-      {
-          "url": "http://localhost:3000/"
-      }
-  ]
+    "uuid": "232205fd-ccb2-462f-8713-25f6892feaff",
+    "lastMigration": 29,
+    "name": "External mock",
+    "endpointPrefix": "",
+    "latency": 0,
+    "port": 3000,
+    "hostname": "",
+    "folders": [],
+    "routes": [
+        {
+            "uuid": "32c52ca7-0140-4d63-8099-2be9402d87a7",
+            "type": "http",
+            "documentation": "",
+            "method": "get",
+            "endpoint": "api/v1/model/bpmn/process/function/:functionType/bank/:acquirerId/branch/:branchId/terminal/:terminalId",
+            "responses": [
+                {
+                    "uuid": "473aeee4-2665-48a9-a5df-5a318d77f40a",
+                    "body": "{\n  \"bpmnId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n  \"modelVersion\": 0,\n  \"deployedFileName\": \"string\",\n  \"definitionKey\": \"string\",\n  \"functionType\": \"MENU\",\n  \"status\": \"CREATED\",\n  \"sha256\": \"string\",\n  \"definitionVersionCamunda\": 0,\n  \"camundaDefinitionId\": \"demo23:1:a2e4c482-6d8a-11ee-9c8f-005056ac9110\",\n  \"description\": \"string\",\n  \"resourceFile\": {\n    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n    \"resourceType\": \"BPMN\",\n    \"storageKey\": \"string\",\n    \"fileName\": \"string\",\n    \"extension\": \"string\",\n    \"createdAt\": \"2023-11-03T14:18:36.635+00:00\",\n    \"lastUpdatedAt\": \"2023-11-03T14:18:36.635+00:00\",\n    \"createdBy\": \"string\",\n    \"lastUpdatedBy\": \"string\"\n  },\n  \"resource\": \"string\",\n  \"deploymentId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n  \"createdAt\": \"2023-11-03T14:18:36.635+00:00\",\n  \"lastUpdatedAt\": \"2023-11-03T14:18:36.635+00:00\",\n  \"createdBy\": \"string\",\n  \"lastUpdatedBy\": \"string\"\n}",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "params",
+                            "modifier": "acquirerId",
+                            "value": "00000",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id"
+                },
+                {
+                    "uuid": "81add873-13ee-48ff-afcb-216522f6ad97",
+                    "body": "{\n  \"type\": \"VALIDATION_ERROR\",\n  \"errorCode\": \"ATML_01\",\n  \"status\": 400,\n  \"message\": \"No runnable BPMN found for selection.\"\n}",
+                    "latency": 0,
+                    "statusCode": 400,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "params",
+                            "modifier": "acquirerId",
+                            "value": "11111",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
+                    "crudKey": "id"
+                },
+                {
+                    "uuid": "969dcd70-544f-4777-86c4-c62def5e5851",
+                    "body": "{\n  \"bpmnId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n  \"modelVersion\": 0,\n  \"deployedFileName\": \"string\",\n  \"definitionKey\": \"string\",\n  \"functionType\": \"MENU\",\n  \"status\": \"CREATED\",\n  \"sha256\": \"string\",\n  \"definitionVersionCamunda\": 0,\n  \"camundaDefinitionId\": \"aaa:1:a2e4c482-6d8a-11ee-9c8f-005056ac9110\",\n  \"description\": \"string\",\n  \"resourceFile\": {\n    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n    \"resourceType\": \"BPMN\",\n    \"storageKey\": \"string\",\n    \"fileName\": \"string\",\n    \"extension\": \"string\",\n    \"createdAt\": \"2023-11-03T14:18:36.635+00:00\",\n    \"lastUpdatedAt\": \"2023-11-03T14:18:36.635+00:00\",\n    \"createdBy\": \"string\",\n    \"lastUpdatedBy\": \"string\"\n  },\n  \"resource\": \"string\",\n  \"deploymentId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n  \"createdAt\": \"2023-11-03T14:18:36.635+00:00\",\n  \"lastUpdatedAt\": \"2023-11-03T14:18:36.635+00:00\",\n  \"createdBy\": \"string\",\n  \"lastUpdatedBy\": \"string\"\n}",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "params",
+                            "modifier": "acquirerId",
+                            "value": "22222",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
+                    "crudKey": "id"
+                }
+            ],
+            "enabled": true,
+            "responseMode": null
+        },
+        {
+            "uuid": "c24fbffb-9139-48d1-a2e9-de9335f7802d",
+            "type": "http",
+            "documentation": "",
+            "method": "post",
+            "endpoint": "engine-rest/process-definition/:id/start",
+            "responses": [
+                {
+                    "uuid": "60e26896-981e-4a7e-9a73-e1506e7a3c5d",
+                    "body": "{\n  \"links\": [\n    {\n      \"method\": \"GET\",\n      \"href\": \"http://localhost:8080/rest-test/process-instance/anId\",\n      \"rel\": \"self\"\n    }\n  ],\n  \"id\": \"anId\",\n  \"definitionId\": \"aProcessDefinitionId\",\n  \"businessKey\": \"myBusinessKey\",\n  \"caseInstanceId\": null,\n  \"tenantId\": null,\n  \"ended\": false,\n  \"suspended\": false\n}",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id"
+                },
+                {
+                    "uuid": "7853cd7b-458b-4d2b-a576-7221af796ed9",
+                    "body": "{}",
+                    "latency": 0,
+                    "statusCode": 500,
+                    "label": "",
+                    "headers": [],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "params",
+                            "modifier": "id",
+                            "value": "aaa:1:a2e4c482-6d8a-11ee-9c8f-005056ac9110",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
+                    "crudKey": "id"
+                }
+            ],
+            "enabled": true,
+            "responseMode": null
+        },
+        {
+            "uuid": "6aaa6075-8e84-4546-9134-3a5ba248e4cf",
+            "type": "http",
+            "documentation": "",
+            "method": "get",
+            "endpoint": "engine-rest/process-instance",
+            "responses": [
+                {
+                    "uuid": "e274a439-adde-4446-866a-dae44a2e537f",
+                    "body": "{\n  \"links\": [\n    {\n      \"method\": \"GET\",\n      \"href\": \"http://localhost:8080/rest-test/process-instance/anId\",\n      \"rel\": \"self\"\n    }\n  ],\n  \"id\": \"anId\",\n  \"definitionId\": \"aProcessDefinitionId\",\n  \"businessKey\": \"test\",\n  \"caseInstanceId\": null,\n  \"tenantId\": null,\n  \"ended\": false,\n  \"suspended\": false\n}",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id"
+                }
+            ],
+            "enabled": true,
+            "responseMode": null
+        },
+        {
+            "uuid": "788c61a9-3c0b-4f2c-b745-83a660c2ec1a",
+            "type": "http",
+            "documentation": "",
+            "method": "post",
+            "endpoint": "engine-rest/task",
+            "responses": [
+                {
+                    "uuid": "1e8915dd-541e-4e08-8aed-592e80b52dfd",
+                    "body": "[\n  {\n    \"id\": \"57c0e37b-87c5-11ee-acee-3adabfa508b8\",\n    \"name\": \"Schermata dati avviso\",\n    \"assignee\": null,\n    \"created\": \"2023-11-20T16:53:34.563+0000\",\n    \"due\": null,\n    \"followUp\": null,\n    \"lastUpdated\": null,\n    \"delegationState\": null,\n    \"description\": null,\n    \"executionId\": \"57bcebbf-87c5-11ee-acee-3adabfa508b8\",\n    \"owner\": null,\n    \"parentTaskId\": null,\n    \"priority\": 50,\n    \"processDefinitionId\": \"demo11_06:67:a4657ee6-84a1-11ee-8aec-f296510bbaa3\",\n    \"processInstanceId\": \"556bd055-87c5-11ee-acee-3adabfa508b8\",\n    \"taskDefinitionKey\": \"Activity_1czk88w\",\n    \"caseExecutionId\": null,\n    \"caseInstanceId\": null,\n    \"caseDefinitionId\": null,\n    \"suspended\": false,\n    \"formKey\": \"datiAvviso.html\",\n    \"camundaFormRef\": null,\n    \"tenantId\": null\n  }\n]",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id"
+                }
+            ],
+            "enabled": true,
+            "responseMode": null
+        },
+        {
+            "uuid": "2c1d0f95-df8a-47d4-b35f-cfb0f981c1b1",
+            "type": "http",
+            "documentation": "",
+            "method": "post",
+            "endpoint": "engine-rest/task/:id/complete",
+            "responses": [
+                {
+                    "uuid": "acc8a50e-550d-46ae-a260-56cc5e145424",
+                    "body": "",
+                    "latency": 0,
+                    "statusCode": 204,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id"
+                }
+            ],
+            "enabled": true,
+            "responseMode": null
+        },
+        {
+            "uuid": "3c1c5dc0-be2c-41df-ae45-675bccf32f83",
+            "type": "http",
+            "documentation": "",
+            "method": "get",
+            "endpoint": "engine-rest/task/:id/variables",
+            "responses": [
+                {
+                    "uuid": "0a313d8c-eca8-4735-a685-bdb691ab451c",
+                    "body": "",
+                    "latency": 0,
+                    "statusCode": 500,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "params",
+                            "modifier": "id",
+                            "value": "57c0e37b-87c5-11ee-acee-0000000000",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id"
+                },
+                {
+                    "uuid": "aac51e32-2409-4a1f-a42c-d4e292eab54d",
+                    "body": "{\n  \"aVariableKey\": {\n    \"value\": {\n      \"prop1\": \"a\"\n    },\n    \"type\": \"Object\",\n    \"valueInfo\": {\n      \"objectTypeName\": \"com.example.MyObject\",\n      \"serializationDataFormat\": \"application/xml\"\n    }\n  }\n}",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "params",
+                            "modifier": "id",
+                            "value": "57c0e37b-87c5-11ee-acee-3adabfa508b8",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
+                    "crudKey": "id"
+                }
+            ],
+            "enabled": true,
+            "responseMode": null
+        },
+        {
+            "uuid": "63cf113c-685d-41e6-8618-f9b4646085b6",
+            "type": "http",
+            "documentation": "",
+            "method": "get",
+            "endpoint": "engine-rest/deployment/:id/resources",
+            "responses": [
+                {
+                    "uuid": "9962baab-3742-4645-9173-e75426d81acc",
+                    "body": "[\r\n  {\r\n    \"id\": \"anResourceId\",\r\n    \"name\": \"anResourceName\",\r\n    \"deploymentId\": \"anDeploymentId\"\r\n  },\r\n  {\r\n    \"id\": \"anotherResourceId\",\r\n    \"name\": \"anotherResourceName\",\r\n    \"deploymentId\": \"anDeploymentId\"\r\n  }\r\n]",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id"
+                },
+                {
+                    "uuid": "62e91a19-0838-4275-8c11-2817a7d073f0",
+                    "body": "{}",
+                    "latency": 0,
+                    "statusCode": 404,
+                    "label": "",
+                    "headers": [],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "params",
+                            "modifier": "id",
+                            "value": "test_not_found",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
+                    "crudKey": "id"
+                }
+            ],
+            "enabled": true,
+            "responseMode": null
+        },
+        {
+            "uuid": "9bd90062-362c-45d2-9295-4aeb31f18f05",
+            "type": "http",
+            "documentation": "",
+            "method": "get",
+            "endpoint": "engine-rest/deployment/:id/resources/:resourceId/data",
+            "responses": [
+                {
+                    "uuid": "4d87a284-b309-42f4-b1e2-124a77830cec",
+                    "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<bpmn:definitions xmlns:bpmn=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:camunda=\"http://camunda.org/schema/1.0/bpmn\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" xmlns:bioc=\"http://bpmn.io/schema/bpmn/biocolor/1.0\" xmlns:color=\"http://www.omg.org/spec/BPMN/non-normative/color/1.0\" xmlns:modeler=\"http://camunda.org/schema/modeler/1.0\" id=\"Definitions_00zw3pl\" targetNamespace=\"http://bpmn.io/schema/bpmn\" exporter=\"Camunda Modeler\" exporterVersion=\"5.16.0\" modeler:executionPlatform=\"Camunda Platform\" modeler:executionPlatformVersion=\"7.19.0\">\r\n  <bmpn></bmpn>\r\n</bpmn:definitions>",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/xml"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id"
+                }
+            ],
+            "enabled": true,
+            "responseMode": null
+        },
+        {
+            "uuid": "f0d7f30c-c7b4-4eb9-8a57-88c4a44ac361",
+            "type": "http",
+            "documentation": "",
+            "method": "get",
+            "endpoint": "download",
+            "responses": [
+                {
+                    "uuid": "08270a61-8382-4889-9fa8-adf2206aed4b",
+                    "body": "Test",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/octet-stream"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id"
+                }
+            ],
+            "enabled": true,
+            "responseMode": null
+        },
+        {
+            "uuid": "484ea081-25cf-4752-90f3-22e880d1db33",
+            "type": "http",
+            "documentation": "",
+            "method": "post",
+            "endpoint": "engine-rest/deployment/create",
+            "responses": [
+                {
+                    "uuid": "25b75ba4-e277-4497-83d2-13d0647dd17c",
+                    "body": "",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id"
+                }
+            ],
+            "enabled": true,
+            "responseMode": null
+        }
+    ],
+    "rootChildren": [
+        {
+            "type": "route",
+            "uuid": "32c52ca7-0140-4d63-8099-2be9402d87a7"
+        },
+        {
+            "type": "route",
+            "uuid": "c24fbffb-9139-48d1-a2e9-de9335f7802d"
+        },
+        {
+            "type": "route",
+            "uuid": "6aaa6075-8e84-4546-9134-3a5ba248e4cf"
+        },
+        {
+            "type": "route",
+            "uuid": "788c61a9-3c0b-4f2c-b745-83a660c2ec1a"
+        },
+        {
+            "type": "route",
+            "uuid": "2c1d0f95-df8a-47d4-b35f-cfb0f981c1b1"
+        },
+        {
+            "type": "route",
+            "uuid": "3c1c5dc0-be2c-41df-ae45-675bccf32f83"
+        },
+        {
+            "type": "route",
+            "uuid": "63cf113c-685d-41e6-8618-f9b4646085b6"
+        },
+        {
+            "type": "route",
+            "uuid": "9bd90062-362c-45d2-9295-4aeb31f18f05"
+        },
+        {
+            "type": "route",
+            "uuid": "f0d7f30c-c7b4-4eb9-8a57-88c4a44ac361"
+        },
+        {
+            "type": "route",
+            "uuid": "484ea081-25cf-4752-90f3-22e880d1db33"
+        }
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "proxyRemovePrefix": false,
+    "tlsOptions": {
+        "enabled": false,
+        "type": "CERT",
+        "pfxPath": "",
+        "certPath": "",
+        "keyPath": "",
+        "caPath": "",
+        "passphrase": ""
+    },
+    "cors": true,
+    "headers": [],
+    "proxyReqHeaders": [
+        {
+            "key": "",
+            "value": ""
+        }
+    ],
+    "proxyResHeaders": [
+        {
+            "key": "",
+            "value": ""
+        }
+    ],
+    "data": []
 }

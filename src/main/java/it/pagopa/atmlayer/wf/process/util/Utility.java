@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.jboss.resteasy.reactive.RestResponse;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -22,17 +24,27 @@ import it.pagopa.atmlayer.wf.process.bean.VariableResponse;
 import it.pagopa.atmlayer.wf.process.bean.VariableResponse.VariableResponseBuilder;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
 import it.pagopa.atmlayer.wf.process.enums.DeviceInfoEnum;
-import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
+import it.pagopa.atmlayer.wf.process.enums.TaskButtonsEnum;
 import it.pagopa.atmlayer.wf.process.enums.TaskVarsEnum;
-import it.pagopa.atmlayer.wf.process.exception.ProcessException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * The {@code Utility} class provides utility methods for various operations within workflow process microservice.
+ *
+ */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Utility {
 
+    /**
+     * Generates a map structure suitable for a REST request body based on the provided variables.
+     * Each variable is mapped to a key in the outer map, and an inner map contains the variable's value.
+     *
+     * @param variables The input variables to be included in the map structure.
+     * @return A map structure suitable for a REST request body.
+     */
     public static Map<String, Map<String, Object>> generateBodyRequestVariables(Map<String, Object> variables) {
         Map<String, Map<String, Object>> vars = new HashMap<>();
 
@@ -47,12 +59,18 @@ public class Utility {
         return vars;
     }
 
+    /**
+     * Converts an object to its JSON representation using Jackson ObjectMapper.
+     *
+     * @param object The object to be converted to JSON.
+     * @return The JSON representation of the object.
+     */
     public static String getJson(Object object) {
         String result = null;
         ObjectMapper om = new ObjectMapper();
 
         try {
-            result = om.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+            result = om.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             log.error("Error during Json processing log!");
         }
@@ -79,10 +97,10 @@ public class Utility {
     }
 
     /**
-     * Downloads a BPMN file from the specified URL and returns it as a temporary
-     * file.
+     * Downloads file from the specified URL and returns it.
      *
-     * @param url The URL from which to download the BPMN file.
+     * @param url The URL from which to download the file.
+     * @param fileName The name of the file to be created. 
      * @return A temporary File object representing the downloaded BPMN file.
      * @throws IOException If an I/O error occurs during the download or file
      *                     creation.
@@ -98,11 +116,11 @@ public class Utility {
     }
 
     /**
-     * Filters variables retrieved from camunda {@link CamundaVariablesDto} with the
-     * 
-     * @param camundaVariablesDto
-     * @param vars
-     * @return
+     * Filters variables retrieved from camunda {@link CamundaVariablesDto} with the specified variable names.
+     *
+     * @param camundaVariablesDto The variables retrieved from Camunda.
+     * @param vars The list of variable names to include in the filtered result.
+     * @return A filtered {@link CamundaVariablesDto} containing only the specified variables.
      */
     public static CamundaVariablesDto filterCamundaVariables(CamundaVariablesDto camundaVariablesDto, List<String> vars) {
         Map<String, Map<String, Object>> variablesDto = camundaVariablesDto.getVariables();
@@ -113,6 +131,12 @@ public class Utility {
         return CamundaVariablesDto.builder().variables(filteredFields).build();
     }
 
+    /**
+     * Maps variables from a {@link CamundaVariablesDto} to a simpler map structure.
+     *
+     * @param camundaVariablesDto The variables retrieved from Camunda.
+     * @return A map structure containing the variable names and their corresponding values.
+     */
     public static Map<String, Object> mapVariablesResponse(CamundaVariablesDto camundaVariablesDto) {
         Map<String, Map<String, Object>> variables = camundaVariablesDto.getVariables();
 
@@ -122,6 +146,13 @@ public class Utility {
                         entry -> entry.getValue().get("value")));
     }
 
+    /**
+     * Populates device information variables in the provided map.
+     *
+     * @param transactionId The transaction ID.
+     * @param deviceInfo     The device information.
+     * @param variables      The map to be populated with device information variables.
+     */
     public static void populateDeviceInfoVariables(String transactionId, DeviceInfo deviceInfo,
             Map<String, Object> variables) {
         
@@ -138,32 +169,38 @@ public class Utility {
         variables.put(DeviceInfoEnum.DEVICE_TYPE.getValue(), deviceInfo.getChannel());
     }
 
-    public static VariableResponse buildVariableResponse(CamundaVariablesDto taskVariables, List<String> variables, List<String> buttons){
-        CamundaVariablesDto variablesFilteredList;
-        CamundaVariablesDto buttonsFilteredList;
+    /**
+     * Builds a {@link VariableResponse} from Camunda variables, filtering by specified variable and button names.
+     *
+     * @param taskVariables The variables retrieved from Camunda.
+     * @param variables     The list of variable names to include in the response.
+     * @param buttons       The list of button names to include in the response.
+     * @return A {@link RestResponse} containing the constructed {@link VariableResponse}.
+     */
+    public static RestResponse<VariableResponse> buildVariableResponse(CamundaVariablesDto taskVariables, List<String> variables, List<String> buttons) {
         VariableResponseBuilder variableResponseBuilder = VariableResponse.builder();
-
-        try {
-            // Filter variables
-            if (variables != null && !variables.isEmpty()) {
-                variables.addAll(TaskVarsEnum.getValues());
-            } else {
-                variables = TaskVarsEnum.getValues();
-            }
-            variablesFilteredList = Utility.filterCamundaVariables(taskVariables, variables);
-            variableResponseBuilder.variables(Utility.mapVariablesResponse(variablesFilteredList));
-
-            // Filter buttons
-            if (buttons != null && !buttons.isEmpty()) {
-                buttonsFilteredList = Utility.filterCamundaVariables(taskVariables, buttons);
-                variableResponseBuilder.buttons(Utility.mapVariablesResponse(buttonsFilteredList));
-            }
-        } catch (RuntimeException e) {
-            log.error("Generic exception occured while building variable response:", e);
-            throw new ProcessException(ProcessErrorEnum.GENERIC);
+    
+        // Filter variables
+        if (variables != null) {
+            variables.addAll(TaskVarsEnum.getValues());
+        } else {
+            variables = TaskVarsEnum.getValues();
         }
+        
+        CamundaVariablesDto variablesFilteredList = Utility.filterCamundaVariables(taskVariables, variables);
+        variableResponseBuilder.variables(Utility.mapVariablesResponse(variablesFilteredList));
+    
+        // Filter buttons
+        if (buttons != null) {
+            buttons.addAll(TaskButtonsEnum.getValues());
+        } else {
+            buttons = TaskButtonsEnum.getValues();
+        } 
 
-        return variableResponseBuilder.build();
+        CamundaVariablesDto buttonsFilteredList = Utility.filterCamundaVariables(taskVariables, buttons);
+        variableResponseBuilder.buttons(Utility.mapVariablesResponse(buttonsFilteredList));
+    
+        return RestResponse.ok(variableResponseBuilder.build());
     }
 
     /**
@@ -188,6 +225,13 @@ public class Utility {
         return deviceInfo;
     }
 
+    /**
+     * Construct terminal ID by appending code to the bankId.
+     * 
+     * @param bankId
+     * @param code
+     * @return bankId+code
+     */
     private static String constructTerminalId(String bankId, String code){
         return bankId.concat(code);
     }

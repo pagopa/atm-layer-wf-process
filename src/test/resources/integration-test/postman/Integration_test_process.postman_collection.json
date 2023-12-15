@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "fa41de07-c678-4c26-9e8f-4cb0ff0184f5",
-		"name": "Intergration_test_process",
+		"name": "Integration_test_process",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "25309445"
 	},
@@ -14,7 +14,7 @@
 					"script": {
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(500);\r",
+							"    pm.response.to.have.status(200);\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -49,14 +49,14 @@
 			"response": []
 		},
 		{
-			"name": "Next - Task specificato completato corretamente e recuperati i task attivi",
+			"name": "Start - Errore su Camunda, processo non startato correttamente",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(500);\r",
+							"pm.test(\"Status code is 503\", function () {\r",
+							"    pm.response.to.have.status(503);\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -68,7 +68,91 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"taskId\": \"4badbbab-846e-11ee-8aec-f296510bbaa3\",\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"00000\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
+					"raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"22222\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/processes/start",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"processes",
+						"start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start - Model recupero bpmn id fallito, utilizzo functionId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"11111\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/processes/start",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"processes",
+						"start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Next - Task specificato completato corretamente e recuperati i task attivi",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"taskId\": \"4badbbab-846e-11ee-8aec-f296510bbaa3\",\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"55555\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -85,6 +169,328 @@
 						"v1",
 						"processes",
 						"next"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Next - Task non specificato, recupero dei task attivi",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"33333\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/processes/next",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"processes",
+						"next"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Variables - Variabili dell'istanza di processo relative al task recuperate correttamente",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-3adabfa508b8\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/processes/variables",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"processes",
+						"variables"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Variables - Errore su Camunda, task specificato non esistente.",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 503\", function () {\r",
+							"    pm.response.to.have.status(503);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-0000000000\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/processes/variables",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"processes",
+						"variables"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deploy - Deploy del bpmn, dmn o form",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "url",
+							"value": "http://localhost:3000/download",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/processes/deploy/:resourceType",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"processes",
+						"deploy",
+						":resourceType"
+					],
+					"variable": [
+						{
+							"key": "resourceType",
+							"value": "BPMN"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deploy - Errore per download della risorsa fallito",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 500\", function () {\r",
+							"    pm.response.to.have.status(500);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "url",
+							"value": "http://test:3000/download",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/processes/deploy/:resourceType",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"processes",
+						"deploy",
+						":resourceType"
+					],
+					"variable": [
+						{
+							"key": "resourceType",
+							"value": "BPMN"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resource - Recupera il bpmn associato al deployment ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/processes/deploy/:id/data",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"processes",
+						"deploy",
+						":id",
+						"data"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resource - Risorsa non trovata",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/processes/deploy/:id/data",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"processes",
+						"deploy",
+						":id",
+						"data"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "test_not_found"
+						}
 					]
 				}
 			},

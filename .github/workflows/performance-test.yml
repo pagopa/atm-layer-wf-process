@@ -1,0 +1,34 @@
+name: Manual run performance test
+
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+permissions: write-all
+
+jobs:
+  manual-create-pre-release:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev'
+    strategy:
+      matrix:
+        environment: [dev]
+
+    name: "manual-run-performance-test"
+    runs-on: ubuntu-latest
+    environment: ${{ matrix.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run k6 local test
+        uses: grafana/k6-action@v0.3.1
+        env:
+            MODEL_APPLICATION_BASE_URL: ${{ vars.MODEL_APPLICATION_BASE_URL }}
+            MODEL_APPLICATION_BASE_PATH: ${{ vars.MODEL_APPLICATION_BASE_PATH }}
+            MODEL_APPLICATION_KEY: ${{ secrets.MODEL_APPLICATION_KEY }}
+        with:
+          filename: performance_test/run_performance_tests.js

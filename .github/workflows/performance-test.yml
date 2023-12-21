@@ -27,8 +27,8 @@ jobs:
       - name: Run k6 local test
         uses: grafana/k6-action@v0.3.1
         env:
-            MODEL_APPLICATION_BASE_URL: ${{ vars.MODEL_APPLICATION_BASE_URL }}
-            MODEL_APPLICATION_BASE_PATH: ${{ vars.MODEL_APPLICATION_BASE_PATH }}
-            MODEL_APPLICATION_KEY: ${{ secrets.MODEL_APPLICATION_KEY }}
+            APPLICATION_BASE_URL: ${{ vars.APPLICATION_BASE_URL }}
+            APPLICATION_BASE_PATH: ${{ vars.APPLICATION_BASE_PATH }}
+            APPLICATION_KEY: ${{ secrets.APPLICATION_KEY }}
         with:
           filename: performance_test/run_performance_tests.js

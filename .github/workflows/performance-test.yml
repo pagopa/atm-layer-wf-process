@@ -32,3 +32,10 @@ jobs:
             APPLICATION_KEY: ${{ secrets.APPLICATION_KEY }}
         with:
           filename: performance_test/run_performance_tests.js
+          
+      - name: Upload performance test file
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: performance-report
+          path: performance_summary.html

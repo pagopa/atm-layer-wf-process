@@ -32,7 +32,7 @@ jobs:
       matrix:
         environment: [dev]
 
-    name: "manual-build"
+    name: "manual-promote-release-in-uat"
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
  

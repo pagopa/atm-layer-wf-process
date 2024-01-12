@@ -26,13 +26,13 @@ permissions:
   contents: write
 
 jobs:
-  manual-build:
+  manual-promote-release-in-uat:
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/uat'
     strategy:
       matrix:
         environment: [dev]
 
-    name: "manual-build"
+    name: "manual-promote-release-in-uat"
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
  

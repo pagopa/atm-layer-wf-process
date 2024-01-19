@@ -26,7 +26,7 @@ import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
 import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
 import it.pagopa.atmlayer.wf.process.exception.ProcessException;
 import it.pagopa.atmlayer.wf.process.service.ProcessService;
-import it.pagopa.atmlayer.wf.process.util.Logging;
+import it.pagopa.atmlayer.wf.process.util.CommonLogic;
 import it.pagopa.atmlayer.wf.process.util.Properties;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @ApplicationScoped
-public class ProcessServiceImpl implements ProcessService {
+public class ProcessServiceImpl extends CommonLogic implements ProcessService {
 
     @RestClient
     CamundaRestClient camundaRestClient;
@@ -67,7 +67,7 @@ public class ProcessServiceImpl implements ProcessService {
             log.error("Deploy bpmn failed! The service may be unreachable or an error occured:", e);
             throw new ProcessException(ProcessErrorEnum.DEPLOY_D01);
         } finally {
-			Logging.logElapsedTime(Logging.CAMUNDA_DEPLOY_LOG_ID , start);
+			logElapsedTime(CAMUNDA_DEPLOY_LOG_ID , start);
         }
 
         return camundaDeployResponse;
@@ -129,12 +129,12 @@ public class ProcessServiceImpl implements ProcessService {
                 case RestResponse.StatusCode.INTERNAL_SERVER_ERROR ->
                     log.warn("Find Bpmn id failed! A model generic error occured.");
 
-                default -> log.warn(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
+                default -> log.warn(UNKNOWN_STATUS, e.getResponse().getStatus());
             }
         } catch (ProcessingException e) {
             log.warn("Connection refused with model service");
         } finally {
-            Logging.logElapsedTime(Logging.MODEL_FIND_BPMN_BY_TRIAD, start);
+            logElapsedTime(MODEL_FIND_BPMN_BY_TRIAD, start);
         }
 
         /*
@@ -184,12 +184,12 @@ public class ProcessServiceImpl implements ProcessService {
                     throw new ProcessException(ProcessErrorEnum.START_C02);
                 }
                 default -> {
-                    log.error(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
+                    log.error(UNKNOWN_STATUS, e.getResponse().getStatus());
                     throw new ProcessException(ProcessErrorEnum.GENERIC);
                 }
             }
         } finally {
-            Logging.logElapsedTime(Logging.CAMUNDA_START_INSTANCE_LOG_ID , start);
+            logElapsedTime(CAMUNDA_START_INSTANCE_LOG_ID , start);
         }
     }
 
@@ -258,18 +258,18 @@ public class ProcessServiceImpl implements ProcessService {
                 log.error("Get list of tasks failed!");
                 throw new ProcessException(ProcessErrorEnum.GET_LIST_C03);
             } else {
-                log.error(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
+                log.error(UNKNOWN_STATUS, e.getResponse().getStatus());
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         } finally {
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_LIST_LOG_ID, start);
+            logElapsedTime(CAMUNDA_GET_LIST_LOG_ID, start);
         }
 
         if (camundaGetListResponse.getEntity().isEmpty()) {
 
             start = System.currentTimeMillis();
             RestResponse<List<InstanceDto>> instanceResponse = camundaRestClient.getInstanceActivity(businessKey);
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_INSTANCE_ACTIVITY_LOG_ID, start);
+            logElapsedTime(CAMUNDA_GET_INSTANCE_ACTIVITY_LOG_ID, start);
 
             if (!instanceResponse.getEntity().isEmpty()) {
                 log.debug("Instance still running...");
@@ -328,11 +328,11 @@ public class ProcessServiceImpl implements ProcessService {
                     log.error("Get list of tasks failed!");
                     throw new ProcessException(ProcessErrorEnum.GET_LIST_C03);
                 } else {
-                    log.error(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
+                    log.error(UNKNOWN_STATUS, e.getResponse().getStatus());
                     throw new ProcessException(ProcessErrorEnum.GENERIC);
                 }
             } finally {
-                Logging.logElapsedTime(Logging.CAMUNDA_GET_LIST_LOG_ID, start);
+                logElapsedTime(CAMUNDA_GET_LIST_LOG_ID, start);
             }
         }
 
@@ -362,12 +362,12 @@ public class ProcessServiceImpl implements ProcessService {
                 case RestResponse.StatusCode.INTERNAL_SERVER_ERROR ->
                     log.warn("Complete task failed! Task not exists or not corresponding to the specified instance.");
 
-                default -> log.warn(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
+                default -> log.warn(UNKNOWN_STATUS, e.getResponse().getStatus());
             }
         } catch (ProcessingException e) {
             log.warn("Connection refused on Camunda service...");
         } finally {
-            Logging.logElapsedTime(Logging.CAMUNDA_COMPLETE_LOG_ID, start);
+            logElapsedTime(CAMUNDA_COMPLETE_LOG_ID, start);
         }
     }
 
@@ -396,11 +396,11 @@ public class ProcessServiceImpl implements ProcessService {
                 log.error("Retrieve variables failed! Task id is null or does ont exist.");
                 throw new ProcessException(ProcessErrorEnum.VARIABLES_C06);
             } else {
-                log.error(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
+                log.error(UNKNOWN_STATUS, e.getResponse().getStatus());
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         } finally {
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_TASK_VARIABLES_LOG_ID , start);
+            logElapsedTime(CAMUNDA_GET_TASK_VARIABLES_LOG_ID , start);
         }
 
         return Utility.buildVariableResponse(taskVariables.getEntity(), variables, buttons);
@@ -429,11 +429,11 @@ public class ProcessServiceImpl implements ProcessService {
                 log.error("Get resources failed! No deployment resources found for the given id deployment.");
                 throw new ProcessException(ProcessErrorEnum.RESOURCE_R01);
             } else {
-                log.error(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
+                log.error(UNKNOWN_STATUS, e.getResponse().getStatus());
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         } finally {
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_RESOURCES_LOG_ID , start);
+            logElapsedTime(CAMUNDA_GET_RESOURCES_LOG_ID , start);
         }
 
         return camundaGetResourcesResponse.getEntity().stream().findFirst().get().getId();
@@ -462,11 +462,11 @@ public class ProcessServiceImpl implements ProcessService {
                 log.error("Get resources failed! No deployment resources found for the given id deployment.");
                 throw new ProcessException(ProcessErrorEnum.RESOURCE_R02);
             } else {
-                log.error(Logging.UNKNOWN_STATUS, e.getResponse().getStatus());
+                log.error(UNKNOWN_STATUS, e.getResponse().getStatus());
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         } finally {
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_RESOURCE_BINARY_LOG_ID, start);
+            logElapsedTime(CAMUNDA_GET_RESOURCE_BINARY_LOG_ID, start);
         }
 
         return camundaGetResourceBinaryResponse.getEntity();

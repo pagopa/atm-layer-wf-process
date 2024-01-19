@@ -39,7 +39,7 @@ public class CommonLogic{
      * @param stop  - the stop time, when the execution is finished
      */
     protected static void logElapsedTime(String label, long start) {
-        log.info(" - {} - Elapsed time [ms] = {}", label, System.currentTimeMillis() - start);
+        log.info(" {} - Elapsed time [ms] = {}", label, System.currentTimeMillis() - start);
     }
     
 }

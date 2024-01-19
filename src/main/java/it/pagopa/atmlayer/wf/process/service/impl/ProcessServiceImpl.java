@@ -67,7 +67,7 @@ public class ProcessServiceImpl implements ProcessService {
             log.error("Deploy bpmn failed! The service may be unreachable or an error occured:", e);
             throw new ProcessException(ProcessErrorEnum.DEPLOY_D01);
         } finally {
-			Logging.logElapsedTime(Logging.CAMUNDA_DEPLOY_LOG_ID , start, System.currentTimeMillis());
+			Logging.logElapsedTime(Logging.CAMUNDA_DEPLOY_LOG_ID , start);
         }
 
         return camundaDeployResponse;
@@ -134,7 +134,7 @@ public class ProcessServiceImpl implements ProcessService {
         } catch (ProcessingException e) {
             log.warn("Connection refused with model service");
         } finally {
-            Logging.logElapsedTime(Logging.MODEL_FIND_BPMN_BY_TRIAD, start, System.currentTimeMillis());
+            Logging.logElapsedTime(Logging.MODEL_FIND_BPMN_BY_TRIAD, start);
         }
 
         /*
@@ -189,7 +189,7 @@ public class ProcessServiceImpl implements ProcessService {
                 }
             }
         } finally {
-            Logging.logElapsedTime(Logging.CAMUNDA_START_INSTANCE_LOG_ID , start, System.currentTimeMillis());
+            Logging.logElapsedTime(Logging.CAMUNDA_START_INSTANCE_LOG_ID , start);
         }
     }
 
@@ -262,14 +262,14 @@ public class ProcessServiceImpl implements ProcessService {
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         } finally {
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_LIST_LOG_ID, start, System.currentTimeMillis());
+            Logging.logElapsedTime(Logging.CAMUNDA_GET_LIST_LOG_ID, start);
         }
 
         if (camundaGetListResponse.getEntity().isEmpty()) {
 
             start = System.currentTimeMillis();
             RestResponse<List<InstanceDto>> instanceResponse = camundaRestClient.getInstanceActivity(businessKey);
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_INSTANCE_ACTIVITY_LOG_ID, start, System.currentTimeMillis());
+            Logging.logElapsedTime(Logging.CAMUNDA_GET_INSTANCE_ACTIVITY_LOG_ID, start);
 
             if (!instanceResponse.getEntity().isEmpty()) {
                 log.debug("Instance still running...");
@@ -332,7 +332,7 @@ public class ProcessServiceImpl implements ProcessService {
                     throw new ProcessException(ProcessErrorEnum.GENERIC);
                 }
             } finally {
-                Logging.logElapsedTime(Logging.CAMUNDA_GET_LIST_LOG_ID, start, System.currentTimeMillis());
+                Logging.logElapsedTime(Logging.CAMUNDA_GET_LIST_LOG_ID, start);
             }
         }
 
@@ -367,7 +367,7 @@ public class ProcessServiceImpl implements ProcessService {
         } catch (ProcessingException e) {
             log.warn("Connection refused on Camunda service...");
         } finally {
-            Logging.logElapsedTime(Logging.CAMUNDA_COMPLETE_LOG_ID, start, System.currentTimeMillis());
+            Logging.logElapsedTime(Logging.CAMUNDA_COMPLETE_LOG_ID, start);
         }
     }
 
@@ -400,7 +400,7 @@ public class ProcessServiceImpl implements ProcessService {
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         } finally {
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_TASK_VARIABLES_LOG_ID , start, System.currentTimeMillis());
+            Logging.logElapsedTime(Logging.CAMUNDA_GET_TASK_VARIABLES_LOG_ID , start);
         }
 
         return Utility.buildVariableResponse(taskVariables.getEntity(), variables, buttons);
@@ -433,7 +433,7 @@ public class ProcessServiceImpl implements ProcessService {
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         } finally {
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_RESOURCES_LOG_ID , start, System.currentTimeMillis());
+            Logging.logElapsedTime(Logging.CAMUNDA_GET_RESOURCES_LOG_ID , start);
         }
 
         return camundaGetResourcesResponse.getEntity().stream().findFirst().get().getId();
@@ -466,7 +466,7 @@ public class ProcessServiceImpl implements ProcessService {
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         } finally {
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_RESOURCE_BINARY_LOG_ID , start, System.currentTimeMillis());
+            Logging.logElapsedTime(Logging.CAMUNDA_GET_RESOURCE_BINARY_LOG_ID, start);
         }
 
         return camundaGetResourceBinaryResponse.getEntity();

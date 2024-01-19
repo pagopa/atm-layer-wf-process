@@ -84,7 +84,7 @@ public class ProcessResource {
         } finally {
             // Delete of temp bpmn used for deploy on Camunda platform
             Utility.deleteFileIfExists(fileName);
-		    Logging.logElapsedTime(Logging.PROCESS_DEPLOY_LOG_ID , start, System.currentTimeMillis());
+		    Logging.logElapsedTime(Logging.PROCESS_DEPLOY_LOG_ID , start);
         }
 
         return response;
@@ -118,7 +118,7 @@ public class ProcessResource {
             log.error("Generic exception occured while processing get resource bpmn: ", e);
             throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
-			Logging.logElapsedTime(Logging.PROCESS_RESOURCE_LOG_ID , start, System.currentTimeMillis());
+			Logging.logElapsedTime(Logging.PROCESS_RESOURCE_LOG_ID , start);
         }
 
         return response;
@@ -160,7 +160,7 @@ public class ProcessResource {
             log.error("Generic exception occured while starting process: ", e);
             throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
-			Logging.logElapsedTime(Logging.PROCESS_START_PROCESS_LOG_ID , start, System.currentTimeMillis());
+			Logging.logElapsedTime(Logging.PROCESS_START_PROCESS_LOG_ID , start);
         }
 
         return response;
@@ -208,7 +208,7 @@ public class ProcessResource {
             log.error("Generic exception occured while executing next: ", e);
             throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
-			Logging.logElapsedTime(Logging.PROCESS_NEXT_LOG_ID , start, System.currentTimeMillis());
+			Logging.logElapsedTime(Logging.PROCESS_NEXT_LOG_ID , start);
         }
 
         return response;
@@ -240,7 +240,7 @@ public class ProcessResource {
             log.error("Generic exception occured while executing variables: ", e);
             throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
-			Logging.logElapsedTime(Logging.PROCESS_VARIABLES_LOG_ID , start, System.currentTimeMillis());
+			Logging.logElapsedTime(Logging.PROCESS_VARIABLES_LOG_ID , start);
         }
 
         return response;

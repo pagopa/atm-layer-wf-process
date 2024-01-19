@@ -6,10 +6,10 @@
       
 | Outcome                 | Value                                                               |
 |-------------------------|---------------------------------------------------------------------|
-| Code Coverage %         | 94.86%               |
-| :heavy_check_mark: Number of Lines Covered | 351    |
+| Code Coverage %         | 95.18%               |
+| :heavy_check_mark: Number of Lines Covered | 375    |
 | :x: Number of Lines Missed  | 19     |
-| Total Number of Lines   | 370     |
+| Total Number of Lines   | 394     |
 
 
 ## Details:
@@ -137,11 +137,11 @@
 ```
         } catch (WebApplicationException e) {
 ```
-- Line #287
+- Line #322
 ```
             } catch (InterruptedException e) {
 ```
-- Line #291
+- Line #326
 ```
             } catch (WebApplicationException e) {
 ```
@@ -158,7 +158,7 @@
         
 #### All Lines Covered!
         
-- Line #74
+- Line #77
 ```
                 .append(resourceType != null ? resourceType.toLowerCase() : Constants.BPMN).toString();
 ```
@@ -383,9 +383,11 @@
 
 <details>
     <summary>
-:x: Logging.java
+:heavy_check_mark: Logging.java
     </summary>
 
+        
+#### All Lines Covered!
         
 </details>
 

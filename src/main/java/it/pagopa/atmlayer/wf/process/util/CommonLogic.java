@@ -10,17 +10,17 @@ public class CommonLogic{
     
     protected static final String UNKNOWN_STATUS = "Unknown response status code: {}";
 
-    protected static final String PROCESS_RESOURCE_CLASS_ID = "ProcessResource.";
+    private static final String PROCESS_RESOURCE_CLASS_ID = "ProcessResource.";
     protected static final String PROCESS_DEPLOY_LOG_ID = PROCESS_RESOURCE_CLASS_ID + "deploy";
     protected static final String PROCESS_RESOURCE_LOG_ID = PROCESS_RESOURCE_CLASS_ID + "resource";
     protected static final String PROCESS_START_PROCESS_LOG_ID = PROCESS_RESOURCE_CLASS_ID + "startProcess";
     protected static final String PROCESS_NEXT_LOG_ID = PROCESS_RESOURCE_CLASS_ID + "next";
     protected static final String PROCESS_VARIABLES_LOG_ID = PROCESS_RESOURCE_CLASS_ID + "variables";
 
-    protected static final String MODEL_REST_CLIENT_CLASS_ID = "ModelRestClient.";
+    private static final String MODEL_REST_CLIENT_CLASS_ID = "ModelRestClient.";
     protected static final String MODEL_FIND_BPMN_BY_TRIAD = MODEL_REST_CLIENT_CLASS_ID + "findBPMNByTriad";
 
-    protected static final String CAMUNDA_REST_CLIENT_CLASS_ID = "CamundaRestClient.";
+    private static final String CAMUNDA_REST_CLIENT_CLASS_ID = "CamundaRestClient.";
     protected static final String CAMUNDA_DEPLOY_LOG_ID = CAMUNDA_REST_CLIENT_CLASS_ID + "deploy";
     protected static final String CAMUNDA_GET_RESOURCES_LOG_ID = CAMUNDA_REST_CLIENT_CLASS_ID + "getResources";
     protected static final String CAMUNDA_GET_RESOURCE_BINARY_LOG_ID = CAMUNDA_REST_CLIENT_CLASS_ID + "getResourceBinary";

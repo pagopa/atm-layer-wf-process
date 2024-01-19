@@ -69,7 +69,6 @@ public class ProcessResource {
             @Parameter(description = "L'url da cui recuperare il file bpmn.") @RestForm("url") String requestUrl,
             @Parameter(description = "Tipo di File (BPMN, DMN...)") @PathParam("resourceType") String resourceType) {
         long start = System.currentTimeMillis();
-        long stop = 0;
         log.info("Executing DEPLOY. . .");
 
         RestResponse<Object> response;
@@ -85,8 +84,7 @@ public class ProcessResource {
         } finally {
             // Delete of temp bpmn used for deploy on Camunda platform
             Utility.deleteFileIfExists(fileName);
-            stop = System.currentTimeMillis();
-		    Logging.logElapsedTime(Logging.PROCESS_DEPLOY_LOG_ID , start, stop);
+		    Logging.logElapsedTime(Logging.PROCESS_DEPLOY_LOG_ID , start, System.currentTimeMillis());
         }
 
         return response;
@@ -109,7 +107,6 @@ public class ProcessResource {
     public RestResponse<String> resource(@PathParam("id") String id) {
         log.info("Executing RESOURCE. . .");
         long start = System.currentTimeMillis();
-		long stop = 0;
 
         RestResponse<String> response;
 
@@ -121,8 +118,7 @@ public class ProcessResource {
             log.error("Generic exception occured while processing get resource bpmn: ", e);
             throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
-            stop = System.currentTimeMillis();
-			Logging.logElapsedTime(Logging.PROCESS_RESOURCE_LOG_ID , start, stop);
+			Logging.logElapsedTime(Logging.PROCESS_RESOURCE_LOG_ID , start, System.currentTimeMillis());
         }
 
         return response;
@@ -145,7 +141,6 @@ public class ProcessResource {
     public RestResponse<TaskResponse> startProcess(@Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
         log.info("Executing START. . .");
         long start = System.currentTimeMillis();
-        long stop = 0;
         
         RestResponse<TaskResponse> response;
 
@@ -165,8 +160,7 @@ public class ProcessResource {
             log.error("Generic exception occured while starting process: ", e);
             throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
-            stop = System.currentTimeMillis();
-			Logging.logElapsedTime(Logging.PROCESS_START_PROCESS_LOG_ID , start, stop);
+			Logging.logElapsedTime(Logging.PROCESS_START_PROCESS_LOG_ID , start, System.currentTimeMillis());
         }
 
         return response;
@@ -191,7 +185,6 @@ public class ProcessResource {
         
         log.info("Executing NEXT. . .");
         long start = System.currentTimeMillis();
-        long stop = 0;
         
         RestResponse<TaskResponse> response;
 
@@ -215,8 +208,7 @@ public class ProcessResource {
             log.error("Generic exception occured while executing next: ", e);
             throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
-            stop = System.currentTimeMillis();
-			Logging.logElapsedTime(Logging.PROCESS_NEXT_LOG_ID , start, stop);
+			Logging.logElapsedTime(Logging.PROCESS_NEXT_LOG_ID , start, System.currentTimeMillis());
         }
 
         return response;
@@ -237,7 +229,6 @@ public class ProcessResource {
     public RestResponse<VariableResponse> variables(VariableRequest request) {
         log.info("Executing VARIABLES. . .");
         long start = System.currentTimeMillis();
-        long stop = 0;
 
         RestResponse<VariableResponse> response;
 
@@ -249,8 +240,7 @@ public class ProcessResource {
             log.error("Generic exception occured while executing variables: ", e);
             throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
-            stop = System.currentTimeMillis();
-			Logging.logElapsedTime(Logging.PROCESS_VARIABLES_LOG_ID , start, stop);
+			Logging.logElapsedTime(Logging.PROCESS_VARIABLES_LOG_ID , start, System.currentTimeMillis());
         }
 
         return response;

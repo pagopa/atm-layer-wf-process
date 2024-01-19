@@ -56,7 +56,6 @@ public class ProcessServiceImpl implements ProcessService {
      */
     public RestResponse<Object> deploy(String requestUrl, String fileName) throws IOException {
         long start = 0;
-        long stop = 0;
         log.info("CAMUNDA DEPLOY sending request with params: [ requestUrl: " + requestUrl + ", fileName: " + fileName + " ]");
         RestResponse<Object> camundaDeployResponse;
 
@@ -68,8 +67,7 @@ public class ProcessServiceImpl implements ProcessService {
             log.error("Deploy bpmn failed! The service may be unreachable or an error occured:", e);
             throw new ProcessException(ProcessErrorEnum.DEPLOY_D01);
         } finally {
-            stop = System.currentTimeMillis();
-			Logging.logElapsedTime(Logging.CAMUNDA_DEPLOY_LOG_ID , start, stop);
+			Logging.logElapsedTime(Logging.CAMUNDA_DEPLOY_LOG_ID , start, System.currentTimeMillis());
         }
 
         return camundaDeployResponse;
@@ -113,7 +111,6 @@ public class ProcessServiceImpl implements ProcessService {
      */
     private String findBpmnId(String functionId, DeviceInfo deviceInfo) {
         long start = 0;
-        long stop = 0;
         String bpmnId = functionId;
         RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = null;
 
@@ -137,8 +134,7 @@ public class ProcessServiceImpl implements ProcessService {
         } catch (ProcessingException e) {
             log.warn("Connection refused with model service");
         } finally {
-            stop = System.currentTimeMillis();
-            Logging.logElapsedTime(Logging.MODEL_FIND_BPMN_BY_TRIAD, start, stop);
+            Logging.logElapsedTime(Logging.MODEL_FIND_BPMN_BY_TRIAD, start, System.currentTimeMillis());
         }
 
         /*
@@ -164,7 +160,6 @@ public class ProcessServiceImpl implements ProcessService {
      */
     private void startInstance(String transactionId, String bpmnId, Map<String, Object> variables) {
         long start = 0;
-        long stop = 0;
 
         try {
             CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
@@ -194,8 +189,7 @@ public class ProcessServiceImpl implements ProcessService {
                 }
             }
         } finally {
-            stop = System.currentTimeMillis();
-            Logging.logElapsedTime(Logging.CAMUNDA_START_INSTANCE_LOG_ID , start, stop);
+            Logging.logElapsedTime(Logging.CAMUNDA_START_INSTANCE_LOG_ID , start, System.currentTimeMillis());
         }
     }
 
@@ -252,7 +246,6 @@ public class ProcessServiceImpl implements ProcessService {
     private RestResponse<List<CamundaTaskDto>> getList(String businessKey) {
         RestResponse<List<CamundaTaskDto>> camundaGetListResponse;
         long start = 0;
-        long stop = 0;
 
         try {
             log.info("CAMUNDA GET LIST sending request with params: [ businessKey: " + businessKey + " ]");
@@ -269,16 +262,14 @@ public class ProcessServiceImpl implements ProcessService {
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         } finally {
-            stop = System.currentTimeMillis();
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_LIST_LOG_ID, start, stop);
+            Logging.logElapsedTime(Logging.CAMUNDA_GET_LIST_LOG_ID, start, System.currentTimeMillis());
         }
 
         if (camundaGetListResponse.getEntity().isEmpty()) {
 
             start = System.currentTimeMillis();
             RestResponse<List<InstanceDto>> instanceResponse = camundaRestClient.getInstanceActivity(businessKey);
-            stop = System.currentTimeMillis();
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_INSTANCE_ACTIVITY_LOG_ID, start, stop);
+            Logging.logElapsedTime(Logging.CAMUNDA_GET_INSTANCE_ACTIVITY_LOG_ID, start, System.currentTimeMillis());
 
             if (!instanceResponse.getEntity().isEmpty()) {
                 log.debug("Instance still running...");
@@ -319,7 +310,6 @@ public class ProcessServiceImpl implements ProcessService {
             ++attempts;
 
             long start = 0;
-            long stop = 0;
 
             try {
                 Thread.sleep(properties.getTaskListTimeToAttempt());
@@ -342,8 +332,7 @@ public class ProcessServiceImpl implements ProcessService {
                     throw new ProcessException(ProcessErrorEnum.GENERIC);
                 }
             } finally {
-                stop = System.currentTimeMillis();
-                Logging.logElapsedTime(Logging.CAMUNDA_GET_LIST_LOG_ID, start, stop);
+                Logging.logElapsedTime(Logging.CAMUNDA_GET_LIST_LOG_ID, start, System.currentTimeMillis());
             }
         }
 
@@ -355,7 +344,6 @@ public class ProcessServiceImpl implements ProcessService {
      */
     public void complete(String taskId, Map<String, Object> variables) {
         long start = 0;
-        long stop = 0;
 
         try {
             CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
@@ -379,8 +367,7 @@ public class ProcessServiceImpl implements ProcessService {
         } catch (ProcessingException e) {
             log.warn("Connection refused on Camunda service...");
         } finally {
-            stop = System.currentTimeMillis();
-            Logging.logElapsedTime(Logging.CAMUNDA_COMPLETE_LOG_ID, start, stop);
+            Logging.logElapsedTime(Logging.CAMUNDA_COMPLETE_LOG_ID, start, System.currentTimeMillis());
         }
     }
 
@@ -397,7 +384,6 @@ public class ProcessServiceImpl implements ProcessService {
     public RestResponse<VariableResponse> getTaskVariables(String taskId, List<String> variables,
             List<String> buttons) {
         long start = 0;
-        long stop = 0;
         RestResponse<CamundaVariablesDto> taskVariables;
 
         try {
@@ -414,8 +400,7 @@ public class ProcessServiceImpl implements ProcessService {
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         } finally {
-            stop = System.currentTimeMillis();
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_TASK_VARIABLES_LOG_ID , start, stop);
+            Logging.logElapsedTime(Logging.CAMUNDA_GET_TASK_VARIABLES_LOG_ID , start, System.currentTimeMillis());
         }
 
         return Utility.buildVariableResponse(taskVariables.getEntity(), variables, buttons);
@@ -431,7 +416,6 @@ public class ProcessServiceImpl implements ProcessService {
      */
     private String camundaGetResources(String id) {
         long start = 0;
-        long stop = 0;
         RestResponse<List<CamundaResourceDto>> camundaGetResourcesResponse;
 
         try {
@@ -449,8 +433,7 @@ public class ProcessServiceImpl implements ProcessService {
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         } finally {
-            stop = System.currentTimeMillis();
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_RESOURCES_LOG_ID , start, stop);
+            Logging.logElapsedTime(Logging.CAMUNDA_GET_RESOURCES_LOG_ID , start, System.currentTimeMillis());
         }
 
         return camundaGetResourcesResponse.getEntity().stream().findFirst().get().getId();
@@ -466,7 +449,6 @@ public class ProcessServiceImpl implements ProcessService {
      */
     private String camundaGetResourceBinary(String deploymentId, String resourceId) {
         long start = 0;
-        long stop = 0;
         RestResponse<String> camundaGetResourceBinaryResponse;
 
         try {
@@ -484,8 +466,7 @@ public class ProcessServiceImpl implements ProcessService {
                 throw new ProcessException(ProcessErrorEnum.GENERIC);
             }
         } finally {
-            stop = System.currentTimeMillis();
-            Logging.logElapsedTime(Logging.CAMUNDA_GET_RESOURCE_BINARY_LOG_ID , start, stop);
+            Logging.logElapsedTime(Logging.CAMUNDA_GET_RESOURCE_BINARY_LOG_ID , start, System.currentTimeMillis());
         }
 
         return camundaGetResourceBinaryResponse.getEntity();

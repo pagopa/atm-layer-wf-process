@@ -1,14 +1,17 @@
 package it.pagopa.atmlayer.wf.process.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,7 +130,7 @@ public class Utility {
         Map<String, Map<String, Object>> filteredFields = variablesDto.entrySet().stream()
                 .filter(entry -> vars.contains(entry.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
+                
         return CamundaVariablesDto.builder().variables(filteredFields).build();
     }
 
@@ -143,9 +146,40 @@ public class Utility {
         return variables.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        entry -> entry.getValue().get("value")));
+                        entry -> {
+                            Object value = entry.getValue().get("value");
+                            if (value instanceof String && isBase64((String) value)) {
+                                // if is Base64, deserialize in java object
+                                return deserializeBase64((String) value);
+                            } else {
+                                // else return the value as is
+                                return value;
+                            }
+                        }));
     }
 
+    private static boolean isBase64(String str) {
+        try {
+            Base64.getDecoder().decode(str);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    private static Object deserializeBase64(String base64String) {
+        Object deserializedObject = null;
+        
+        try {
+            byte[] decodedBytes = Base64.getDecoder().decode(base64String);
+            ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(decodedBytes));
+            deserializedObject = objectInputStream.readObject();           
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return deserializedObject;
+    }
     /**
      * Populates device information variables in the provided map.
      *

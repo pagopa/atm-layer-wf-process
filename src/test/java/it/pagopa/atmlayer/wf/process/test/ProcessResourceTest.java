@@ -556,7 +556,7 @@ class ProcessResourceTest {
 
         @Test
         void testVariablesServiceUnavailable() {
-                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), false))
+                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), Mockito.anyBoolean()))
                                 .thenThrow(new WebApplicationException(
                                                 Response.status(Status.INTERNAL_SERVER_ERROR).build()));
 
@@ -571,7 +571,7 @@ class ProcessResourceTest {
 
         @Test
         void testVariablesUnknownResponseCode() {
-                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), false))
+                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), Mockito.anyBoolean()))
                                 .thenThrow(new WebApplicationException(Response.status(Status.BAD_GATEWAY).build()));
 
                 given()
@@ -585,7 +585,7 @@ class ProcessResourceTest {
 
         @Test
         void testVariablesOkNoVariables() {
-                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), false))
+                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), Mockito.anyBoolean()))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createCamundaVariablesDto()));
 
                 given()
@@ -599,7 +599,7 @@ class ProcessResourceTest {
 
         @Test
         void testVariablesOkNoButtons() {
-                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), false))
+                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), Mockito.anyBoolean()))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createCamundaVariablesDto()));
 
                 given()
@@ -613,7 +613,7 @@ class ProcessResourceTest {
 
         @Test
         void testVariablesOkEmptyVariables() {
-                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), false))
+                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), Mockito.anyBoolean()))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createCamundaVariablesDto()));
 
                 given()
@@ -627,7 +627,7 @@ class ProcessResourceTest {
 
         @Test
         void testVariablesOkEmptyButtons() {
-                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), false))
+                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), Mockito.anyBoolean()))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createCamundaVariablesDto()));
 
                 given()
@@ -641,7 +641,7 @@ class ProcessResourceTest {
 
         @Test
         void testVariablesTaskNotFound() {
-                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), false))
+                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), Mockito.anyBoolean()))
                                 .thenReturn(RestResponse.serverError());
 
                 given()
@@ -655,7 +655,7 @@ class ProcessResourceTest {
 
         @Test
         void testVariablesKo() {
-                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), false)).thenThrow(new RuntimeException());
+                Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString(), Mockito.anyBoolean())).thenThrow(new RuntimeException());
 
                 given()
                                 .body(ProcessTestData.createVariableRequest())

@@ -68,7 +68,7 @@ public interface CamundaRestClient {
 
     @GET
     @Path("/task/{id}/variables")
-    RestResponse<CamundaVariablesDto> getTaskVariables(@PathParam("id") String id);
+    RestResponse<CamundaVariablesDto> getTaskVariables(@PathParam("id") String id, @QueryParam("deserializeValues") boolean deserializeValues);
 
     @GET
     @Path("/process-instance")

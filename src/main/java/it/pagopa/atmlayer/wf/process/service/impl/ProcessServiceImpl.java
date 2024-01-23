@@ -389,7 +389,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         try {
             log.info("CAMUNDA GET TASK VARIABLES sending request with params: [ taskId: {} ]", taskId);
             start = System.currentTimeMillis();
-            taskVariables = camundaRestClient.getTaskVariables(taskId);
+            taskVariables = camundaRestClient.getTaskVariables(taskId, false);
             log.info("Variables: [{}]", taskVariables.getEntity());
         } catch (WebApplicationException e) {
             if (e.getResponse().getStatus() == RestResponse.StatusCode.INTERNAL_SERVER_ERROR) {

@@ -150,7 +150,7 @@ public class Utility {
                             Object value = entry.getValue().get("value");
                             if (value instanceof String && isBase64((String) value)) {
                                 // if is Base64, deserialize in java object
-                                return deserializeBase64((String) value);
+                                return deserializeBase64(String.valueOf(value));
                             } else {
                                 // else return the value as is
                                 return value;

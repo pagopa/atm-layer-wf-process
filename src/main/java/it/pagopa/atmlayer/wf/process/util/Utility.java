@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.pagopa.atmlayer.wf.process.bean.DeviceInfo;
@@ -159,10 +160,13 @@ public class Utility {
                         }));
     }
     
-    public static void main(String[] args) {
-        System.out.println("ciao");
-        String o = "rO0ABXNyABFqYXZhLnV0aWwuVHJlZU1hcAzB9j4tJWrmAwABTAAKY29tcGFyYXRvcnQAFkxqYXZhL3V0aWwvQ29tcGFyYXRvcjt4cHB3BAAAAAJ0AAllcnJvckNvZGV0AAIzMXQAEGVycm9yRGVzY3JpcHRpb250ABJlcnJvciBvbiBtZW51Lmh0bWx4";
-        System.out.println(deserializeBase64(o));
+    public static void main(String[] args) throws JsonMappingException, JsonProcessingException {
+        System.out.println("ciao");     
+        String o = "{\"template\":{\"type\":\"String\",\"value\":\"MENU\",\"valueInfo\":{}},\"branchId\":{\"type\":\"String\",\"value\":\"12345\",\"valueInfo\":{}},\"onError\":{\"type\":\"Object\",\"value\":\"rO0ABXNyABFqYXZhLnV0aWwuVHJlZU1hcAzB9j4tJWrmAwABTAAKY29tcGFyYXRvcnQAFkxqYXZhL3V0aWwvQ29tcGFyYXRvcjt4cHB3BAAAAAJ0AAllcnJvckNvZGV0AAIzMXQAEGVycm9yRGVzY3JpcHRpb250ABJlcnJvciBvbiBtZW51Lmh0bWx4\",\"valueInfo\":{\"objectTypeName\":\"java.util.TreeMap\",\"serializationDataFormat\":\"application/x-java-serialized-object\"}},\"code\":{\"type\":\"String\",\"value\":\"0001\",\"valueInfo\":{}},\"millAccessToken\":{\"type\":\"String\",\"value\":\"eyJraWQiOiJhdXRoNGFkZDY1OGI4YTEzNDVmZWIyZTAwZTc1YzEyYjYxY2YvNWIzODVlNGY0YjQ1NDgzYmE0MDJjZmY4MTIwOWE4MDUiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI4M2MwYjEwZi1iMzk4LTRjYzgtYjM1Ni1hM2UwZjAyOTE2NzkiLCJjbGllbnRJZCI6IjgzYzBiMTBmLWIzOTgtNGNjOC1iMzU2LWEzZTBmMDI5MTY3OSIsImNoYW5uZWwiOiJBVE0iLCJncm91cHMiOlsiTm90aWNlUGF5ZXIiLCJPbmJvYXJkVG9JRFBheSJdLCJ0ZXJtaW5hbElkIjoiNjQ4NzQ0MTIiLCJleHAiOjE3MDYxMDQ5NzQsImFjcXVpcmVySWQiOiIwNjc4OSIsImlhdCI6MTcwNjEwNDA3NH0.Gkfo1euHax-ZXp9Yv2IqUlSF3DHBpee03bEN67sZoebSXALsWeEiUsgNoCm6KUHAZ-kc6G16jysUPNnNtSHA2trxZRjm3OQDrcXvXVsoYHECMVw-uo13LRQqOxEqfB9Vv03yOcwFlss2uhXTcjNf9G19jvZ2SmLKIan_tWmreFB7GwSKcb98fxkiAyLNOnx12mOklgoUj8ZTc-ST5oEC29cjZfbpK_ZqxcdQxfPv6_BWjYMSqmbJll5GQ75tvRZrFgoTOCXq8H4fRI7r4UatUl_gGoPleGrjkwYWft9idgXg9sv3rJsp5huXPcHRT-oArKrCNSO3bR5vzS0VCkP5v0zxa3HsA4grR8fyYZvRUZ8xMkhS0-YNBmQqZATz5tQ9S0Ti4vF9qD8x2ncoPu_FF0nWi1gRIp4-V7FZMm2odZRk6XrGcUFqpbWbnJAtUdkUCIxwKfRZS0Ywy7v2Lpry1s9srfM_giCShdDwfjJPYynCjwJF6wLX3SV3Y-Aia4bPq8un-8cGjxgPDCly_Ac0jHaIJlFsBhWZpVtaWaJMOvr75MdNXRtLPEGpP-hk4POFTWLk1sr8agxnAh6zcoEVwLdyJNQZE4avzy15mR1QnrP4WbS-JK77X5EogntQHC9-jgwMg4ujCab9i3b8-wteZYEH5mEwD-NQoSj2jMQRAY8\",\"valueInfo\":{}},\"channel\":{\"type\":\"String\",\"value\":\"ATM\",\"valueInfo\":{}},\"terminalId\":{\"type\":\"String\",\"value\":\"64874412\",\"valueInfo\":{}},\"SCANNER\":{\"type\":\"String\",\"value\":\"OK\",\"valueInfo\":{}},\"timeout\":{\"type\":\"Long\",\"value\":30,\"valueInfo\":{}},\"transactionId\":{\"type\":\"String\",\"value\":\"06789-12345-0001-64874412-1698769800000-8459e9e5-1\",\"valueInfo\":{}},\"exit\":{\"type\":\"Object\",\"value\":\"rO0ABXNyABFqYXZhLnV0aWwuVHJlZU1hcAzB9j4tJWrmAwABTAAKY29tcGFyYXRvcnQAFkxqYXZhL3V0aWwvQ29tcGFyYXRvcjt4cHB3BAAAAAF0AAhjb250aW51ZXNyABFqYXZhLmxhbmcuQm9vbGVhbs0gcoDVnPruAgABWgAFdmFsdWV4cAB4\",\"valueInfo\":{\"objectTypeName\":\"java.util.TreeMap\",\"serializationDataFormat\":\"application/x-java-serialized-object\"}},\"bankId\":{\"type\":\"String\",\"value\":\"06789\",\"valueInfo\":{}},\"PRINTER\":{\"type\":\"String\",\"value\":\"OK\",\"valueInfo\":{}},\"opTimestamp\":{\"type\":\"String\",\"value\":\"2023-10-31T16:30:00.000+00:00\",\"valueInfo\":{}},\"continue\":{\"type\":\"Boolean\",\"value\":true,\"valueInfo\":{}},\"onTimeout\":{\"type\":\"Object\",\"value\":\"rO0ABXNyABFqYXZhLnV0aWwuVHJlZU1hcAzB9j4tJWrmAwABTAAKY29tcGFyYXRvcnQAFkxqYXZhL3V0aWwvQ29tcGFyYXRvcjt4cHB3BAAAAAJ0AAllcnJvckNvZGV0AAIyN3QAEGVycm9yRGVzY3JpcHRpb250ABR0aW1lb3V0IG9uIG1lbnUuaHRtbHg=\",\"valueInfo\":{\"objectTypeName\":\"java.util.TreeMap\",\"serializationDataFormat\":\"application/x-java-serialized-object\"}},\"pagamentoAviso\":{\"type\":\"Object\",\"value\":\"rO0ABXNyABFqYXZhLnV0aWwuVHJlZU1hcAzB9j4tJWrmAwABTAAKY29tcGFyYXRvcnQAFkxqYXZhL3V0aWwvQ29tcGFyYXRvcjt4cHB3BAAAAAJ0AAhjb250aW51ZXNyABFqYXZhLmxhbmcuQm9vbGVhbs0gcoDVnPruAgABWgAFdmFsdWV4cAF0AApmdW5jdGlvbklkdAATU1BPTlRBTkVPVVNfUEFZTUVOVHg=\",\"valueInfo\":{\"objectTypeName\":\"java.util.TreeMap\",\"serializationDataFormat\":\"application/x-java-serialized-object\"}}}=";
+        ObjectMapper mapper = new ObjectMapper();
+        CamundaVariablesDto map = mapper.readValue(o, CamundaVariablesDto.class);
+        System.out.println(mapVariablesResponse(map));
+       // System.out.println(deserializeBase64(o));
     }
 
     private static boolean isBase64(String str) {
@@ -178,8 +182,8 @@ public class Utility {
         Object deserializedObject = base64String;
         
         try {
-            byte[] decodedBytes = Base64.getDecoder().decode(base64String);
-            ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(decodedBytes));
+            byte[] decodedBytes = Base64.getDecoder().decode(base64String);            
+            ObjectInputStream objectInputStream = new CustomInputStream(new ByteArrayInputStream(decodedBytes));
             deserializedObject = objectInputStream.readObject();           
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

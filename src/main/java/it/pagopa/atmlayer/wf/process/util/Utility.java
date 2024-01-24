@@ -146,9 +146,10 @@ public class Utility {
         return variables.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        entry -> {
+                        entry -> {                            
+                            String type = (String) entry.getValue().get("type");
                             Object value = entry.getValue().get("value");
-                            if (value instanceof String && isBase64((String) value)) {
+                            if ( type.equals("Object") && value instanceof String && isBase64((String) value)) {
                                 // if is Base64, deserialize in java object
                                 return deserializeBase64(String.valueOf(value));
                             } else {
@@ -156,6 +157,12 @@ public class Utility {
                                 return value;
                             }
                         }));
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("ciao");
+        String o = "rO0ABXNyABFqYXZhLnV0aWwuVHJlZU1hcAzB9j4tJWrmAwABTAAKY29tcGFyYXRvcnQAFkxqYXZhL3V0aWwvQ29tcGFyYXRvcjt4cHB3BAAAAAJ0AAllcnJvckNvZGV0AAIzMXQAEGVycm9yRGVzY3JpcHRpb250ABJlcnJvciBvbiBtZW51Lmh0bWx4";
+        System.out.println(deserializeBase64(o));
     }
 
     private static boolean isBase64(String str) {
@@ -168,7 +175,7 @@ public class Utility {
     }
 
     private static Object deserializeBase64(String base64String) {
-        Object deserializedObject = null;
+        Object deserializedObject = base64String;
         
         try {
             byte[] decodedBytes = Base64.getDecoder().decode(base64String);

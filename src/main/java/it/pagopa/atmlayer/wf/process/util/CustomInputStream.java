@@ -2,7 +2,6 @@ package it.pagopa.atmlayer.wf.process.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 
@@ -30,12 +29,8 @@ public class CustomInputStream extends ObjectInputStream {
         if (localClassDescriptor != null) { // only if class implements serializable
             final long localSUID = localClassDescriptor.getSerialVersionUID();
             final long streamSUID = resultClassDescriptor.getSerialVersionUID();
-            if (streamSUID != localSUID) { // check for serialVersionUID mismatch.
-                final StringBuffer s = new StringBuffer("Overriding serialized class version mismatch: ");
-                s.append("local serialVersionUID = ").append(localSUID);
-                s.append(" stream serialVersionUID = ").append(streamSUID);
-                Exception e = new InvalidClassException(s.toString());
-                logger.error("Potentially Fatal Deserialization Operation.", e);
+            if (streamSUID != localSUID) { // check for serialVersionUID mismatch.  
+                logger.error("Potentially Fatal Deserialization Operation.");
                 resultClassDescriptor = localClassDescriptor; // Use local class descriptor for deserialization
             }
         }

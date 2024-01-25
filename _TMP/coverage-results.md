@@ -6,10 +6,10 @@
       
 | Outcome                 | Value                                                               |
 |-------------------------|---------------------------------------------------------------------|
-| Code Coverage %         | 93.47%               |
-| :heavy_check_mark: Number of Lines Covered | 401    |
-| :x: Number of Lines Missed  | 28     |
-| Total Number of Lines   | 429     |
+| Code Coverage %         | 95.19%               |
+| :heavy_check_mark: Number of Lines Covered | 376    |
+| :x: Number of Lines Missed  | 19     |
+| Total Number of Lines   | 395     |
 
 
 ## Details:
@@ -369,37 +369,13 @@
         
 #### Lines Missed:
         
-- Line #77
+- Line #74
 ```
         } catch (JsonProcessingException e) {
 ```
-- Line #95
+- Line #92
 ```
             } catch (IOException e) {
-```
-- Line #166
-```
-        } catch (IllegalArgumentException e) {
-```
-- Line #178
-```
-        } catch (IOException | ClassNotFoundException e) {
-```
-</details>
-
-    
-
-<details>
-    <summary>
-:x: CustomInputStream.java
-    </summary>
-
-        
-#### Lines Missed:
-        
-- Line #24
-```
-        } catch (ClassNotFoundException e) {
 ```
 </details>
 

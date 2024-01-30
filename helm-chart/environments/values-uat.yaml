@@ -18,6 +18,11 @@ fullnameOverride: ""
 
 logLevel: DEBUG
 
+tracing:
+  enabled: "true"
+  endpointBasePath: "http://jaeger-collector.default.svc.cluster.local:4317"
+  enableJDBCMonitoring: "false"
+
 modelServiceAddress: http://pagopa-uat-atm-layer-model.pagopa.svc.cluster.local:8080
 
 camundaWebUser:

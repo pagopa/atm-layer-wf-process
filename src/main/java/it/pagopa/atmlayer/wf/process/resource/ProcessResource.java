@@ -11,6 +11,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.RestResponse;
 
+import io.opentelemetry.api.trace.Tracer;
 import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
 import it.pagopa.atmlayer.wf.process.bean.TaskResponse;
 import it.pagopa.atmlayer.wf.process.bean.VariableRequest;
@@ -51,6 +52,9 @@ public class ProcessResource extends CommonLogic{
     @Inject
     ProcessService processService;
 
+    @Inject
+    Tracer tracer;
+    
     /**
      * Endpoint to deploy a BPMN process definition to Camunda.
      *

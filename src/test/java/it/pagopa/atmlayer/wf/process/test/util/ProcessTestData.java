@@ -23,6 +23,7 @@ import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.InstanceDto;
 import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
+import it.pagopa.atmlayer.wf.process.util.Constants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -81,6 +82,15 @@ public class ProcessTestData {
 
         variables.put(RandomStringUtils.random(10, true, true), RandomStringUtils.random(10, true, true));
         variables.put(RandomStringUtils.random(10, true, true), Math.random());
+        return variables;
+    }
+
+    public static Map<String, Object> getVariablesWithFunId() {
+        Map<String, Object> variables = new HashMap<>();
+
+        variables.put(RandomStringUtils.random(10, true, true), RandomStringUtils.random(10, true, true));
+        variables.put(RandomStringUtils.random(10, true, true), Math.random());
+        variables.put(Constants.FUNCTION_ID, "TEST_FUN_ID");
         return variables;
     }
 
@@ -177,9 +187,8 @@ public class ProcessTestData {
         return TaskRequest.builder()
                 .transactionId(ProcessTestData.TRANSACTION_ID)
                 .taskId(ProcessTestData.TASK_ID)
-                .variables(ProcessTestData.getVariables())
+                .variables(ProcessTestData.getVariablesWithFunId())
                 .deviceInfo(ProcessTestData.getDeviceInfo())
-                .functionId(FUNCTION_ID)
                 .build();
     }
 

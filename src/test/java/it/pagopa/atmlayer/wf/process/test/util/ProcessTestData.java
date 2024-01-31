@@ -43,6 +43,10 @@ public class ProcessTestData {
 
     public static final String BPMN = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><bpmn>test</bpmn>";
 
+    public static final String DEFINITION_KEY = "TEST_DEFINITION_KEY";
+
+    public static final String DEFINITION_VERSION_CAMUNDA = "TEST_DEFINITION_VERSION_CAMUNDA";
+
     public static final String DEPLOYMENT_ID = "TEST_DEPLOYMENT_ID";
 
     private static Random random = new Random();
@@ -169,6 +173,16 @@ public class ProcessTestData {
                 .build();
     }
 
+    public static TaskRequest createTaskRequestNextWithFunId() {
+        return TaskRequest.builder()
+                .transactionId(ProcessTestData.TRANSACTION_ID)
+                .taskId(ProcessTestData.TASK_ID)
+                .variables(ProcessTestData.getVariables())
+                .deviceInfo(ProcessTestData.getDeviceInfo())
+                .functionId(FUNCTION_ID)
+                .build();
+    }
+
     public static TaskRequest createTaskRequestNextWithoutVars() {
         return TaskRequest.builder()
                 .transactionId(ProcessTestData.TRANSACTION_ID)
@@ -255,6 +269,10 @@ public class ProcessTestData {
 
     public static ModelBpmnDto createModelBpmnDto() {
         return ModelBpmnDto.builder().camundaDefinitionId(BPMN_ID).build();
+    }
+
+    public static ModelBpmnDto createModelBpmnDtoWithDefKeyAndVersion() {
+        return ModelBpmnDto.builder().camundaDefinitionId(BPMN_ID).definitionKey(DEFINITION_KEY).definitionVersionCamunda(DEFINITION_VERSION_CAMUNDA).build();
     }
 
     public static List<InstanceDto> createEmptyResponseInstance() {

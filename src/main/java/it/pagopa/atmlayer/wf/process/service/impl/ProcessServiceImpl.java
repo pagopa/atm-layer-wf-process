@@ -27,6 +27,7 @@ import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
 import it.pagopa.atmlayer.wf.process.exception.ProcessException;
 import it.pagopa.atmlayer.wf.process.service.ProcessService;
 import it.pagopa.atmlayer.wf.process.util.CommonLogic;
+import it.pagopa.atmlayer.wf.process.util.Constants;
 import it.pagopa.atmlayer.wf.process.util.Properties;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -93,7 +94,9 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
     public void start(String transactionId, String functionId, DeviceInfo deviceInfo, Map<String, Object> variables) {
         Utility.populateDeviceInfoVariables(transactionId, deviceInfo, variables);
 
-        String bpmnId = findBpmnId(functionId, deviceInfo);
+        RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = findBpmnId(functionId, deviceInfo);
+
+        String bpmnId = getBpmnId(modelFindBpmnIdResponse, functionId);
 
         startInstance(transactionId, bpmnId, variables);
     }
@@ -109,9 +112,8 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      * @param deviceInfo
      * @return bpmnId
      */
-    private String findBpmnId(String functionId, DeviceInfo deviceInfo) {
+    private RestResponse<ModelBpmnDto> findBpmnId(String functionId, DeviceInfo deviceInfo) {
         long start = 0;
-        String bpmnId = functionId;
         RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = null;
 
         deviceInfo = Utility.constructModelDeviceInfo(deviceInfo);
@@ -136,6 +138,12 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         } finally {
             logElapsedTime(MODEL_FIND_BPMN_BY_TRIAD, start);
         }
+
+        return modelFindBpmnIdResponse;
+    }
+
+    private String getBpmnId(RestResponse<ModelBpmnDto> modelFindBpmnIdResponse, String functionId){
+        String bpmnId = functionId;
 
         /*
          * Model call is ok
@@ -337,6 +345,28 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         }
 
         return camundaGetListResponse;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void complete(String taskId, Map<String, Object> variables, String functionId, DeviceInfo deviceInfo) {
+        RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = findBpmnId(functionId, deviceInfo);
+
+        if (modelFindBpmnIdResponse != null) {
+            String definitionKey = modelFindBpmnIdResponse.getEntity().getDefinitionKey();
+            String definitionVersionCamunda = modelFindBpmnIdResponse.getEntity().getDefinitionVersionCamunda();
+            log.info("definitionKey: {}, definitionVersionCamunda: {}", definitionKey, definitionVersionCamunda);
+
+            variables = variables != null ? variables : Collections.emptyMap();
+            variables.put(Constants.DEFINITION_KEY, definitionKey);
+            variables.put(Constants.DEFINITION_VERSION_CAMUNDA, definitionVersionCamunda);
+
+            complete(taskId, variables);
+        } else {
+            log.error("Model error occurred!");
+            throw new ProcessException(ProcessErrorEnum.MODEL_GENERIC_ERROR_M02);
+        }
     }
 
     /**

@@ -200,7 +200,11 @@ public class ProcessResource extends CommonLogic{
                 /*
                  * Complete camunda task
                  */
-                processService.complete(request.getTaskId(), request.getVariables());
+                if (request.getFunctionId() != null) {
+                    processService.complete(request.getTaskId(), request.getVariables(), request.getFunctionId(), request.getDeviceInfo());
+                } else {
+                    processService.complete(request.getTaskId(), request.getVariables());
+                }             
             }
             /*
              * Retrieve active tasks

@@ -70,7 +70,15 @@ public interface ProcessService {
      */
     void complete(String taskId, Map<String, Object> variables);
 
-    
+    /**
+     * Completes a task in Camunda.
+     *
+     * @param taskId    The ID of the task to complete.
+     * @param variables The variables to associate with the completion.
+     * @param functionId the ID of the function.
+     */
+    void complete(String taskId, Map<String, Object> variables, String functionId, DeviceInfo deviceInfo);
+
     /**
      * Gets the task instance variables.
      * 

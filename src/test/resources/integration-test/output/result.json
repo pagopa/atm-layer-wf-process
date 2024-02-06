@@ -2232,7 +2232,7 @@
             ]
           },
           "cookie": [],
-          "responseTime": 25,
+          "responseTime": 21,
           "responseSize": 57
         },
         "id": "df500b78-49a0-454a-a425-c2f4b46ca852",
@@ -4072,7 +4072,7 @@
             },
             {
               "key": "content-length",
-              "value": "74"
+              "value": "73"
             }
           ],
           "stream": {
@@ -4168,7 +4168,7 @@
       }
     ],
     "transfers": {
-      "responseTotal": 1778
+      "responseTotal": 1777
     },
     "failures": [],
     "error": null

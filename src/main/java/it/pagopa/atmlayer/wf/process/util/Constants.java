@@ -14,4 +14,10 @@ public class Constants {
     public static final String DOT = ".";
 
     public static final Object BPMN = "bpmn";
+
+    public static final String DEFINITION_KEY = "definitionKey";
+
+    public static final String DEFINITION_VERSION_CAMUNDA = "definitionVersionCamunda";
+
+    public static final String FUNCTION_ID = "functionId";
 }

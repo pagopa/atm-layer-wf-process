@@ -18,6 +18,11 @@ fullnameOverride: ""
 
 logLevel: DEBUG
 
+tracing:
+  enabled: "true"
+  endpointBasePath: "http://jaeger-collector.default.svc.cluster.local:4317"
+  enableJDBCMonitoring: "false"
+
 modelServiceAddress: http://pagopa-prod-atm-layer-model.pagopa.svc.cluster.local:8080
 
 camundaWebUser:
@@ -66,7 +71,7 @@ service:
   port: 8080
 
 ingress:
-  enabled: true
+  enabled: false
   name: pagopa-prod-atm-layer-wf-process
   className: ""
   annotations: 
@@ -98,11 +103,15 @@ resources: {}
   #   memory: 128Mi
 
 autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+  memoryLimits: 600Mi
+  memoryRequests: 300Mi
+  cpuLimits: 600m
+  cpuRequest: 300m
 
 nodeSelector: {}
 

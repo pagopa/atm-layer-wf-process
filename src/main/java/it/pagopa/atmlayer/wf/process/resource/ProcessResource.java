@@ -129,6 +129,36 @@ public class ProcessResource extends CommonLogic{
     }
 
     /**
+     * Endpoint to get a BPMN resource from Camunda.
+     *
+     * @param id The deploymentId.
+     * @return A `RestResponse` containing the resource BPMN.
+     */
+    @Operation(summary = "Recupera risorsa BPMN/FORM/DMN.", description = "Recupera file BPMN per il dato deploymentId.")
+    @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce il file in formato Xml.", content = @Content(mediaType = "application/xml", schema = @Schema(implementation = String.class)))
+    @APIResponse(responseCode = "400", description = "BAD_REQUEST. Risorsa non trovata.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
+    @APIResponse(responseCode = "404", description = "NOT_FOUND. Deployments non trovati.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
+    @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore generico.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
+    @GET
+    @Path("/deploy/{id}/data")
+    @Produces(MediaType.APPLICATION_XML)
+    public RestResponse<String> resource(@PathParam("id") String id) {
+        log.info("Executing RESOURCE. . .");
+        RestResponse<String> response;
+
+        try {
+            response = processService.getResource(id);
+        } catch (ProcessException e) {
+            throw e;
+        } catch (RuntimeException e) {
+            log.error("Generic exception occured while processing get resource bpmn: ", e);
+            throw new ProcessException(ProcessErrorEnum.GENERIC);
+        }
+
+        return response;
+    }
+
+    /**
      * Endpoint to start a BPMN process and to retireve active tasks.
      *
      * @param request The task request.

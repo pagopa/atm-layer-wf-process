@@ -79,6 +79,7 @@ public interface ProcessService {
      */
     void complete(String taskId, Map<String, Object> variables, String functionId, DeviceInfo deviceInfo);
 
+    
     /**
      * Gets the task instance variables.
      * 

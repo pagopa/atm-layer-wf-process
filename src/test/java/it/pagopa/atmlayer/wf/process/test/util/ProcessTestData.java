@@ -23,6 +23,7 @@ import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.InstanceDto;
 import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
+import it.pagopa.atmlayer.wf.process.util.Constants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -42,6 +43,10 @@ public class ProcessTestData {
     public static final String RESOURCE_ID = "TEST_RESOURCE_ID";
 
     public static final String BPMN = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><bpmn>test</bpmn>";
+
+    public static final String DEFINITION_KEY = "TEST_DEFINITION_KEY";
+
+    public static final String DEFINITION_VERSION_CAMUNDA = "TEST_DEFINITION_VERSION_CAMUNDA";
 
     public static final String DEPLOYMENT_ID = "TEST_DEPLOYMENT_ID";
 
@@ -77,6 +82,15 @@ public class ProcessTestData {
 
         variables.put(RandomStringUtils.random(10, true, true), RandomStringUtils.random(10, true, true));
         variables.put(RandomStringUtils.random(10, true, true), Math.random());
+        return variables;
+    }
+
+    public static Map<String, Object> getVariablesWithFunId() {
+        Map<String, Object> variables = new HashMap<>();
+
+        variables.put(RandomStringUtils.random(10, true, true), RandomStringUtils.random(10, true, true));
+        variables.put(RandomStringUtils.random(10, true, true), Math.random());
+        variables.put(Constants.FUNCTION_ID, "TEST_FUN_ID");
         return variables;
     }
 
@@ -169,6 +183,15 @@ public class ProcessTestData {
                 .build();
     }
 
+    public static TaskRequest createTaskRequestNextWithFunId() {
+        return TaskRequest.builder()
+                .transactionId(ProcessTestData.TRANSACTION_ID)
+                .taskId(ProcessTestData.TASK_ID)
+                .variables(ProcessTestData.getVariablesWithFunId())
+                .deviceInfo(ProcessTestData.getDeviceInfo())
+                .build();
+    }
+
     public static TaskRequest createTaskRequestNextWithoutVars() {
         return TaskRequest.builder()
                 .transactionId(ProcessTestData.TRANSACTION_ID)
@@ -255,6 +278,10 @@ public class ProcessTestData {
 
     public static ModelBpmnDto createModelBpmnDto() {
         return ModelBpmnDto.builder().camundaDefinitionId(BPMN_ID).build();
+    }
+
+    public static ModelBpmnDto createModelBpmnDtoWithDefKeyAndVersion() {
+        return ModelBpmnDto.builder().camundaDefinitionId(BPMN_ID).definitionKey(DEFINITION_KEY).definitionVersionCamunda(DEFINITION_VERSION_CAMUNDA).build();
     }
 
     public static List<InstanceDto> createEmptyResponseInstance() {

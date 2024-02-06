@@ -9,7 +9,9 @@ metadata:
     {{- toYaml .Values.deployment.annotations | nindent 4 }}
 
 spec:
-  # replicas: {{ .Values.replicaCount }}
+  {{- if .Values.autoscaling.disabled -}}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       App: {{ .Values.deployment.name }}
@@ -38,6 +40,12 @@ spec:
               value: "{{ .Values.logLevel }}"
             - name: CAMUNDA_ADDRESS
               value: "{{ .Values.camundaWebUser.address }}"
+            - name: TRACING_ENABLED
+              value: "{{ .Values.tracing.enabled }}"
+            - name: TRACING_ENDPOINT_BASE_PATH
+              value: "{{ .Values.tracing.endpointBasePath }}"
+            - name: TRACING_ENABLE_JDBC_MONITORING
+              value: "{{ .Values.tracing.enableJDBCMonitoring }}"
             - name: PROCESS_SERVICE_ENGINE_ACCOUNT_USER
               valueFrom:
                 secretKeyRef:
@@ -54,6 +62,7 @@ spec:
           - name: secrets-store-inline
             mountPath: "/mnt/secrets-store"
             readOnly: true
+          {{- if .Values.autoscaling.enabled }}
           resources:
             limits:
               cpu: {{ .Values.autoscaling.cpuLimits }}
@@ -61,6 +70,7 @@ spec:
             requests:
               cpu: {{ .Values.autoscaling.cpuRequest }}
               memory: {{ .Values.autoscaling.memoryRequests }}
+          {{- end }}
 
   strategy:
     type: Recreate

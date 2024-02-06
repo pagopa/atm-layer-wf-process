@@ -41,3 +41,7 @@ nb-configuration.xml
 
 # Plugin directory
 /.quarkus/cli/plugins/
+
+#result integration test
+src/test/resources/integration-test/output/result.html
+# src/test/resources/integration-test/output/result.json

@@ -6,10 +6,10 @@
       
 | Outcome                 | Value                                                               |
 |-------------------------|---------------------------------------------------------------------|
-| Code Coverage %         | 94.86%               |
-| :heavy_check_mark: Number of Lines Covered | 351    |
-| :x: Number of Lines Missed  | 19     |
-| Total Number of Lines   | 370     |
+| Code Coverage %         | 94.9%               |
+| :heavy_check_mark: Number of Lines Covered | 391    |
+| :x: Number of Lines Missed  | 21     |
+| Total Number of Lines   | 412     |
 
 
 ## Details:
@@ -133,17 +133,21 @@
         
 #### Lines Missed:
         
-- Line #66
+- Line #67
 ```
         } catch (WebApplicationException e) {
 ```
-- Line #287
+- Line #330
 ```
             } catch (InterruptedException e) {
 ```
-- Line #291
+- Line #334
 ```
             } catch (WebApplicationException e) {
+```
+- Line #361
+```
+            variables = variables != null ? variables : Collections.emptyMap();
 ```
 </details>
 
@@ -158,7 +162,7 @@
         
 #### All Lines Covered!
         
-- Line #74
+- Line #81
 ```
                 .append(resourceType != null ? resourceType.toLowerCase() : Constants.BPMN).toString();
 ```
@@ -383,9 +387,11 @@
 
 <details>
     <summary>
-:x: Logging.java
+:heavy_check_mark: CommonLogic.java
     </summary>
 
+        
+#### All Lines Covered!
         
 </details>
 

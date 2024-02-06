@@ -15,4 +15,8 @@ public class ModelBpmnDto {
     
     String camundaDefinitionId;
 
+    String definitionKey;
+
+    String definitionVersionCamunda;
+
 }

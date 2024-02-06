@@ -13,7 +13,7 @@
             "type": "http",
             "documentation": "",
             "method": "get",
-            "endpoint": "api/v1/model/bpmn/process/function/:functionType/bank/:acquirerId/branch/:branchId/terminal/:terminalId",
+            "endpoint": "api/v1/model/bpmn/function/:functionType/bank/:acquirerId/branch/:branchId/terminal/:terminalId",
             "responses": [
                 {
                     "uuid": "473aeee4-2665-48a9-a5df-5a318d77f40a",

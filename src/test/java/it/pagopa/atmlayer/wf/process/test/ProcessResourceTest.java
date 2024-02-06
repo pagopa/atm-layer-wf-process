@@ -426,6 +426,28 @@ class ProcessResourceTest {
         }
 
         @Test
+        void testNextOkWithFunIdBpmnCompleted() {
+
+                Mockito.when(modelRestClient.findBPMNByTriad(Mockito.anyString(), Mockito.anyString(),
+                                Mockito.anyString(), Mockito.anyString()))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createModelBpmnDtoWithDefKeyAndVersion()));
+                Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok());
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(Collections.emptyList()));
+                Mockito.when(camundaRestClient.getInstanceActivity(Mockito.any(String.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createEmptyResponseInstance()));
+                given()
+                                .body(ProcessTestData.createTaskRequestNextWithFunId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/next")
+                                .then()
+                                .statusCode(StatusCode.OK);
+        }
+
+
+        @Test
         void testNextKoNoBusinessKey() {
                 Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.ok());

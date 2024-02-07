@@ -33,6 +33,7 @@ camundaWebUser:
     password: WEB_PASSWORD
 
 secretProviderClass:
+  enabled: true
   name: atm-layer-wf-process-secrets
   env: prod
 

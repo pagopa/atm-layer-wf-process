@@ -350,6 +350,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void complete(String taskId, Map<String, Object> variables, String functionId, DeviceInfo deviceInfo) {
         RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = findBpmnId(functionId, deviceInfo);
 
@@ -372,6 +373,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void complete(String taskId, Map<String, Object> variables) {
         long start = 0;
 

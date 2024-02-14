@@ -22,7 +22,8 @@ public enum TaskVarsEnum {
     TIMEOUT("timeout"),
     DATA("data"),
     TEMPLATE("template"),
-    EPP_MODE("eppMode");
+    EPP_MODE("eppMode"),
+    FUNCTION_ID("functionId");
 
     private final String value;
 

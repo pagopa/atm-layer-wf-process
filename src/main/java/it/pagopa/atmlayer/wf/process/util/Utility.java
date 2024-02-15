@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.jboss.resteasy.reactive.RestResponse;
+import org.slf4j.MDC;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -127,7 +128,7 @@ public class Utility {
         Map<String, Map<String, Object>> filteredFields = variablesDto.entrySet().stream()
                 .filter(entry -> vars.contains(entry.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
+        
         return CamundaVariablesDto.builder().variables(filteredFields).build();
     }
 
@@ -188,7 +189,12 @@ public class Utility {
         }
         
         CamundaVariablesDto variablesFilteredList = Utility.filterCamundaVariables(taskVariables, variables);
-        variableResponseBuilder.variables(Utility.mapVariablesResponse(variablesFilteredList));
+        Map<String,Object> variablesMap = Utility.mapVariablesResponse(variablesFilteredList);
+        variableResponseBuilder.variables(variablesMap);
+        //Aggiungo al contesto dei log la functionId
+        if (variablesMap != null && variablesMap.get(Constants.FUNCTION_ID) != null) {
+            MDC.put(Constants.FUNCTION_ID, (String) variablesMap.get(Constants.FUNCTION_ID));
+        }
     
         // Filter buttons
         if (buttons != null) {

@@ -69,7 +69,7 @@ jobs:
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git add pom.xml
-          git commit -m "pom.xml updated with new version ${{ steps.semantic-release-dryrun.outputs.new_release_version }}"
+          git commit --allow-empty -m "pom.xml updated with new version ${{ steps.semantic-release-dryrun.outputs.new_release_version }}"
           git push
 
       - name: Update file Chart.yaml with the new version
@@ -78,7 +78,7 @@ jobs:
           yq -i ".version = \"v${{ steps.semantic-release-dryrun.outputs.new_release_version }}\"" "helm-chart/atm-layer-wf-engine/Chart.yaml"
           git pull
           git add "helm-chart/atm-layer-wf-engine/Chart.yaml"
-          git commit -m "Chart.yaml updated with new version v${{ steps.semantic-release-dryrun.outputs.new_release_version }}"
+          git commit --allow-empty -m "Chart.yaml updated with new version v${{ steps.semantic-release-dryrun.outputs.new_release_version }}"
           git push
 
       - name: Commit with "${{ inputs.commit }}:" prefix

@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -23,6 +24,8 @@ import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.InstanceDto;
 import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
 import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
+import it.pagopa.atmlayer.wf.process.client.transactions.TransactionsServiceRestClient;
+import it.pagopa.atmlayer.wf.process.client.transactions.bean.TransactionServiceRequest;
 import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
 import it.pagopa.atmlayer.wf.process.exception.ProcessException;
 import it.pagopa.atmlayer.wf.process.service.ProcessService;
@@ -48,6 +51,9 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
 
     @RestClient
     ModelRestClient modelRestClient;
+    
+    @RestClient
+    TransactionsServiceRestClient transactionsRestClient;
 
     @Inject
     Properties properties;
@@ -97,6 +103,18 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = findBpmnId(functionId, deviceInfo);
 
         String bpmnId = getBpmnId(modelFindBpmnIdResponse, functionId);
+        
+        final TransactionServiceRequest request = new TransactionServiceRequest();
+        request.setFunctionType(functionId);
+        request.setAcquirerId(deviceInfo.getBankId());
+        request.setBranchId(deviceInfo.getBranchId());
+        request.setTerminalId(deviceInfo.getTerminalId());
+        request.setTransactionId(transactionId);
+        request.setTransactionStatus((String) variables.get(Constants.TRANSACTION_STATUS));
+    
+        CompletableFuture.runAsync(() -> {          
+            transactionsRestClient.inset(request);
+        });
 
         startInstance(transactionId, bpmnId, variables);
     }
@@ -415,14 +433,21 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      */
     public RestResponse<VariableResponse> getTaskVariables(String taskId, List<String> variables,
             List<String> buttons) {
-        long start = 0;
-        RestResponse<CamundaVariablesDto> taskVariables;
-
+        long start = 0;         
+         RestResponse<CamundaVariablesDto> taskVariables;
         try {
             log.info("CAMUNDA GET TASK VARIABLES sending request with params: [ taskId: {} ]", taskId);
             start = System.currentTimeMillis();
-            taskVariables = camundaRestClient.getTaskVariables(taskId);
-            log.info("Variables: [{}]", taskVariables.getEntity());
+            taskVariables = camundaRestClient.getTaskVariables(taskId);            
+            log.info("Variables: [{}]", taskVariables);      
+            Map<String, Object> mapVariables = Utility.mapVariablesResponse(taskVariables.getEntity());   
+            final TransactionServiceRequest request = new TransactionServiceRequest(
+                    (String) mapVariables.get(Constants.FUNCTION_ID),
+                    (String) mapVariables.get(Constants.TRANSACTION_ID),
+                    (String) mapVariables.get(Constants.TRANSACTION_STATUS));
+            CompletableFuture.runAsync(() -> {
+                transactionsRestClient.update(request);
+            });
         } catch (WebApplicationException e) {
             if (e.getResponse().getStatus() == RestResponse.StatusCode.INTERNAL_SERVER_ERROR) {
                 log.error("Retrieve variables failed! Task id is null or does ont exist.");

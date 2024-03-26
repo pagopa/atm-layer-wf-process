@@ -442,14 +442,14 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             log.info("Variables: [{}]", taskVariables);      
            
             Map<String, Object> mapVariables = Utility.mapVariablesResponse(taskVariables.getEntity());   
-            /*
+            
             final TransactionServiceRequest request = new TransactionServiceRequest(
-                    "" ,//+ (String) mapVariables.get(Constants.FUNCTION_ID) ,
-                    "" ,//+ (String) mapVariables.get(Constants.TRANSACTION_ID),
-                    "" );//+ (String) mapVariables.get(Constants.TRANSACTION_STATUS));
+                     (String) mapVariables.get(Constants.FUNCTION_ID) ,
+                     (String) mapVariables.get(Constants.TRANSACTION_ID),
+                     (String) mapVariables.get(Constants.TRANSACTION_STATUS));
             CompletableFuture.runAsync(() -> {
                 transactionsRestClient.update(request);
-            });*/
+            });
             
             
             

@@ -144,9 +144,18 @@ public class Utility {
         Map<String, Map<String, Object>> variables = camundaVariablesDto.getVariables();
         
         return variables.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> entry.getValue().isEmpty()?"":(entry.getValue().get("value")+"") ));
+                .collect(Collectors.toMap(Map.Entry::getKey,Utility::getVariableValue));                    
+    }
+    
+    private static Object getVariableValue( Map.Entry<String, Map<String, Object>> entry ) {
+        Object result = "";
+        if (!entry.getValue().isEmpty()) {
+            result = entry.getValue().get("value");
+            if (result == null) {
+                result = ""; 
+            }            
+        }
+        return result;
     }
 
     /**

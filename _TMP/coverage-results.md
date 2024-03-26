@@ -6,10 +6,10 @@
       
 | Outcome                 | Value                                                               |
 |-------------------------|---------------------------------------------------------------------|
-| Code Coverage %         | 94.71%               |
-| :heavy_check_mark: Number of Lines Covered | 394    |
-| :x: Number of Lines Missed  | 22     |
-| Total Number of Lines   | 416     |
+| Code Coverage %         | 93.32%               |
+| :heavy_check_mark: Number of Lines Covered | 405    |
+| :x: Number of Lines Missed  | 29     |
+| Total Number of Lines   | 434     |
 
 
 ## Details:
@@ -133,19 +133,23 @@
         
 #### Lines Missed:
         
-- Line #67
+- Line #73
 ```
         } catch (WebApplicationException e) {
 ```
-- Line #330
+- Line #117
+```
+        });
+```
+- Line #348
 ```
             } catch (InterruptedException e) {
 ```
-- Line #334
+- Line #352
 ```
             } catch (WebApplicationException e) {
 ```
-- Line #362
+- Line #380
 ```
             variables = variables != null ? variables : Collections.emptyMap();
 ```
@@ -414,6 +418,34 @@
 
         
 #### Lines Missed:
+        
+</details>
+
+    
+### it/pagopa/atmlayer/wf/process/client/transactions/bean
+
+<details>
+    <summary>
+:x: TransactionServiceRequest.java
+    </summary>
+
+        
+#### Lines Missed:
+        
+- Line #37
+```
+    }
+```
+</details>
+
+    
+### it/pagopa/atmlayer/wf/process/client/transactions
+
+<details>
+    <summary>
+:x: TransactionsServiceRestClient.java
+    </summary>
+
         
 </details>
 

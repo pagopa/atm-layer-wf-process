@@ -48,6 +48,8 @@ spec:
               value: "{{ .Values.tracing.endpointBasePath }}"
             - name: TRACING_ENABLE_JDBC_MONITORING
               value: "{{ .Values.tracing.enableJDBCMonitoring }}"
+            - name: TRANSACTIONS_SERVICE_ADDRESS
+              value: "{{ .Values.transactionServiceAddress }}"
             - name: PROCESS_SERVICE_ENGINE_ACCOUNT_USER
               valueFrom:
                 secretKeyRef:

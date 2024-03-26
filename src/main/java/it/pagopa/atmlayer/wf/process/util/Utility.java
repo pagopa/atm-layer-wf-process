@@ -139,12 +139,14 @@ public class Utility {
      * @return A map structure containing the variable names and their corresponding values.
      */
     public static Map<String, Object> mapVariablesResponse(CamundaVariablesDto camundaVariablesDto) {
+        if (camundaVariablesDto == null || camundaVariablesDto.getVariables().isEmpty())
+            return new HashMap<>();
         Map<String, Map<String, Object>> variables = camundaVariablesDto.getVariables();
-
+        
         return variables.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        entry -> entry.getValue().get("value")));
+                        entry -> entry.getValue().isEmpty()?"":(entry.getValue().get("value")+"") ));
     }
 
     /**

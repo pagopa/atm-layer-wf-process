@@ -110,7 +110,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         request.setBranchId(deviceInfo.getBranchId());
         request.setTerminalId(deviceInfo.getTerminalId());
         request.setTransactionId(transactionId);
-        request.setTransactionStatus((String) variables.get(Constants.TRANSACTION_STATUS));
+        request.setTransactionStatus(variables != null ?((String) variables.get(Constants.TRANSACTION_STATUS)):"");
     
         CompletableFuture.runAsync(() -> {          
             transactionsRestClient.inset(request);
@@ -440,14 +440,19 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             start = System.currentTimeMillis();
             taskVariables = camundaRestClient.getTaskVariables(taskId);            
             log.info("Variables: [{}]", taskVariables);      
+           
             Map<String, Object> mapVariables = Utility.mapVariablesResponse(taskVariables.getEntity());   
+            /*
             final TransactionServiceRequest request = new TransactionServiceRequest(
-                    (String) mapVariables.get(Constants.FUNCTION_ID),
-                    (String) mapVariables.get(Constants.TRANSACTION_ID),
-                    (String) mapVariables.get(Constants.TRANSACTION_STATUS));
+                    "" ,//+ (String) mapVariables.get(Constants.FUNCTION_ID) ,
+                    "" ,//+ (String) mapVariables.get(Constants.TRANSACTION_ID),
+                    "" );//+ (String) mapVariables.get(Constants.TRANSACTION_STATUS));
             CompletableFuture.runAsync(() -> {
                 transactionsRestClient.update(request);
-            });
+            });*/
+            
+            
+            
         } catch (WebApplicationException e) {
             if (e.getResponse().getStatus() == RestResponse.StatusCode.INTERNAL_SERVER_ERROR) {
                 log.error("Retrieve variables failed! Task id is null or does ont exist.");

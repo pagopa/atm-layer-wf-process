@@ -651,7 +651,6 @@ class ProcessResourceTest {
         void testVariablesOkEmptyButtons() {
                 Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString()))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createCamundaVariablesDto()));
-
                 given()
                                 .body(ProcessTestData.createVariableRequestWithButtonsEmpty())
                                 .contentType(MediaType.APPLICATION_JSON)

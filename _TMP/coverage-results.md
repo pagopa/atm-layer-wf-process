@@ -6,10 +6,10 @@
       
 | Outcome                 | Value                                                               |
 |-------------------------|---------------------------------------------------------------------|
-| Code Coverage %         | 93.32%               |
-| :heavy_check_mark: Number of Lines Covered | 405    |
-| :x: Number of Lines Missed  | 29     |
-| Total Number of Lines   | 434     |
+| Code Coverage %         | 94.17%               |
+| :heavy_check_mark: Number of Lines Covered | 420    |
+| :x: Number of Lines Missed  | 26     |
+| Total Number of Lines   | 446     |
 
 
 ## Details:
@@ -152,6 +152,10 @@
 - Line #380
 ```
             variables = variables != null ? variables : Collections.emptyMap();
+```
+- Line #452
+```
+            });
 ```
 </details>
 
@@ -426,16 +430,12 @@
 
 <details>
     <summary>
-:x: TransactionServiceRequest.java
+:heavy_check_mark: TransactionServiceRequest.java
     </summary>
 
         
-#### Lines Missed:
+#### All Lines Covered!
         
-- Line #37
-```
-    }
-```
 </details>
 
     

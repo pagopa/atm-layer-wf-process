@@ -165,20 +165,24 @@ public class Utility {
      * @param deviceInfo     The device information.
      * @param variables      The map to be populated with device information variables.
      */
-    public static void populateDeviceInfoVariables(String transactionId, DeviceInfo deviceInfo,
+    public static Map<String, Object> populateDeviceInfoVariables(String transactionId, DeviceInfo deviceInfo,
             Map<String, Object> variables) {
         
-        if (variables == null){
-            variables = new HashMap<>();
+        Map<String, Object> extendedVariables = new HashMap<>();
+        
+        if (variables != null){
+            extendedVariables.putAll(variables);
         }
 
-        variables.put(DeviceInfoEnum.TRANSACTION_ID.getValue(), transactionId);
-        variables.put(DeviceInfoEnum.BANK_ID.getValue(), deviceInfo.getBankId());
-        variables.put(DeviceInfoEnum.BRANCH_ID.getValue(), deviceInfo.getBranchId());
-        variables.put(DeviceInfoEnum.TERMINAL_ID.getValue(), deviceInfo.getTerminalId());
-        variables.put(DeviceInfoEnum.CODE.getValue(), deviceInfo.getCode());
-        variables.put(DeviceInfoEnum.OP_TIMESTAMP.getValue(), deviceInfo.getOpTimestamp());
-        variables.put(DeviceInfoEnum.DEVICE_TYPE.getValue(), deviceInfo.getChannel());
+        extendedVariables.put(DeviceInfoEnum.TRANSACTION_ID.getValue(), transactionId);
+        extendedVariables.put(DeviceInfoEnum.BANK_ID.getValue(), deviceInfo.getBankId());
+        extendedVariables.put(DeviceInfoEnum.BRANCH_ID.getValue(), deviceInfo.getBranchId());
+        extendedVariables.put(DeviceInfoEnum.TERMINAL_ID.getValue(), deviceInfo.getTerminalId());
+        extendedVariables.put(DeviceInfoEnum.CODE.getValue(), deviceInfo.getCode());
+        extendedVariables.put(DeviceInfoEnum.OP_TIMESTAMP.getValue(), deviceInfo.getOpTimestamp());
+        extendedVariables.put(DeviceInfoEnum.DEVICE_TYPE.getValue(), deviceInfo.getChannel());
+        
+        return extendedVariables;
     }
 
     /**

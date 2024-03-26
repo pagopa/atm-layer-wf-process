@@ -20,6 +20,8 @@ import io.quarkus.test.junit.mockito.MockitoConfig;
 import it.pagopa.atmlayer.wf.process.client.camunda.CamundaRestClient;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
 import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
+import it.pagopa.atmlayer.wf.process.client.transactions.TransactionsServiceRestClient;
+import it.pagopa.atmlayer.wf.process.client.transactions.bean.TransactionServiceRequest;
 import it.pagopa.atmlayer.wf.process.resource.ProcessResource;
 import it.pagopa.atmlayer.wf.process.test.util.ProcessTestData;
 import jakarta.ws.rs.ProcessingException;

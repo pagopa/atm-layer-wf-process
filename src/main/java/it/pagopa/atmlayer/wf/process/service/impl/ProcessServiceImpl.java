@@ -98,7 +98,10 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      * @param variables
      */
     public void start(String transactionId, String functionId, DeviceInfo deviceInfo, Map<String, Object> variables) {
-        Utility.populateDeviceInfoVariables(transactionId, deviceInfo, variables);
+        
+        Map<String, Object> extendedVariables = Utility.populateDeviceInfoVariables(transactionId, deviceInfo, variables);
+        extendedVariables.put(Constants.FUNCTION_ID, functionId);
+        extendedVariables.put(Constants.TRANSACTION_STATUS, Constants.TRANSACTION_STATUS_NEW_SESSION);
 
         RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = findBpmnId(functionId, deviceInfo);
 
@@ -110,13 +113,13 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         request.setBranchId(deviceInfo.getBranchId());
         request.setTerminalId(deviceInfo.getTerminalId());
         request.setTransactionId(transactionId);
-        request.setTransactionStatus(variables != null ?((String) variables.get(Constants.TRANSACTION_STATUS)):"");
+        request.setTransactionStatus((String)extendedVariables.get(Constants.TRANSACTION_STATUS));
     
         CompletableFuture.runAsync(() -> {          
             transactionsRestClient.inset(request);
         });
 
-        startInstance(transactionId, bpmnId, variables);
+        startInstance(transactionId, bpmnId, extendedVariables);
     }
 
     /**

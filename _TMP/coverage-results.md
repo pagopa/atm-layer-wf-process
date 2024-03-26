@@ -6,10 +6,10 @@
       
 | Outcome                 | Value                                                               |
 |-------------------------|---------------------------------------------------------------------|
-| Code Coverage %         | 94.17%               |
-| :heavy_check_mark: Number of Lines Covered | 420    |
+| Code Coverage %         | 94.21%               |
+| :heavy_check_mark: Number of Lines Covered | 423    |
 | :x: Number of Lines Missed  | 26     |
-| Total Number of Lines   | 446     |
+| Total Number of Lines   | 449     |
 
 
 ## Details:
@@ -137,23 +137,23 @@
 ```
         } catch (WebApplicationException e) {
 ```
-- Line #117
+- Line #120
 ```
         });
 ```
-- Line #348
+- Line #351
 ```
             } catch (InterruptedException e) {
 ```
-- Line #352
+- Line #355
 ```
             } catch (WebApplicationException e) {
 ```
-- Line #380
+- Line #383
 ```
             variables = variables != null ? variables : Collections.emptyMap();
 ```
-- Line #452
+- Line #455
 ```
             });
 ```

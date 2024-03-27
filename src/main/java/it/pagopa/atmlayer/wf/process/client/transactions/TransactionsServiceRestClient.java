@@ -1,6 +1,7 @@
 package it.pagopa.atmlayer.wf.process.client.transactions;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+import org.jboss.resteasy.reactive.RestResponse;
 
 import it.pagopa.atmlayer.wf.process.client.transactions.bean.TransactionServiceRequest;
 import jakarta.ws.rs.POST;
@@ -12,10 +13,10 @@ public interface TransactionsServiceRestClient {
     
     @POST
     @Path("/insert")
-    void inset(TransactionServiceRequest request);
+    RestResponse<Object>  inset(TransactionServiceRequest request);
 
     @PUT
     @Path("/update")
-    void update(TransactionServiceRequest request);
+    RestResponse<Object>  update(TransactionServiceRequest request);
 
 }

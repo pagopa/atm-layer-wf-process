@@ -32,6 +32,8 @@ camundaWebUser:
     username: WEB_USER
     password: WEB_PASSWORD
 
+transactionServiceAddress: http://pagopa-dev-atm-layer-transaction-service.pagopa.svc.cluster.local:8080
+
 secretProviderClass:
   enabled: true
   name: atm-layer-wf-process-secrets

@@ -6,10 +6,10 @@
       
 | Outcome                 | Value                                                               |
 |-------------------------|---------------------------------------------------------------------|
-| Code Coverage %         | 94.21%               |
-| :heavy_check_mark: Number of Lines Covered | 423    |
-| :x: Number of Lines Missed  | 26     |
-| Total Number of Lines   | 449     |
+| Code Coverage %         | 92.16%               |
+| :heavy_check_mark: Number of Lines Covered | 435    |
+| :x: Number of Lines Missed  | 37     |
+| Total Number of Lines   | 472     |
 
 
 ## Details:
@@ -164,15 +164,31 @@
 
 <details>
     <summary>
-:heavy_check_mark: ProcessResource.java
+:x: ProcessResource.java
     </summary>
 
         
-#### All Lines Covered!
+#### Lines Missed:
         
 - Line #81
 ```
                 .append(resourceType != null ? resourceType.toLowerCase() : Constants.BPMN).toString();
+```
+- Line #262
+```
+        } catch (ProcessException e) {
+```
+- Line #264
+```
+        } catch (RuntimeException e) {
+```
+- Line #301
+```
+        } catch (ProcessException e) {
+```
+- Line #303
+```
+        } catch (RuntimeException e) {
 ```
 </details>
 

@@ -20,8 +20,6 @@ import io.quarkus.test.junit.mockito.MockitoConfig;
 import it.pagopa.atmlayer.wf.process.client.camunda.CamundaRestClient;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
 import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
-import it.pagopa.atmlayer.wf.process.client.transactions.TransactionsServiceRestClient;
-import it.pagopa.atmlayer.wf.process.client.transactions.bean.TransactionServiceRequest;
 import it.pagopa.atmlayer.wf.process.resource.ProcessResource;
 import it.pagopa.atmlayer.wf.process.test.util.ProcessTestData;
 import jakarta.ws.rs.ProcessingException;
@@ -294,6 +292,30 @@ class ProcessResourceTest {
                                 .post("/next")
                                 .then()
                                 .statusCode(StatusCode.OK);
+        }
+        
+        @Test
+        void testNext2Ok() {
+                Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok());
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestNext())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/next2")
+                                .then()
+                                .statusCode(StatusCode.OK);
+                
+                given()
+                .body(ProcessTestData.createTaskRequestNext())
+                .contentType(MediaType.APPLICATION_JSON)
+                .when()
+                .post("/complete")
+                .then()
+                .statusCode(StatusCode.OK);
         }
 
         @Test

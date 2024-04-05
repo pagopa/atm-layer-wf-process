@@ -372,7 +372,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      * {@inheritDoc}
      */
     @Override
-    public void complete(String taskId, Map<String, Object> variables, String functionId, DeviceInfo deviceInfo) {
+    public RestResponse complete(String taskId, Map<String, Object> variables, String functionId, DeviceInfo deviceInfo) {
         RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = findBpmnId(functionId, deviceInfo);
 
         if (modelFindBpmnIdResponse != null) {
@@ -384,7 +384,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             variables.put(Constants.DEFINITION_KEY, definitionKey);
             variables.put(Constants.DEFINITION_VERSION_CAMUNDA, definitionVersionCamunda);
 
-            complete(taskId, variables);
+            return complete(taskId, variables);
         } else {
             log.error("Model error occurred!");
             throw new ProcessException(ProcessErrorEnum.MODEL_GENERIC_ERROR_M02);
@@ -395,18 +395,17 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      * {@inheritDoc}
      */
     @Override
-    public void complete(String taskId, Map<String, Object> variables) {
+    public RestResponse complete(String taskId, Map<String, Object> variables) {
         long start = 0;
-
+        RestResponse response = null;
         try {
             CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
                 .variables(Utility.generateBodyRequestVariables(variables))
                 .build();
 
             log.info("CAMUNDA COMPLETE sending request with params: [taskId: {}, body: {}]", taskId, body);
-            start = System.currentTimeMillis();
-            camundaRestClient.complete(taskId, body);
-
+            start = System.currentTimeMillis();            
+            response = RestResponse.status(Status.fromStatusCode(camundaRestClient.complete(taskId, body).getStatus()));
             log.info("Task completed! taskId: {}", taskId);
         } catch (WebApplicationException e) {
             switch (e.getResponse().getStatus()) {
@@ -422,6 +421,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         } finally {
             logElapsedTime(CAMUNDA_COMPLETE_LOG_ID, start);
         }
+        return response;
     }
 
     /**

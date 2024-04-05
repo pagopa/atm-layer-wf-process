@@ -38,6 +38,8 @@ spec:
             - containerPort: {{ .Values.service.port }}
           imagePullPolicy: Always
           env:
+            - name: TZ
+              value: Europe/Rome
             - name: PROCESS_SERVICE_LOG_LEVEL
               value: "{{ .Values.logLevel }}"
             - name: CAMUNDA_ADDRESS

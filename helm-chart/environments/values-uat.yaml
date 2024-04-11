@@ -27,6 +27,7 @@ modelServiceAddress: http://pagopa-uat-atm-layer-model.pagopa.svc.cluster.local:
 
 camundaWebUser:
   address: http://pagopa-uat-atm-layer-wf-engine.pagopa.svc.cluster.local:8080
+  credentialsSecretEnabled: true
   credentialsSecretName: "pagopa-uat-atm-layer-wf-process-camunda"
   credentialsSecretKeys:
     username: WEB_USER

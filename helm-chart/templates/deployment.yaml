@@ -52,6 +52,7 @@ spec:
               value: "{{ .Values.tracing.enableJDBCMonitoring }}"
             - name: TRANSACTIONS_SERVICE_ADDRESS
               value: "{{ .Values.transactionServiceAddress }}"
+            {{- if .Values.camundaWebUser.credentialsSecretEnabled }}
             - name: PROCESS_SERVICE_ENGINE_ACCOUNT_USER
               valueFrom:
                 secretKeyRef:
@@ -62,6 +63,7 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.camundaWebUser.credentialsSecretName }}
                   key: {{ .Values.camundaWebUser.credentialsSecretKeys.password }}
+            {{- end }}
             - name: MODEL_SERVICE_ADDRESS
               value: "{{ .Values.modelServiceAddress }}"
           volumeMounts:

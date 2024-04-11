@@ -72,7 +72,7 @@ deployment:
   name: pagopa-prod-atm-layer-wf-process
   annotation:
     reloader.stakater.com/auto: "true"
-    secret.reloader.stakater.com/reload: pagopa-prod-atm-layer-wf-process-camunda
+    secret.reloader.stakater.com/reload: pagopa-prod-atm-layer-wf-process-camunda, pagopa-prod-atm-layer-wf-process-redis
 
 service:
   name: pagopa-prod-atm-layer-wf-process

@@ -34,6 +34,12 @@ camundaWebUser:
 
 transactionServiceAddress: http://pagopa-dev-atm-layer-transaction-service.pagopa.svc.cluster.local:8080
 
+redis:
+  credentialsSecretName: pagopa-dev-atm-layer-wf-process-redis
+  credentialsSecretKeys:
+    host: host
+    port: port
+
 secretProviderClass:
   enabled: true
   name: atm-layer-wf-process-secrets

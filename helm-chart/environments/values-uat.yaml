@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 2
+replicaCount: 4
 
 image:
   repository: 00000000000.dkr.ecr.eu-south-1.amazonaws.com/xxxxxxx
@@ -33,6 +33,12 @@ camundaWebUser:
     password: WEB_PASSWORD
 
 transactionServiceAddress: http://pagopa-uat-atm-layer-transaction-service.pagopa.svc.cluster.local:8080
+
+redis:
+  credentialsSecretName: pagopa-uat-atm-layer-wf-process-redis
+  credentialsSecretKeys:
+    host: host
+    port: port
 
 secretProviderClass:
   enabled: true
@@ -98,15 +104,15 @@ resources:
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  limits:
-    cpu: 600m
-    memory: 600Mi
-  requests:
-    cpu: 300m
-    memory: 300Mi
+  # limits:
+  #   cpu: 600m
+  #   memory: 600Mi
+  # requests:
+  #   cpu: 300m
+  #   memory: 300Mi
 
 autoscaling:
-  enabled: true
+  enabled: false
   minReplicas: 2
   maxReplicas: 4
   targetCPUUtilizationPercentage: 80

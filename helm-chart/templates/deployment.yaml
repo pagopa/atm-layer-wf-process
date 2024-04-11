@@ -64,6 +64,16 @@ spec:
                   key: {{ .Values.camundaWebUser.credentialsSecretKeys.password }}
             - name: MODEL_SERVICE_ADDRESS
               value: "{{ .Values.modelServiceAddress }}"
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.redis.credentialsSecretName }}
+                  key: {{ .Values.redis.credentialsSecretKeys.host }}
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.redis.credentialsSecretName }}
+                  key: {{ .Values.redis.credentialsSecretKeys.port }}
           volumeMounts:
           {{- if .Values.secretProviderClass.enabled }}
           - name: secrets-store-inline

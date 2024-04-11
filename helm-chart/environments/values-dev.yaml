@@ -27,6 +27,7 @@ modelServiceAddress: http://pagopa-dev-atm-layer-model.pagopa.svc.cluster.local:
 
 camundaWebUser:
   address: http://pagopa-dev-atm-layer-wf-engine.pagopa.svc.cluster.local:8080
+  credentialsSecretEnabled: true
   credentialsSecretName: "pagopa-dev-atm-layer-wf-process-camunda"
   credentialsSecretKeys:
     username: WEB_USER
@@ -35,6 +36,7 @@ camundaWebUser:
 transactionServiceAddress: http://pagopa-dev-atm-layer-transaction-service.pagopa.svc.cluster.local:8080
 
 redis:
+  credentialsSecretEnabled: true
   credentialsSecretName: pagopa-dev-atm-layer-wf-process-redis
   credentialsSecretKeys:
     host: host

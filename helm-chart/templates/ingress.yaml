@@ -16,7 +16,7 @@ spec:
             pathType: {{ index .Values.ingress.hosts 0 "paths" 0 "pathType" }}
             backend:
               service:
-                name: {{ .Values.ingress.name }}
+                name: {{ .Values.service.name }}
                 port:
                   number: {{ .Values.service.port }}
 {{- end }}

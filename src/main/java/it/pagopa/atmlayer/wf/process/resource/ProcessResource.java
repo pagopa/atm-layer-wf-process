@@ -158,6 +158,10 @@ public class ProcessResource extends CommonLogic{
              * Retrieve active tasks
              */
             response = processService.retrieveActiveTasks(request.getTransactionId());
+            if (response.getStatus() == RestResponse.StatusCode.CREATED) {
+                response = response.ok();
+            }
+
         } catch (ProcessException e) {
             throw e;
         } catch (RuntimeException e) {
@@ -206,6 +210,8 @@ public class ProcessResource extends CommonLogic{
                     processService.complete(request.getTaskId(), request.getVariables());
                 }             
             }
+           
+            
             /*
              * Retrieve active tasks
              */

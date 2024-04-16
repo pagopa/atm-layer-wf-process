@@ -23,6 +23,11 @@ tracing:
   endpointBasePath: "http://jaeger-collector.default.svc.cluster.local:4317"
   enableJDBCMonitoring: "false"
 
+objectStore:
+  region: eu-south-1
+  bucket_name: pagopa-dev-atm-layer-s3-wf-task-trace-logs
+  resource_template_path: logs
+
 modelServiceAddress: http://pagopa-dev-atm-layer-model.pagopa.svc.cluster.local:8080
 
 camundaWebUser:

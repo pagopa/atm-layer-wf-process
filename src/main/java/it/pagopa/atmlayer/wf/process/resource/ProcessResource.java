@@ -159,7 +159,7 @@ public class ProcessResource extends CommonLogic{
              */
             response = processService.retrieveActiveTasks(request.getTransactionId());
             if (response.getStatus() == RestResponse.StatusCode.CREATED) {
-                response = response.ok();
+                response = response.ok(response.getEntity());
             }
 
         } catch (ProcessException e) {

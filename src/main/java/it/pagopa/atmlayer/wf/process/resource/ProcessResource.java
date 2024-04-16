@@ -2,6 +2,7 @@ package it.pagopa.atmlayer.wf.process.resource;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -152,8 +153,7 @@ public class ProcessResource extends CommonLogic{
             /*
              * Starting camunda process
              */
-            processService.start(request.getTransactionId(), request.getFunctionId(), request.getDeviceInfo(),
-                    request.getVariables());
+            CompletableFuture.runAsync(() -> processService.start(request.getTransactionId(), request.getFunctionId(), request.getDeviceInfo(),request.getVariables()));
             /*
              * Retrieve active tasks
              */
@@ -205,9 +205,10 @@ public class ProcessResource extends CommonLogic{
                  * Complete camunda task
                  */
                 if (request.getVariables() != null && request.getVariables().get(Constants.FUNCTION_ID) != null) {
-                    processService.complete(request.getTaskId(), request.getVariables(), request.getVariables().get(Constants.FUNCTION_ID).toString(), request.getDeviceInfo());
+                    CompletableFuture.runAsync(() -> processService.complete(request.getTaskId(), request.getVariables(), request.getVariables().get(Constants.FUNCTION_ID).toString(), request.getDeviceInfo()));
                 } else {
-                    processService.complete(request.getTaskId(), request.getVariables());
+                    
+                    CompletableFuture.runAsync(() -> processService.complete(request.getTaskId(), request.getVariables()));
                 }             
             }
            

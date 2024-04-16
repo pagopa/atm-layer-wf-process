@@ -118,9 +118,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         request.setTransactionId(transactionId);
         request.setTransactionStatus((String) extendedVariables.get(Constants.TRANSACTION_STATUS));
 
-        CompletableFuture.runAsync(() -> {
-            transactionsRestClient.inset(request);
-        });
+      
 
         CompletableFuture.runAsync(() -> transactionsRestClient.inset(request));
 

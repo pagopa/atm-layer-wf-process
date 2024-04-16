@@ -293,6 +293,30 @@ class ProcessResourceTest {
                                 .then()
                                 .statusCode(StatusCode.OK);
         }
+        
+        @Test
+        void testNext2Ok() {
+                Mockito.when(camundaRestClient.complete(Mockito.anyString(), Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok());
+                Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
+                                .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
+
+                given()
+                                .body(ProcessTestData.createTaskRequestNext())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/next2")
+                                .then()
+                                .statusCode(StatusCode.OK);
+                
+                given()
+                .body(ProcessTestData.createTaskRequestNext())
+                .contentType(MediaType.APPLICATION_JSON)
+                .when()
+                .post("/complete")
+                .then()
+                .statusCode(StatusCode.OK);
+        }
 
         @Test
         void testNextOkWithoutVars() {
@@ -651,7 +675,6 @@ class ProcessResourceTest {
         void testVariablesOkEmptyButtons() {
                 Mockito.when(camundaRestClient.getTaskVariables(Mockito.anyString()))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createCamundaVariablesDto()));
-
                 given()
                                 .body(ProcessTestData.createVariableRequestWithButtonsEmpty())
                                 .contentType(MediaType.APPLICATION_JSON)

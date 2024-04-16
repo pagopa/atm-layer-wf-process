@@ -25,7 +25,6 @@ public class Constants {
     
     public static final String TRANSACTION_STATUS = "transactionStatus";
     
-    
-    
+    public static final String TRANSACTION_STATUS_NEW_SESSION = "SESSIONE_AVVIATA";
     
 }

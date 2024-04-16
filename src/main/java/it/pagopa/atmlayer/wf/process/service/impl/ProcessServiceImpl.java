@@ -98,7 +98,10 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      * @param variables
      */
     public void start(String transactionId, String functionId, DeviceInfo deviceInfo, Map<String, Object> variables) {
-        Utility.populateDeviceInfoVariables(transactionId, deviceInfo, variables);
+        
+        Map<String, Object> extendedVariables = Utility.populateDeviceInfoVariables(transactionId, deviceInfo, variables);
+        extendedVariables.put(Constants.FUNCTION_ID, functionId);
+        extendedVariables.put(Constants.TRANSACTION_STATUS, Constants.TRANSACTION_STATUS_NEW_SESSION);
 
         RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = findBpmnId(functionId, deviceInfo);
 
@@ -110,13 +113,13 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         request.setBranchId(deviceInfo.getBranchId());
         request.setTerminalId(deviceInfo.getTerminalId());
         request.setTransactionId(transactionId);
-        request.setTransactionStatus((String) variables.get(Constants.TRANSACTION_STATUS));
+        request.setTransactionStatus((String)extendedVariables.get(Constants.TRANSACTION_STATUS));
     
         CompletableFuture.runAsync(() -> {          
             transactionsRestClient.inset(request);
         });
 
-        startInstance(transactionId, bpmnId, variables);
+        startInstance(transactionId, bpmnId, extendedVariables);
     }
 
     /**
@@ -369,7 +372,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      * {@inheritDoc}
      */
     @Override
-    public void complete(String taskId, Map<String, Object> variables, String functionId, DeviceInfo deviceInfo) {
+    public RestResponse complete(String taskId, Map<String, Object> variables, String functionId, DeviceInfo deviceInfo) {
         RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = findBpmnId(functionId, deviceInfo);
 
         if (modelFindBpmnIdResponse != null) {
@@ -381,7 +384,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             variables.put(Constants.DEFINITION_KEY, definitionKey);
             variables.put(Constants.DEFINITION_VERSION_CAMUNDA, definitionVersionCamunda);
 
-            complete(taskId, variables);
+            return complete(taskId, variables);
         } else {
             log.error("Model error occurred!");
             throw new ProcessException(ProcessErrorEnum.MODEL_GENERIC_ERROR_M02);
@@ -392,18 +395,17 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      * {@inheritDoc}
      */
     @Override
-    public void complete(String taskId, Map<String, Object> variables) {
+    public RestResponse complete(String taskId, Map<String, Object> variables) {
         long start = 0;
-
+        RestResponse response = null;
         try {
             CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
                 .variables(Utility.generateBodyRequestVariables(variables))
                 .build();
 
             log.info("CAMUNDA COMPLETE sending request with params: [taskId: {}, body: {}]", taskId, body);
-            start = System.currentTimeMillis();
-            camundaRestClient.complete(taskId, body);
-
+            start = System.currentTimeMillis();            
+            response = RestResponse.status(Status.fromStatusCode(camundaRestClient.complete(taskId, body).getStatus()));
             log.info("Task completed! taskId: {}", taskId);
         } catch (WebApplicationException e) {
             switch (e.getResponse().getStatus()) {
@@ -419,6 +421,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         } finally {
             logElapsedTime(CAMUNDA_COMPLETE_LOG_ID, start);
         }
+        return response;
     }
 
     /**
@@ -440,14 +443,19 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             start = System.currentTimeMillis();
             taskVariables = camundaRestClient.getTaskVariables(taskId);            
             log.info("Variables: [{}]", taskVariables);      
+           
             Map<String, Object> mapVariables = Utility.mapVariablesResponse(taskVariables.getEntity());   
+            
             final TransactionServiceRequest request = new TransactionServiceRequest(
-                    (String) mapVariables.get(Constants.FUNCTION_ID),
-                    (String) mapVariables.get(Constants.TRANSACTION_ID),
-                    (String) mapVariables.get(Constants.TRANSACTION_STATUS));
+                     (String) mapVariables.get(Constants.FUNCTION_ID) ,
+                     (String) mapVariables.get(Constants.TRANSACTION_ID),
+                     (String) mapVariables.get(Constants.TRANSACTION_STATUS));
             CompletableFuture.runAsync(() -> {
                 transactionsRestClient.update(request);
             });
+            
+            
+            
         } catch (WebApplicationException e) {
             if (e.getResponse().getStatus() == RestResponse.StatusCode.INTERNAL_SERVER_ERROR) {
                 log.error("Retrieve variables failed! Task id is null or does ont exist.");

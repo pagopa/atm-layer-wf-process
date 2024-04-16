@@ -6,10 +6,10 @@
       
 | Outcome                 | Value                                                               |
 |-------------------------|---------------------------------------------------------------------|
-| Code Coverage %         | 94.71%               |
-| :heavy_check_mark: Number of Lines Covered | 394    |
-| :x: Number of Lines Missed  | 22     |
-| Total Number of Lines   | 416     |
+| Code Coverage %         | 92.16%               |
+| :heavy_check_mark: Number of Lines Covered | 435    |
+| :x: Number of Lines Missed  | 37     |
+| Total Number of Lines   | 472     |
 
 
 ## Details:
@@ -133,21 +133,29 @@
         
 #### Lines Missed:
         
-- Line #67
+- Line #73
 ```
         } catch (WebApplicationException e) {
 ```
-- Line #330
+- Line #120
+```
+        });
+```
+- Line #351
 ```
             } catch (InterruptedException e) {
 ```
-- Line #334
+- Line #355
 ```
             } catch (WebApplicationException e) {
 ```
-- Line #362
+- Line #383
 ```
             variables = variables != null ? variables : Collections.emptyMap();
+```
+- Line #455
+```
+            });
 ```
 </details>
 
@@ -156,15 +164,31 @@
 
 <details>
     <summary>
-:heavy_check_mark: ProcessResource.java
+:x: ProcessResource.java
     </summary>
 
         
-#### All Lines Covered!
+#### Lines Missed:
         
 - Line #81
 ```
                 .append(resourceType != null ? resourceType.toLowerCase() : Constants.BPMN).toString();
+```
+- Line #262
+```
+        } catch (ProcessException e) {
+```
+- Line #264
+```
+        } catch (RuntimeException e) {
+```
+- Line #301
+```
+        } catch (ProcessException e) {
+```
+- Line #303
+```
+        } catch (RuntimeException e) {
 ```
 </details>
 
@@ -414,6 +438,30 @@
 
         
 #### Lines Missed:
+        
+</details>
+
+    
+### it/pagopa/atmlayer/wf/process/client/transactions/bean
+
+<details>
+    <summary>
+:heavy_check_mark: TransactionServiceRequest.java
+    </summary>
+
+        
+#### All Lines Covered!
+        
+</details>
+
+    
+### it/pagopa/atmlayer/wf/process/client/transactions
+
+<details>
+    <summary>
+:x: TransactionsServiceRestClient.java
+    </summary>
+
         
 </details>
 

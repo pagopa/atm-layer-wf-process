@@ -61,7 +61,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
 
     @Inject
     InstanceVariablesAsyncServiceImpl instanceVariablesService;
-    
+
     @Inject
     Properties properties;
 
@@ -73,7 +73,8 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      */
     public RestResponse<Object> deploy(String requestUrl, String fileName) throws IOException {
         long start = 0;
-        log.info("CAMUNDA DEPLOY sending request with params: [ requestUrl: " + requestUrl + ", fileName: " + fileName + " ]");
+        log.info("CAMUNDA DEPLOY sending request with params: [ requestUrl: " + requestUrl + ", fileName: " + fileName
+                + " ]");
         RestResponse<Object> camundaDeployResponse;
 
         try {
@@ -152,7 +153,8 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
 
             log.info("MODEL FIND BPMN BY TRIAD REQUEST sending request with params: [ functionId: " + functionId + ", bankId: " + deviceInfo.getBankId() + ", branchId: " + deviceInfo.getBranchId() + ", terminalId: " + deviceInfo.getTerminalId() + " ]");
             start = System.currentTimeMillis();
-            modelFindBpmnIdResponse = modelRestClient.findBPMNByTriad(functionId, deviceInfo.getBankId(), deviceInfo.getBranchId(), deviceInfo.getTerminalId());
+            modelFindBpmnIdResponse = modelRestClient.findBPMNByTriad(functionId, deviceInfo.getBankId(),
+                    deviceInfo.getBranchId(), deviceInfo.getTerminalId());
         } catch (WebApplicationException e) {
             switch (e.getResponse().getStatus()) {
                 case RestResponse.StatusCode.BAD_REQUEST -> log.warn("Find Bpmn id failed! No runnable BPMN found for selection.");
@@ -203,10 +205,13 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
                     instanceVariablesList -> {
                         if (!Objects.isNull(instanceVariablesList) && !instanceVariablesList.isEmpty()) {
                             log.debug("Number of instance variables found: {}", instanceVariablesList.size());
-                            variables.putAll(instanceVariablesList.stream()
-                                    .collect(Collectors.toMap(
-                                            InstanceVariables::getName,
-                                            InstanceVariables::getValue)));
+                            log.debug("instance-variables: {}", variables.toString());
+                            if (!Objects.isNull(variables)) {
+                                variables.putAll(instanceVariablesList.stream()
+                                        .collect(Collectors.toMap(
+                                                InstanceVariables::getName,
+                                                InstanceVariables::getValue)));
+                            }
                         } else {
                             log.debug("instance-variables table is empty!");
                         }
@@ -215,9 +220,9 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
                         log.error("Error while retrieving instance variables from DynamoDB: {}", throwable);
                     });
             CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
-                .businessKey(transactionId)
-                .variables(Utility.generateBodyRequestVariables(variables))
-                .build();
+                    .businessKey(transactionId)
+                    .variables(Utility.generateBodyRequestVariables(variables))
+                    .build();
 
             log.info("CAMUNDA START INSTANCE sending request with params: [functionId: {}, body: {}]", bpmnId, body);
 
@@ -431,7 +436,8 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      * {@inheritDoc}
      */
     @Override
-    public RestResponse complete(String taskId, Map<String, Object> variables, String functionId, DeviceInfo deviceInfo) {
+    public RestResponse complete(String taskId, Map<String, Object> variables, String functionId,
+            DeviceInfo deviceInfo) {
         RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = findBpmnId(functionId, deviceInfo);
 
         if (modelFindBpmnIdResponse != null) {
@@ -566,7 +572,8 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         RestResponse<String> camundaGetResourceBinaryResponse;
 
         try {
-            log.info("CAMUNDA GET RESOURCE BINARY sending request with params: [ deploymentId: {}, resourceId {}]", deploymentId, resourceId);
+            log.info("CAMUNDA GET RESOURCE BINARY sending request with params: [ deploymentId: {}, resourceId {}]",
+                    deploymentId, resourceId);
             start = System.currentTimeMillis();
             camundaGetResourceBinaryResponse = camundaRestClient.getResourceBinary(deploymentId, resourceId);
 

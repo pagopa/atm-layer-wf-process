@@ -23,8 +23,8 @@ public class InstanceVariables {
         if (item != null && !item.isEmpty()) {
             instanceVariables.setName(item.get(InstanceVariablesService.INSTANCE_VARIABLES_NAME_COL).s());
             switch (item.get(InstanceVariablesService.INSTANCE_VARIABLES_VALUE_COL).type()) {
-                case N:
-                    instanceVariables.setValue(item.get(InstanceVariablesService.INSTANCE_VARIABLES_VALUE_COL).n());
+                case BOOL:
+                    instanceVariables.setValue(item.get(InstanceVariablesService.INSTANCE_VARIABLES_VALUE_COL).bool());
                     break;
                 case S:
                     instanceVariables.setValue(item.get(InstanceVariablesService.INSTANCE_VARIABLES_VALUE_COL).s());

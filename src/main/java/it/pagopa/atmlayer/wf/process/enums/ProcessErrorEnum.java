@@ -23,7 +23,8 @@ public enum ProcessErrorEnum {
     VARIABLES_C06(RestResponse.Status.SERVICE_UNAVAILABLE, "C06", "Task id is null or does not exists", "VARIABLES_TASK_NOT_EXIST"),
     BPMN_ID_NOT_FOUND_M01(RestResponse.Status.BAD_REQUEST, "M01", "No runnable BPMN found for selection.", "NOT_VALID_REFERENCED_ENTITY"),
     MODEL_GENERIC_ERROR_M02(RestResponse.Status.SERVICE_UNAVAILABLE, "M02", "An unexpected error has occurred, see model logs.", "GENERIC_ERROR"),
-    DEPLOY_D01(RestResponse.Status.SERVICE_UNAVAILABLE, "D01", "Deploy failed! An error occurs during deployment on Camunda platform.", "DEPLOY_ERROR");
+    DEPLOY_D01(RestResponse.Status.SERVICE_UNAVAILABLE, "D01", "Deploy failed! An error occurs during deployment on Camunda platform.", "DEPLOY_ERROR"),
+    UNDEPLOY_D01(RestResponse.Status.NOT_FOUND, "U01", "The deployment with the given id does not exists.", "DEPLOYMENT_NOT_FOUND");
     
     
     private final RestResponse.Status status;

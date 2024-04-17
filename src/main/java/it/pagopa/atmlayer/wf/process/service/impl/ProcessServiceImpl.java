@@ -6,9 +6,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
@@ -26,6 +28,8 @@ import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
 import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
 import it.pagopa.atmlayer.wf.process.client.transactions.TransactionsServiceRestClient;
 import it.pagopa.atmlayer.wf.process.client.transactions.bean.TransactionServiceRequest;
+import it.pagopa.atmlayer.wf.process.database.dynamo.entity.InstanceVariables;
+import it.pagopa.atmlayer.wf.process.database.dynamo.service.InstanceVariablesAsyncServiceImpl;
 import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
 import it.pagopa.atmlayer.wf.process.exception.ProcessException;
 import it.pagopa.atmlayer.wf.process.service.ProcessService;
@@ -55,6 +59,9 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
     @RestClient
     TransactionsServiceRestClient transactionsRestClient;
 
+    @Inject
+    InstanceVariablesAsyncServiceImpl instanceVariablesService;
+    
     @Inject
     Properties properties;
 
@@ -191,7 +198,26 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         long start = 0;
 
         try {
-            CamundaBodyRequestDto body = CamundaBodyRequestDto.builder().businessKey(transactionId).variables(Utility.generateBodyRequestVariables(variables)).build();
+
+            instanceVariablesService.findAll().subscribe().with(
+                    instanceVariablesList -> {
+                        if (!Objects.isNull(instanceVariablesList) && !instanceVariablesList.isEmpty()) {
+                            log.debug("Number of instance variables found: {}", instanceVariablesList.size());
+                            variables.putAll(instanceVariablesList.stream()
+                                    .collect(Collectors.toMap(
+                                            InstanceVariables::getName,
+                                            InstanceVariables::getValue)));
+                        } else {
+                            log.debug("instance-variables table is empty!");
+                        }
+                    },
+                    throwable -> {
+                        log.error("Error while retrieving instance variables from DynamoDB: {}", throwable);
+                    });
+            CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
+                .businessKey(transactionId)
+                .variables(Utility.generateBodyRequestVariables(variables))
+                .build();
 
             log.info("CAMUNDA START INSTANCE sending request with params: [functionId: {}, body: {}]", bpmnId, body);
 

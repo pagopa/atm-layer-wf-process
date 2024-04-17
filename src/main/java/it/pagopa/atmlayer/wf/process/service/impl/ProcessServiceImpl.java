@@ -205,7 +205,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
                     instanceVariablesList -> {
                         if (!Objects.isNull(instanceVariablesList) && !instanceVariablesList.isEmpty()) {
                             log.debug("Number of instance variables found: {}", instanceVariablesList.size());
-                            log.debug("instance-variables: {}", variables.toString());
+                            log.debug("instance-variables: {}", instanceVariablesList.toString());
                             if (!Objects.isNull(variables)) {
                                 variables.putAll(instanceVariablesList.stream()
                                         .collect(Collectors.toMap(

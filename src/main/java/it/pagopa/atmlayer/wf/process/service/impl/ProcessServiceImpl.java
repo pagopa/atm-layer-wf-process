@@ -216,7 +216,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
                         }
                     },
                     throwable -> {
-                        log.error("Error while retrieving instance variables from DynamoDB: {}", throwable);
+                        log.error("Error while retrieving instance variables from DynamoDB: ", throwable);
                     });
             CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
                     .businessKey(transactionId)

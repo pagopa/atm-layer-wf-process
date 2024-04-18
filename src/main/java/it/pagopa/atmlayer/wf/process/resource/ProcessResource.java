@@ -357,8 +357,8 @@ public class ProcessResource extends CommonLogic{
     */
     @Operation(summary = "Effettua l'undeploy del bpmn.")
     @APIResponse(responseCode = "204", description = "OK. Operazione eseguita con successo.")
-    @APIResponse(responseCode = "404", description = "NOT_FOUND. Nel caso il deployment corrispondente al id non esiste.", content = @Content(schema = @Schema(implementation = ProcessErrorResponse.class)))
-    @APIResponse(responseCode = "500", description = "ERROR. Nel caso di errori durante l'undeploy.", content = @Content(schema = @Schema(implementation = ProcessErrorResponse.class)))
+    @APIResponse(responseCode = "404", description = "NOT_FOUND. Nel caso il deployment corrispondente al id non esiste.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
+    @APIResponse(responseCode = "500", description = "ERROR. Nel caso di errori durante l'undeploy.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @POST
     @Path("/undeploy/{id}")
     public RestResponse<Object> undeploy(@PathParam("id") String id) {

@@ -21,7 +21,6 @@ import it.pagopa.atmlayer.wf.process.bean.VariableResponse;
 import it.pagopa.atmlayer.wf.process.client.camunda.CamundaRestClient;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaResourceDto;
-import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
 import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
 import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
@@ -421,14 +420,8 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
     public RestResponse complete(String taskId, Map<String, Object> variables) {
         long start = 0;
         RestResponse response = null;
-        try {
-            CamundaBodyRequestDto body = CamundaBodyRequestDto.builder().processInstanceId(taskId).build();
-            
-            RestResponse<List<CamundaTaskDto>> taskList = camundaRestClient.getList(body);
-            if (taskList.getEntity() != null && !taskList.getEntity().isEmpty() )
-                taskId = taskList.getEntity().get(0).getId();
-            
-             body = CamundaBodyRequestDto.builder().variables(Utility.generateBodyRequestVariables(variables)).build();
+        try {            
+            CamundaBodyRequestDto body = CamundaBodyRequestDto.builder().variables(Utility.generateBodyRequestVariables(variables)).build();
 
             log.info("CAMUNDA COMPLETE sending request with params: [taskId: {}, body: {}]", taskId, body);
             start = System.currentTimeMillis();

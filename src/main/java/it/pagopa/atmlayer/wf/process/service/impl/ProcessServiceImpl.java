@@ -247,7 +247,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         SubscriptionPayload payload = this.pubSubService.subscribe(businessKey);
         try {
             long start = System.currentTimeMillis();
-            Task t = payload.getFuture().get(10, TimeUnit.SECONDS);
+            Task t = payload.getFuture().get(4500, TimeUnit.MILLISECONDS);
             logElapsedTime("PerformanceY", start);
             if (t!=null) {
                 log.info("Task completed!  "+ t.toString());
@@ -424,9 +424,9 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         try {
             CamundaBodyRequestDto body = CamundaBodyRequestDto.builder().processInstanceId(taskId).build();
             
-            RestResponse<List<CamundaTaskDto>> res = camundaRestClient.getList(body);
-            taskId = res.getEntity().get(0).getId();
-            
+            RestResponse<List<CamundaTaskDto>> taskList = camundaRestClient.getList(body);
+            if (taskList.getEntity() != null && !taskList.getEntity().isEmpty() )
+                taskId = taskList.getEntity().get(0).getId();
             
              body = CamundaBodyRequestDto.builder().variables(Utility.generateBodyRequestVariables(variables)).build();
 

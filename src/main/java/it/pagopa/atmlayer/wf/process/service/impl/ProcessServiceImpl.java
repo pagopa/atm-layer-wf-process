@@ -289,6 +289,8 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             
             if (isExternal || task != null && task.isExternal()) {
                 log.info("Task with external call!  ");   
+                payload.getSubscriber().unsubscribe();
+                payload = this.pubSubService.subscribe(businessKey);
                 task = payload.getFuture().get(4500, TimeUnit.MILLISECONDS); 
             }                
             

@@ -31,5 +31,8 @@ public class Task {
 
     @Schema(description = "priority associata al task")
     private int priority;
+    
+    @Schema(description = "There was an external call")
+    private boolean isExternal;
 
 }

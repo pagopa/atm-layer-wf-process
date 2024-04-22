@@ -251,16 +251,13 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         try {
             long start = System.currentTimeMillis();
             Task t = new Task();
-            try {
-            t = payload.getFuture().get(200, TimeUnit.MILLISECONDS);
-            } catch (TimeoutException e) {
-                if (isExternal || t.isExternal()) {
-                    log.info("Task with external call!  ");   
-                    t = payload.getFuture().get(4000, TimeUnit.MILLISECONDS); 
-                }
-                 else 
-                     throw e ;                    
-            }
+            
+            t = payload.getFuture().get(200, TimeUnit.MILLISECONDS);         
+            if (isExternal || t.isExternal()) {
+                log.info("Task with external call!  ");   
+                t = payload.getFuture().get(4500, TimeUnit.MILLISECONDS); 
+            }                
+            
             logElapsedTime("PerformanceY", start);
             log.info("Task completed!  "+ t.toString());
             if (t == null || t.getId() == null || t.getId().trim().isEmpty() ) 

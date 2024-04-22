@@ -248,13 +248,9 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             long start = System.currentTimeMillis();
             Task t = payload.getFuture().get(4500, TimeUnit.MILLISECONDS);
             logElapsedTime("PerformanceY", start);
-            if (t!=null) {
-                log.info("Task completed!  "+ t.toString());
-                log.info(t.getId());
-          
-            }
-            
-
+            log.info("Task completed!  "+ t.toString());
+            if (t == null || t.getId() == null || t.getId().trim().isEmpty() ) 
+               return RestResponse.status(Status.OK, TaskResponse.builder().transactionId(businessKey).build());
             return RestResponse.status(Status.CREATED, TaskResponse.builder().transactionId(businessKey).tasks(Arrays.asList(t)).build());
         } catch (TimeoutException e) {
             log.info("Service task not completed yet!");

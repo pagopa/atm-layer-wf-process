@@ -250,19 +250,23 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         SubscriptionPayload payload = this.pubSubService.subscribe(businessKey);
         try {
             long start = System.currentTimeMillis();
-            Task t = new Task();
+            Task task = new Task();
+            try {
+            task = payload.getFuture().get(200, TimeUnit.MILLISECONDS);     
+            } catch (TimeoutException e) {   
+                log.info("Task not completed in 200ms "); 
+            }
             
-            t = payload.getFuture().get(200, TimeUnit.MILLISECONDS);         
-            if (isExternal || t.isExternal()) {
+            if (isExternal || task != null && task.isExternal()) {
                 log.info("Task with external call!  ");   
-                t = payload.getFuture().get(4500, TimeUnit.MILLISECONDS); 
+                task = payload.getFuture().get(4500, TimeUnit.MILLISECONDS); 
             }                
             
             logElapsedTime("PerformanceY", start);
-            log.info("Task completed!  "+ t.toString());
-            if (t == null || t.getId() == null || t.getId().trim().isEmpty() ) 
+            log.info("Task completed!  "+ task.toString());
+            if (task == null || task.getId() == null || task.getId().trim().isEmpty() ) 
                return RestResponse.status(Status.OK, TaskResponse.builder().transactionId(businessKey).build());
-            return RestResponse.status(Status.CREATED, TaskResponse.builder().transactionId(businessKey).tasks(Arrays.asList(t)).build());
+            return RestResponse.status(Status.CREATED, TaskResponse.builder().transactionId(businessKey).tasks(Arrays.asList(task)).build());
         } catch (TimeoutException e) {
             log.info("Service task not completed yet!");
             return RestResponse.status(Status.ACCEPTED, new TaskResponse());

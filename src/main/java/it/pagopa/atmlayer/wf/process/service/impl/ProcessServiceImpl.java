@@ -280,14 +280,14 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         SubscriptionPayload payload = this.pubSubService.subscribe(businessKey);
         try {
             long start = System.currentTimeMillis();
-            Task task = new Task();
+            Task task = null;
             try {
             task = payload.getFuture().get(200, TimeUnit.MILLISECONDS);     
             } catch (TimeoutException e) {   
                 log.info("Task not completed in 200ms "); 
             }
             
-            if (isExternal || task != null && task.isExternal()) {
+            if ( (task != null && task.isExternal()) ||(isExternal && task == null)) {
                 log.info("Task with external call!  ");   
                 payload.getSubscriber().unsubscribe();
                 payload = this.pubSubService.subscribe(businessKey);

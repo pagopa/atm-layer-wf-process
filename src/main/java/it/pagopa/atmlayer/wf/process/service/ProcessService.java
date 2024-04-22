@@ -60,6 +60,17 @@ public interface ProcessService {
      * @return A `RestResponse` containing the active tasks.
      */
     RestResponse<TaskResponse> retrieveActiveTasks(String businessKey);
+    
+    
+    /**
+     * This method retrieves the active tasks for the specified camunda process
+     * identified by the business key.
+     * 
+     * @param businessKey
+     * @param isExternal
+     * @return A `RestResponse` containing the active tasks.
+     */
+    RestResponse<TaskResponse> retrieveActiveTasks(String businessKey, boolean isExternal);
 
     
     /**

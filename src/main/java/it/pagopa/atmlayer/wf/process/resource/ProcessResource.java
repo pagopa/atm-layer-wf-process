@@ -157,7 +157,7 @@ public class ProcessResource extends CommonLogic{
             /*
              * Retrieve active tasks
              */
-            response = processService.retrieveActiveTasks(request.getTransactionId());
+            response = processService.retrieveActiveTasks(request.getTransactionId(), true);
             if (response.getStatus() == RestResponse.StatusCode.CREATED) {
                 response = response.ok(response.getEntity());
             }

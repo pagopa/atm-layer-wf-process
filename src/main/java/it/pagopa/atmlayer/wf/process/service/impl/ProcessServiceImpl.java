@@ -218,15 +218,19 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             logElapsedTime(CAMUNDA_START_INSTANCE_LOG_ID, start);
         }
     }
+    
+    public RestResponse<TaskResponse> retrieveActiveTasks(String businessKey) {
+        return retrieveActiveTasks(businessKey, false);
+    }
 
     /**
      * {@inheritDoc}
      */
-    public RestResponse<TaskResponse> retrieveActiveTasks(String businessKey) {
+    public RestResponse<TaskResponse> retrieveActiveTasks(String businessKey, boolean isExternal) {
         RestResponse<TaskResponse> response;
 
         if (businessKey != null) {
-            response = getActiveTasks(businessKey);
+            response = getActiveTasks(businessKey, isExternal);
         } else {
             throw new ProcessException(ProcessErrorEnum.BUSINESS_KEY_NOT_PRESENT);
         }
@@ -241,7 +245,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      * @return A `RestResponse` containing the retrieved tasks.
      * @throws InterruptedException
      */
-    private RestResponse<TaskResponse> getActiveTasks(String businessKey) {
+    private RestResponse<TaskResponse> getActiveTasks(String businessKey, boolean isExternal) {
 
         SubscriptionPayload payload = this.pubSubService.subscribe(businessKey);
         try {
@@ -250,7 +254,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             try {
             t = payload.getFuture().get(200, TimeUnit.MILLISECONDS);
             } catch (TimeoutException e) {
-                if (t.isExternal()) {
+                if (isExternal || t.isExternal()) {
                     log.info("Task with external call!  ");   
                     t = payload.getFuture().get(4000, TimeUnit.MILLISECONDS); 
                 }

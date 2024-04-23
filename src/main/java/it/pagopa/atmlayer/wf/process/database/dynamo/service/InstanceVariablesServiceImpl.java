@@ -15,6 +15,11 @@ public class InstanceVariablesServiceImpl extends InstanceVariablesService{
     @Inject
     DynamoDbClient dynamoDB;
 
+    /**
+     * Find all instance variables defined in <b>pagopa-dev-atm-layer-wf-process-instance-variables</b> table on DynamoDB.
+     * 
+     * @return The instance variables
+     */
     public List<InstanceVariables> findAll() {
         return dynamoDB.scanPaginator(scanRequest()).items().stream()
                 .map(InstanceVariables::from)

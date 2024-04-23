@@ -204,6 +204,9 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         long start = 0;
 
         try {
+            /*
+             * Retrieving instance variables from DynamoDB and send them to Camunda
+             */
             List<InstanceVariables> instanceVariablesList = instanceVariablesService.findAll();
             if (!Objects.isNull(instanceVariablesList) && !instanceVariablesList.isEmpty()){
                 log.debug("Number of instance variables found: {}", instanceVariablesList.size());

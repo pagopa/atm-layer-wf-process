@@ -6,9 +6,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
@@ -26,6 +28,8 @@ import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
 import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
 import it.pagopa.atmlayer.wf.process.client.transactions.TransactionsServiceRestClient;
 import it.pagopa.atmlayer.wf.process.client.transactions.bean.TransactionServiceRequest;
+import it.pagopa.atmlayer.wf.process.database.dynamo.entity.InstanceVariables;
+import it.pagopa.atmlayer.wf.process.database.dynamo.service.InstanceVariablesAsyncServiceImpl;
 import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
 import it.pagopa.atmlayer.wf.process.exception.ProcessException;
 import it.pagopa.atmlayer.wf.process.service.ProcessService;
@@ -56,6 +60,9 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
     TransactionsServiceRestClient transactionsRestClient;
 
     @Inject
+    InstanceVariablesAsyncServiceImpl instanceVariablesService;
+
+    @Inject
     Properties properties;
 
     @Inject
@@ -66,7 +73,8 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      */
     public RestResponse<Object> deploy(String requestUrl, String fileName) throws IOException {
         long start = 0;
-        log.info("CAMUNDA DEPLOY sending request with params: [ requestUrl: " + requestUrl + ", fileName: " + fileName + " ]");
+        log.info("CAMUNDA DEPLOY sending request with params: [ requestUrl: " + requestUrl + ", fileName: " + fileName
+                + " ]");
         RestResponse<Object> camundaDeployResponse;
 
         try {
@@ -145,7 +153,8 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
 
             log.info("MODEL FIND BPMN BY TRIAD REQUEST sending request with params: [ functionId: " + functionId + ", bankId: " + deviceInfo.getBankId() + ", branchId: " + deviceInfo.getBranchId() + ", terminalId: " + deviceInfo.getTerminalId() + " ]");
             start = System.currentTimeMillis();
-            modelFindBpmnIdResponse = modelRestClient.findBPMNByTriad(functionId, deviceInfo.getBankId(), deviceInfo.getBranchId(), deviceInfo.getTerminalId());
+            modelFindBpmnIdResponse = modelRestClient.findBPMNByTriad(functionId, deviceInfo.getBankId(),
+                    deviceInfo.getBranchId(), deviceInfo.getTerminalId());
         } catch (WebApplicationException e) {
             switch (e.getResponse().getStatus()) {
                 case RestResponse.StatusCode.BAD_REQUEST -> log.warn("Find Bpmn id failed! No runnable BPMN found for selection.");
@@ -191,7 +200,28 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         long start = 0;
 
         try {
-            CamundaBodyRequestDto body = CamundaBodyRequestDto.builder().businessKey(transactionId).variables(Utility.generateBodyRequestVariables(variables)).build();
+
+            instanceVariablesService.findAll().subscribe().with(
+                    instanceVariablesList -> {
+                        if (!Objects.isNull(instanceVariablesList) && !instanceVariablesList.isEmpty()) {
+                            log.debug("Number of instance variables found: {}", instanceVariablesList.size());
+                            if (!Objects.isNull(variables)) {
+                                variables.putAll(instanceVariablesList.stream()
+                                        .collect(Collectors.toMap(
+                                                InstanceVariables::getName,
+                                                InstanceVariables::getValue)));
+                            }
+                        } else {
+                            log.debug("instance-variables table is empty!");
+                        }
+                    },
+                    throwable -> {
+                        log.error("Error while retrieving instance variables from DynamoDB: ", throwable);
+                    });
+            CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
+                    .businessKey(transactionId)
+                    .variables(Utility.generateBodyRequestVariables(variables))
+                    .build();
 
             log.info("CAMUNDA START INSTANCE sending request with params: [functionId: {}, body: {}]", bpmnId, body);
 
@@ -218,15 +248,19 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             logElapsedTime(CAMUNDA_START_INSTANCE_LOG_ID, start);
         }
     }
+    
+    public RestResponse<TaskResponse> retrieveActiveTasks(String businessKey) {
+        return retrieveActiveTasks(businessKey, false);
+    }
 
     /**
      * {@inheritDoc}
      */
-    public RestResponse<TaskResponse> retrieveActiveTasks(String businessKey) {
+    public RestResponse<TaskResponse> retrieveActiveTasks(String businessKey, boolean isExternal) {
         RestResponse<TaskResponse> response;
 
         if (businessKey != null) {
-            response = getActiveTasks(businessKey);
+            response = getActiveTasks(businessKey, isExternal);
         } else {
             throw new ProcessException(ProcessErrorEnum.BUSINESS_KEY_NOT_PRESENT);
         }
@@ -241,26 +275,42 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      * @return A `RestResponse` containing the retrieved tasks.
      * @throws InterruptedException
      */
-    private RestResponse<TaskResponse> getActiveTasks(String businessKey) {
+    private RestResponse<TaskResponse> getActiveTasks(String businessKey, boolean isExternal) {
 
         SubscriptionPayload payload = this.pubSubService.subscribe(businessKey);
         try {
             long start = System.currentTimeMillis();
-            Task t = payload.getFuture().get(4500, TimeUnit.MILLISECONDS);
-            logElapsedTime("PerformanceY", start);
-            if (t!=null) {
-                log.info("Task completed!  "+ t.toString());
-                log.info(t.getId());
-          
+            Task task = null;
+            try {
+            task = payload.getFuture().get(200, TimeUnit.MILLISECONDS);     
+            } catch (TimeoutException e) {   
+                log.info("Task not completed in 200ms "); 
+                if ( !isExternal ) {
+                    log.info("Service task not completed yet!");
+                    return RestResponse.status(Status.ACCEPTED, new TaskResponse());
+                }
             }
+            int i = 0;
+            while( i<5 && (task != null && task.isExternal()) ||(isExternal && task == null)){
+           // if ( (task != null && task.isExternal()) ||(isExternal && task == null)) {
+                log.info("Task with external call!  ");   
+                payload.getSubscriber().unsubscribe();
+                payload = this.pubSubService.subscribe(businessKey);
+                task = payload.getFuture().get(4500, TimeUnit.MILLISECONDS); 
+                i++;
+            }                
             
-
-            return RestResponse.status(Status.CREATED, TaskResponse.builder().transactionId(businessKey).tasks(Arrays.asList(t)).build());
+            logElapsedTime("PerformanceY", start);
+            if (task != null)
+                log.info("Task completed!  "+ task.toString());
+            if (task == null || task.getId() == null || task.getId().trim().isEmpty() ) 
+               return RestResponse.status(Status.OK, TaskResponse.builder().transactionId(businessKey).build());
+            return RestResponse.status(Status.CREATED, TaskResponse.builder().transactionId(businessKey).tasks(Arrays.asList(task)).build());
         } catch (TimeoutException e) {
             log.info("Service task not completed yet!");
             return RestResponse.status(Status.ACCEPTED, new TaskResponse());
         } catch (Exception e) {
-            log.error("Get list of tasks failed!");
+            log.error("Get list of tasks failed!",e);
             throw new ProcessException(ProcessErrorEnum.GET_LIST_C03);
         } finally {
            if (payload.getSubscriber()!= null)
@@ -394,7 +444,8 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      * {@inheritDoc}
      */
     @Override
-    public RestResponse complete(String taskId, Map<String, Object> variables, String functionId, DeviceInfo deviceInfo) {
+    public RestResponse complete(String taskId, Map<String, Object> variables, String functionId,
+            DeviceInfo deviceInfo) {
         RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = findBpmnId(functionId, deviceInfo);
 
         if (modelFindBpmnIdResponse != null) {
@@ -529,7 +580,8 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         RestResponse<String> camundaGetResourceBinaryResponse;
 
         try {
-            log.info("CAMUNDA GET RESOURCE BINARY sending request with params: [ deploymentId: {}, resourceId {}]", deploymentId, resourceId);
+            log.info("CAMUNDA GET RESOURCE BINARY sending request with params: [ deploymentId: {}, resourceId {}]",
+                    deploymentId, resourceId);
             start = System.currentTimeMillis();
             camundaGetResourceBinaryResponse = camundaRestClient.getResourceBinary(deploymentId, resourceId);
 
@@ -548,5 +600,34 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
 
         return camundaGetResourceBinaryResponse.getEntity();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public RestResponse<Object> undeploy(String id) {
+        long start = 0;
+        RestResponse<Object> camundaUndeployResponse;
+        try {
+            log.info("Undeploying bpmn. . .");
+            start = System.currentTimeMillis();
+            camundaUndeployResponse = camundaRestClient.undeploy(id, true);
+            log.info("Bpmn with id: {} undeployed! ", id);
+        } catch (WebApplicationException e) {
+            if (e.getResponse().getStatus() == RestResponse.StatusCode.NOT_FOUND) {
+                log.error("Deployment with the given id not found!");
+                throw new ProcessException(ProcessErrorEnum.RESOURCE_R02);
+            } else {
+                log.error(UNKNOWN_STATUS, e.getResponse().getStatus());
+                throw new ProcessException(ProcessErrorEnum.GENERIC);
+            }
+        } finally {
+            logElapsedTime(CAMUNDA_UNDEPLOY_LOG_ID, start);
+        }
+
+        return camundaUndeployResponse;
+    }
+
+    
 
 }

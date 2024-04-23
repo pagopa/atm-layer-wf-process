@@ -17,6 +17,8 @@ import io.quarkus.test.junit.mockito.MockitoConfig;
 import it.pagopa.atmlayer.wf.process.client.camunda.CamundaRestClient;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
 import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
+import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
+import it.pagopa.atmlayer.wf.process.exception.ProcessException;
 import it.pagopa.atmlayer.wf.process.resource.ProcessResource;
 import it.pagopa.atmlayer.wf.process.service.impl.PubSubService;
 import it.pagopa.atmlayer.wf.process.service.impl.SubscriptionPayload;
@@ -907,5 +909,44 @@ class ProcessResourceTest {
                                   .get("/deploy/{id}/data", ProcessTestData.DEPLOYMENT_ID)
                                   .then()
                                   .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
-          }*/
+        }*/
+        
+        @Test
+        void testUndeployOk() {
+                Mockito.when(camundaRestClient.undeploy(Mockito.anyString(), Mockito.anyBoolean()))
+                                .thenReturn(RestResponse.noContent());
+
+                given()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/undeploy/{id}", ProcessTestData.DEPLOYMENT_ID)
+                                .then()
+                                .statusCode(StatusCode.NO_CONTENT);
+        }
+
+        @Test
+        void testUndeployNotFound() {
+                Mockito.when(camundaRestClient.undeploy(Mockito.anyString(), Mockito.anyBoolean()))
+                                .thenReturn(RestResponse.notFound());
+
+                given()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/undeploy/{id}", ProcessTestData.DEPLOYMENT_ID)
+                                .then()
+                                .statusCode(StatusCode.NOT_FOUND);
+        }
+
+        @Test
+        void testUndeployKo() {
+                Mockito.when(camundaRestClient.undeploy(Mockito.anyString(), Mockito.anyBoolean()))
+                                .thenThrow(new RuntimeException());
+
+                given()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/undeploy/{id}", ProcessTestData.DEPLOYMENT_ID)
+                                .then()
+                                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+        }
 }

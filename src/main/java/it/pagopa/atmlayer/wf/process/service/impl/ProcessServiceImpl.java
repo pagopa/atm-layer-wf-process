@@ -290,12 +290,14 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
                     return RestResponse.status(Status.ACCEPTED, new TaskResponse());
                 }
             }
-            
-            if ( (task != null && task.isExternal()) ||(isExternal && task == null)) {
+            int i = 0;
+            while( i<5 && (task != null && task.isExternal()) ||(isExternal && task == null)){
+           // if ( (task != null && task.isExternal()) ||(isExternal && task == null)) {
                 log.info("Task with external call!  ");   
                 payload.getSubscriber().unsubscribe();
                 payload = this.pubSubService.subscribe(businessKey);
                 task = payload.getFuture().get(4500, TimeUnit.MILLISECONDS); 
+                i++;
             }                
             
             logElapsedTime("PerformanceY", start);

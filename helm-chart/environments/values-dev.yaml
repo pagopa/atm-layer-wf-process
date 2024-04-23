@@ -46,7 +46,7 @@ redis:
   credentialsSecretKeys:
     host: host
     port: port
-    hostReader: hostReader
+    hostReader: host-reader
 
 secretProviderClass:
   enabled: true

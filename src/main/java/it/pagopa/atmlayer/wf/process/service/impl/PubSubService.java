@@ -16,7 +16,7 @@ public class PubSubService {
     }
     
     public SubscriptionPayload subscribe(String channel) {
-        CompletableFuture<Task> future = new CompletableFuture<>();
+        CompletableFuture<Task> future = new CompletableFuture<>();       
         PubSubCommands.RedisSubscriber subscriber = pubSubCommands.subscribe(channel, future::complete);
         return SubscriptionPayload.builder()
                 .future(future)

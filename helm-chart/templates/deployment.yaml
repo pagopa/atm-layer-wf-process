@@ -77,6 +77,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.redis.credentialsSecretName }}
                   key: {{ .Values.redis.credentialsSecretKeys.port }}
+            - name: REDIS_HOST_READER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.redis.credentialsSecretName }}
+                  key: {{ .Values.redis.credentialsSecretKeys.hostReader }}
             {{- end }}
           volumeMounts:
           {{- if .Values.secretProviderClass.enabled }}

@@ -7,6 +7,10 @@ import it.pagopa.atmlayer.wf.process.database.dynamo.service.contract.InstanceVa
 import lombok.Data;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
+/**
+ * This class represents the <b>entity</b> in <b>pagopa-dev-atm-layer-wf-process-instance-variables</b> table
+ * stored on DynamoDB.
+ */
 @Data
 @RegisterForReflection
 public class InstanceVariables {
@@ -18,6 +22,12 @@ public class InstanceVariables {
     public InstanceVariables() {
     }
 
+    /**
+     * Perform conversion from AWS item to Java Object of type InstanceVariables.
+     * 
+     * @param item
+     * @return the InstanceVariables object representing the AWS item
+     */
     public static InstanceVariables from(Map<String, AttributeValue> item) {
         InstanceVariables instanceVariables = new InstanceVariables();
         if (item != null && !item.isEmpty()) {

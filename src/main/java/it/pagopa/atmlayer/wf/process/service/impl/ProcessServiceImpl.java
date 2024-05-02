@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -202,12 +203,12 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      */
     private void startInstance(String transactionId, String bpmnId, Map<String, Object> variables) {
         long start = 0;
-
+        List<InstanceVariables> instanceVariablesList = new LinkedList<>();
         try {
             /*
              * Retrieving instance variables from DynamoDB and send them to Camunda
              */
-            List<InstanceVariables> instanceVariablesList = instanceVariablesService.findAll();
+           instanceVariablesList = instanceVariablesService.findAll();
             if (!Objects.isNull(instanceVariablesList) && !instanceVariablesList.isEmpty()){
                 log.debug("Number of instance variables found: {}", instanceVariablesList.size());
                 variables.putAll(instanceVariablesList.stream()
@@ -217,6 +218,11 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             } else {
                 log.debug("instance-variables table is empty!");
             }
+        } catch (SdkException e){
+            log.error("Error while trying to retrieve instance variables from DynamoDB: ", e);
+        }
+        
+        try {
             
             CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
                     .businessKey(transactionId)
@@ -244,8 +250,6 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
                     throw new ProcessException(ProcessErrorEnum.GENERIC);
                 }
             }
-        } catch (SdkException e){
-            log.error("Error while trying to retrieve instance variables from DynamoDB: ", e);
         } finally {
             logElapsedTime(CAMUNDA_START_INSTANCE_LOG_ID, start);
         }

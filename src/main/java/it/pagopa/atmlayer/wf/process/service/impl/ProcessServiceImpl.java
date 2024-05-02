@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -202,12 +203,12 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      */
     private void startInstance(String transactionId, String bpmnId, Map<String, Object> variables) {
         long start = 0;
-
+        List<InstanceVariables> instanceVariablesList = new LinkedList<>();
         try {
             /*
              * Retrieving instance variables from DynamoDB and send them to Camunda
              */
-            List<InstanceVariables> instanceVariablesList = instanceVariablesService.findAll();
+           instanceVariablesList = instanceVariablesService.findAll();
             if (!Objects.isNull(instanceVariablesList) && !instanceVariablesList.isEmpty()){
                 log.debug("Number of instance variables found: {}", instanceVariablesList.size());
                 variables.putAll(instanceVariablesList.stream()
@@ -217,6 +218,11 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             } else {
                 log.debug("instance-variables table is empty!");
             }
+        } catch (SdkException e){
+            log.error("Error while trying to retrieve instance variables from DynamoDB: ", e);
+        }
+        
+        try {
             
             CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
                     .businessKey(transactionId)
@@ -244,8 +250,6 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
                     throw new ProcessException(ProcessErrorEnum.GENERIC);
                 }
             }
-        } catch (SdkException e){
-            log.error("Error while trying to retrieve instance variables from DynamoDB: ", e);
         } finally {
             logElapsedTime(CAMUNDA_START_INSTANCE_LOG_ID, start);
         }
@@ -284,7 +288,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             long start = System.currentTimeMillis();
             Task task = null;
             try {
-                task = payload.getFuture().get(2000, TimeUnit.MILLISECONDS);
+                task = payload.getFuture().get(10000, TimeUnit.MILLISECONDS);
             } catch (TimeoutException e) {
                 log.info("Task not completed in 200ms ");
                 if (!isExternal) {
@@ -319,27 +323,6 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             if (payload.getSubscriber() != null)
                 payload.getSubscriber().unsubscribe();
         }
-        /*
-         * RestResponse<List<CamundaTaskDto>> camundaTaskList = getList(businessKey);
-         * 
-         * log.info("Retrieving active tasks. . .");
-         * List<Task> activeTasks = camundaTaskList.getEntity().stream()
-         * .map(taskDto -> {
-         * log.info("ID: {} ", taskDto.getId());
-         * 
-         * return Task.builder()
-         * .form(taskDto.getFormKey())
-         * .id(taskDto.getId())
-         * .priority(taskDto.getPriority())
-         * .build();
-         * })
-         * .collect(Collectors.toList());
-         * 
-         * return
-         * RestResponse.status(Status.fromStatusCode(camundaTaskList.getStatus()),
-         * TaskResponse.builder().transactionId(businessKey).tasks(activeTasks).build())
-         * ;
-         */
     }
 
     /**

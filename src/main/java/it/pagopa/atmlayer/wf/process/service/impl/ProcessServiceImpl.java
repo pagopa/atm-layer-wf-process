@@ -288,7 +288,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             long start = System.currentTimeMillis();
             Task task = null;
             try {
-                task = payload.getFuture().get(2000, TimeUnit.MILLISECONDS);
+                task = payload.getFuture().get(10000, TimeUnit.MILLISECONDS);
             } catch (TimeoutException e) {
                 log.info("Task not completed in 200ms ");
                 if (!isExternal) {
@@ -323,27 +323,6 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             if (payload.getSubscriber() != null)
                 payload.getSubscriber().unsubscribe();
         }
-        /*
-         * RestResponse<List<CamundaTaskDto>> camundaTaskList = getList(businessKey);
-         * 
-         * log.info("Retrieving active tasks. . .");
-         * List<Task> activeTasks = camundaTaskList.getEntity().stream()
-         * .map(taskDto -> {
-         * log.info("ID: {} ", taskDto.getId());
-         * 
-         * return Task.builder()
-         * .form(taskDto.getFormKey())
-         * .id(taskDto.getId())
-         * .priority(taskDto.getPriority())
-         * .build();
-         * })
-         * .collect(Collectors.toList());
-         * 
-         * return
-         * RestResponse.status(Status.fromStatusCode(camundaTaskList.getStatus()),
-         * TaskResponse.builder().transactionId(businessKey).tasks(activeTasks).build())
-         * ;
-         */
     }
 
     /**

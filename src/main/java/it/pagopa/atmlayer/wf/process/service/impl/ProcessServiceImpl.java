@@ -287,15 +287,16 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         try {
             long start = System.currentTimeMillis();
             Task task = null;
-            try {
+    //        try {
                 task = payload.getFuture().get(10000, TimeUnit.MILLISECONDS);
-            } catch (TimeoutException e) {
+      /*      } catch (TimeoutException e) {
                 log.info("Task not completed in 200ms ");
                 if (!isExternal) {
                     log.info("Service task not completed yet!");
                     return RestResponse.status(Status.ACCEPTED, new TaskResponse());
                 }
             }
+            
             int i = 0;
             while (i < 5 && (task != null && task.isExternal()) || (isExternal && task == null)) {
                 // if ( (task != null && task.isExternal()) ||(isExternal && task == null)) {
@@ -305,7 +306,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
                 task = payload.getFuture().get(4500, TimeUnit.MILLISECONDS);
                 i++;
             }
-
+*/
             logElapsedTime("PerformanceY", start);
             if (task != null)
                 log.info("Task completed!  " + task.toString());
@@ -313,7 +314,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
                 return RestResponse.status(Status.OK, TaskResponse.builder().transactionId(businessKey).build());
             return RestResponse.status(Status.CREATED,
                     TaskResponse.builder().transactionId(businessKey).tasks(Arrays.asList(task)).build());
-        } catch (TimeoutException e) {
+       } catch (TimeoutException e) {
             log.info("Service task not completed yet!");
             return RestResponse.status(Status.ACCEPTED, new TaskResponse());
         } catch (Exception e) {

@@ -4,23 +4,36 @@ import java.util.concurrent.CompletableFuture;
 
 import io.quarkus.redis.datasource.RedisDataSource;
 import io.quarkus.redis.datasource.pubsub.PubSubCommands;
+import io.quarkus.redis.datasource.value.ValueCommands;
 import it.pagopa.atmlayer.wf.process.bean.Task;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class PubSubService {
     private final PubSubCommands<Task> pubSubCommands;
+    private final ValueCommands<String, Task> valueCommands;
+    private PubSubCommands.RedisSubscriber subscriber;
     
     public PubSubService(RedisDataSource ds) {
         pubSubCommands = ds.pubsub(Task.class);
+        valueCommands = ds.value(Task.class);
     }
     
     public SubscriptionPayload subscribe(String channel) {
         CompletableFuture<Task> future = new CompletableFuture<>();       
-        PubSubCommands.RedisSubscriber subscriber = pubSubCommands.subscribe(channel, future::complete);
+       subscriber = pubSubCommands.subscribe(channel, task ->setTask(channel, future, task));        
         return SubscriptionPayload.builder()
                 .future(future)
                 .subscriber(subscriber).build();
     }
+    
+    private boolean setTask(String channel, CompletableFuture<Task> future, Task task) {
+        valueCommands.setex(channel, 10L, task);
+        subscriber.unsubscribe();
+        return future.complete(task);
+    }
+    
+    
+    
     
 }

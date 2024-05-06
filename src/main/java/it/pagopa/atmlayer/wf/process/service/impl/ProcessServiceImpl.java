@@ -17,6 +17,7 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.Status;
 
+import io.quarkus.redis.datasource.ReactiveRedisDataSource;
 import it.pagopa.atmlayer.wf.process.bean.DeviceInfo;
 import it.pagopa.atmlayer.wf.process.bean.Task;
 import it.pagopa.atmlayer.wf.process.bean.TaskResponse;
@@ -69,6 +70,9 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
 
     @Inject
     PubSubService pubSubService;
+    
+    @Inject
+    ReactiveRedisDataSource redisClient;
 
     /**
      * {@inheritDoc}
@@ -262,17 +266,23 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
     /**
      * {@inheritDoc}
      */
-    public RestResponse<TaskResponse> retrieveActiveTasks(String businessKey, boolean isExternal) {
+    public RestResponse<TaskResponse> retrieveActiveTasks(String businessKey, boolean isExternal, SubscriptionPayload payload ) {
         RestResponse<TaskResponse> response;
 
         if (businessKey != null) {
-            response = getActiveTasks(businessKey, isExternal);
+            response = getActiveTasks(businessKey, isExternal, payload);
         } else {
             throw new ProcessException(ProcessErrorEnum.BUSINESS_KEY_NOT_PRESENT);
         }
 
         return response;
     }
+    
+    
+    public SubscriptionPayload  getSubscribe(String businessKey) {
+
+        return this.pubSubService.subscribe(businessKey);
+        }
 
     /**
      * Retrieves the active tasks associated with a BPM process.
@@ -281,12 +291,12 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      * @return A `RestResponse` containing the retrieved tasks.
      * @throws InterruptedException
      */
-    private RestResponse<TaskResponse> getActiveTasks(String businessKey, boolean isExternal) {
-
-        SubscriptionPayload payload = this.pubSubService.subscribe(businessKey);
+    private RestResponse<TaskResponse> getActiveTasks(String businessKey, boolean isExternal, SubscriptionPayload payload ) {
+     
         try {
             long start = System.currentTimeMillis();
             Task task = null;
+           
     //        try {
                 task = payload.getFuture().get(10000, TimeUnit.MILLISECONDS);
       /*      } catch (TimeoutException e) {

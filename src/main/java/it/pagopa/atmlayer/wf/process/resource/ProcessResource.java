@@ -21,6 +21,7 @@ import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
 import it.pagopa.atmlayer.wf.process.exception.ProcessException;
 import it.pagopa.atmlayer.wf.process.exception.bean.ProcessErrorResponse;
 import it.pagopa.atmlayer.wf.process.service.ProcessService;
+import it.pagopa.atmlayer.wf.process.service.impl.SubscriptionPayload;
 import it.pagopa.atmlayer.wf.process.util.CommonLogic;
 import it.pagopa.atmlayer.wf.process.util.Constants;
 import it.pagopa.atmlayer.wf.process.util.Utility;
@@ -150,6 +151,7 @@ public class ProcessResource extends CommonLogic{
         RestResponse<TaskResponse> response;
 
         try {
+            SubscriptionPayload payload = processService.getSubscribe(request.getTransactionId());
             /*
              * Starting camunda process
              */
@@ -157,7 +159,7 @@ public class ProcessResource extends CommonLogic{
             /*
              * Retrieve active tasks
              */
-            response = processService.retrieveActiveTasks(request.getTransactionId(), true);
+            response = processService.retrieveActiveTasks(request.getTransactionId(), true, payload);
             if (response.getStatus() == RestResponse.StatusCode.CREATED) {
                 response = response.ok(response.getEntity());
             }
@@ -197,6 +199,8 @@ public class ProcessResource extends CommonLogic{
         RestResponse<TaskResponse> response;
 
         try {
+            
+            SubscriptionPayload payload = processService.getSubscribe(request.getTransactionId());
             /*
              * Checking presence of taskId for complete
              */
@@ -216,7 +220,7 @@ public class ProcessResource extends CommonLogic{
             /*
              * Retrieve active tasks
              */
-            response = processService.retrieveActiveTasks(request.getTransactionId());
+            response = processService.retrieveActiveTasks(request.getTransactionId(), false, payload);
         } catch (ProcessException e) {
             throw e;
         } catch (RuntimeException e) {

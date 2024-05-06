@@ -9,6 +9,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import it.pagopa.atmlayer.wf.process.bean.DeviceInfo;
 import it.pagopa.atmlayer.wf.process.bean.TaskResponse;
 import it.pagopa.atmlayer.wf.process.bean.VariableResponse;
+import it.pagopa.atmlayer.wf.process.service.impl.SubscriptionPayload;
 
 /**
  * @author Pasquale Sansonna
@@ -61,6 +62,8 @@ public interface ProcessService {
      */
     RestResponse<TaskResponse> retrieveActiveTasks(String businessKey);
     
+    SubscriptionPayload  getSubscribe(String businessKey);
+    
     
     /**
      * This method retrieves the active tasks for the specified camunda process
@@ -70,7 +73,7 @@ public interface ProcessService {
      * @param isExternal
      * @return A `RestResponse` containing the active tasks.
      */
-    RestResponse<TaskResponse> retrieveActiveTasks(String businessKey, boolean isExternal);
+    RestResponse<TaskResponse> retrieveActiveTasks(String businessKey, boolean isExternal, SubscriptionPayload payload);
 
     
     /**

@@ -259,8 +259,8 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         }
     }
 
-    public RestResponse<TaskResponse> retrieveActiveTasks(String businessKey) {
-        return retrieveActiveTasks(businessKey, false);
+    public RestResponse<TaskResponse> retrieveActiveTasks(String businessKey, SubscriptionPayload payload ) {
+        return retrieveActiveTasks(businessKey, false, payload);
     }
 
     /**

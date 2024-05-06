@@ -60,7 +60,7 @@ public interface ProcessService {
      * @param businessKey
      * @return A `RestResponse` containing the active tasks.
      */
-    RestResponse<TaskResponse> retrieveActiveTasks(String businessKey);
+    RestResponse<TaskResponse> retrieveActiveTasks(String businessKey,  SubscriptionPayload payload);
     
     SubscriptionPayload  getSubscribe(String businessKey);
     

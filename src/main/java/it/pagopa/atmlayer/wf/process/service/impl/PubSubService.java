@@ -5,10 +5,11 @@ import java.util.concurrent.CompletableFuture;
 import io.quarkus.redis.datasource.RedisDataSource;
 import io.quarkus.redis.datasource.pubsub.PubSubCommands;
 import io.quarkus.redis.datasource.value.ValueCommands;
-import io.smallrye.mutiny.Uni;
 import it.pagopa.atmlayer.wf.process.bean.Task;
 import jakarta.enterprise.context.ApplicationScoped;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @ApplicationScoped
 public class PubSubService {
     private final PubSubCommands<Task> pubSubCommands;
@@ -38,12 +39,12 @@ public class PubSubService {
     }
     
     private boolean setTask(String channel, CompletableFuture<Task> future, Task task, String key ) {
-      
-        Uni.createFrom().emitter(emitter -> {
+        log.info("Task event received " + task.toString());
+        CompletableFuture.runAsync(() ->{
             valueCommands.setex(key, 60L, task);
+            log.info("Saved task in cache key :"+ key);
             if (subscriber != null)
-                subscriber.unsubscribe();
-            emitter.complete("end");
+                subscriber.unsubscribe();           
         });        
         return future.complete(task);
     }

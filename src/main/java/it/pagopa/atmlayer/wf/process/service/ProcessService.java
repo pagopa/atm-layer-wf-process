@@ -62,7 +62,7 @@ public interface ProcessService {
      */
     RestResponse<TaskResponse> retrieveActiveTasks(String businessKey,  SubscriptionPayload payload);
     
-    SubscriptionPayload  getSubscribe(String businessKey);
+    SubscriptionPayload  getSubscribe(String businessKey, String taskId);
     
     
     /**

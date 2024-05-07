@@ -151,7 +151,7 @@ public class ProcessResource extends CommonLogic{
         RestResponse<TaskResponse> response;
 
         try {
-            SubscriptionPayload payload = processService.getSubscribe(request.getTransactionId());
+            SubscriptionPayload payload = processService.getSubscribe(request.getTransactionId(), null);
             /*
              * Starting camunda process
              */
@@ -200,11 +200,12 @@ public class ProcessResource extends CommonLogic{
 
         try {
             
-            SubscriptionPayload payload = processService.getSubscribe(request.getTransactionId());
+            SubscriptionPayload payload = processService.getSubscribe(request.getTransactionId(), request.getTaskId());
             /*
              * Checking presence of taskId for complete
              */
             if (request.getTaskId() != null && !request.getTaskId().isEmpty()) {
+               
                 /*
                  * Complete camunda task
                  */
@@ -307,8 +308,8 @@ public class ProcessResource extends CommonLogic{
         try {           
             /*
              * Retrieve active tasks
-             */
-            SubscriptionPayload payload = processService.getSubscribe(request.getTransactionId());
+             */        
+            SubscriptionPayload payload = processService.getSubscribe(request.getTransactionId(), request.getTaskId());
             response = processService.retrieveActiveTasks(request.getTransactionId(), payload);
         } catch (ProcessException e) {
             throw e;

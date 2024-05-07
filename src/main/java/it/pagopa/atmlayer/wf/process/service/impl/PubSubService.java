@@ -41,10 +41,10 @@ public class PubSubService {
       
         Uni.createFrom().emitter(emitter -> {
             valueCommands.setex(key, 60L, task);
+            if (subscriber != null)
+                subscriber.unsubscribe();
             emitter.complete("end");
-        });
-        if (subscriber != null)
-            subscriber.unsubscribe();
+        });        
         return future.complete(task);
     }
     

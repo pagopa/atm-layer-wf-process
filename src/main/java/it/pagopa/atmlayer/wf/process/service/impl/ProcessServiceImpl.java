@@ -329,10 +329,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             return RestResponse.status(Status.ACCEPTED, new TaskResponse());
         } catch (Exception e) {
             log.error("Get list of tasks failed!", e);
-            throw new ProcessException(ProcessErrorEnum.GET_LIST_C03);
-        } finally {
-            if (payload.getSubscriber() != null)
-                payload.getSubscriber().unsubscribe();
+            throw new ProcessException(ProcessErrorEnum.GET_LIST_C03);        
         }
     }
 

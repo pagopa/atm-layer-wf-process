@@ -37,7 +37,7 @@ public class PubSubService {
     }
     
     private boolean setTask(String channel, CompletableFuture<Task> future, Task task, String key ) {
-        valueCommands.setex(key, 60L, task);
+        CompletableFuture.runAsync(() ->     valueCommands.setex(key, 60L, task));
         if (subscriber != null)
             subscriber.unsubscribe();
         return future.complete(task);

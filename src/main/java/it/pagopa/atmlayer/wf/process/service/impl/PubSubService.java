@@ -42,6 +42,7 @@ public class PubSubService {
     private boolean setTask(String channel, CompletableFuture<Task> future, Task task, String key ) {
         log.info("Task event received " + task.toString());
         CompletableFuture.runAsync(() ->{
+            log.info("valueCommands.setex");
             valueCommands.setex(key, 60L, task);
             log.info("Saved task in cache key :"+ key);
             if (subscriber != null)

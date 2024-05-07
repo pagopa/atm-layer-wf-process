@@ -17,8 +17,6 @@ import io.quarkus.test.junit.mockito.MockitoConfig;
 import it.pagopa.atmlayer.wf.process.client.camunda.CamundaRestClient;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
 import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
-import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
-import it.pagopa.atmlayer.wf.process.exception.ProcessException;
 import it.pagopa.atmlayer.wf.process.resource.ProcessResource;
 import it.pagopa.atmlayer.wf.process.service.impl.PubSubService;
 import it.pagopa.atmlayer.wf.process.service.impl.SubscriptionPayload;
@@ -58,7 +56,7 @@ class ProcessResourceTest {
                 Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp); 
 
                 given()
@@ -81,7 +79,7 @@ class ProcessResourceTest {
                 Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp);
 
                 given()
@@ -104,7 +102,7 @@ class ProcessResourceTest {
                 Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp);
 
                 given()
@@ -128,7 +126,7 @@ class ProcessResourceTest {
                 Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp);
                 
                 given()
@@ -151,7 +149,7 @@ class ProcessResourceTest {
                 Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp);
 
                 given()
@@ -174,7 +172,7 @@ class ProcessResourceTest {
                 Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp);
 
                 given()
@@ -190,7 +188,7 @@ class ProcessResourceTest {
         void testStartInstanceKo() {
             
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp);
                 Mockito.when(camundaRestClient.startInstance(Mockito.anyString(),
                                 Mockito.any(CamundaBodyRequestDto.class)))
@@ -210,7 +208,7 @@ class ProcessResourceTest {
                                 Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenThrow(new RuntimeException());
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp);
 
                 given()
@@ -228,7 +226,7 @@ class ProcessResourceTest {
                                 Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenThrow(new WebApplicationException(Response.status(Status.BAD_REQUEST).build()));
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp);
 
                 given()
@@ -247,7 +245,7 @@ class ProcessResourceTest {
                                 .thenThrow(new WebApplicationException(
                                                 Response.status(Status.INTERNAL_SERVER_ERROR).build()));
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp);
 
                 given()
@@ -265,7 +263,7 @@ class ProcessResourceTest {
                                 Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenThrow(new WebApplicationException(Response.status(Status.BAD_GATEWAY).build()));
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp);
                 
                 given()
@@ -288,7 +286,7 @@ class ProcessResourceTest {
                 Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp);
 
                 given()
@@ -311,7 +309,7 @@ class ProcessResourceTest {
                 Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp);
 
                 given()
@@ -330,7 +328,7 @@ class ProcessResourceTest {
                 Mockito.when(camundaRestClient.getList(Mockito.any(CamundaBodyRequestDto.class)))
                                 .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp);
 
                 given()
@@ -352,7 +350,7 @@ class ProcessResourceTest {
                 .thenReturn(RestResponse.ok(ProcessTestData.createListCamundaTaskDto()));
                 
                 SubscriptionPayload sp =ProcessTestData.createSubscriptionPayload();
-                Mockito.when(pubSubService.subscribe(Mockito.anyString()))
+                Mockito.when(pubSubService.subscribe(Mockito.anyString(), null))
                     .thenReturn(sp);
                 given()
                                 .body(ProcessTestData.createTaskRequestNext())

@@ -26,12 +26,13 @@ public class PubSubService {
         String cacheKey = key != null ? key : channel;       
         Task t = valueCommands.get(cacheKey);
         if (t != null ) {
+            log.info("task in cache key :"+ key);
             future.complete(t);
             return SubscriptionPayload.builder()
                     .future(future)
                     .subscriber(subscriber).build();
             }
-            
+        log.info("task not in cache key :"+ key);    
        subscriber = pubSubCommands.subscribe(channel, task ->setTask(channel, future, task, cacheKey ));        
         return SubscriptionPayload.builder()
                 .future(future)

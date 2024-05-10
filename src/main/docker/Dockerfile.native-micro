@@ -1,5 +1,5 @@
 # dependency resolution and compiling
-FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:jdk-17 AS builder
+FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:jdk-21 AS builder
 WORKDIR /app
 USER quarkus
 COPY --chown=quarkus:quarkus mvnw .

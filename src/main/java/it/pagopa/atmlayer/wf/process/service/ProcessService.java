@@ -89,4 +89,11 @@ public interface ProcessService {
      */
     RestResponse<VariableResponse> getTaskVariables(String taskId, List<String> variables, List<String> buttons);
 
+    /**
+     * Execute the undeploy of a deployment with the given deployment id.
+     * 
+     * @param id   Deployment Id
+     * @return A `RestResponse` with the undeploy response status
+     */
+    RestResponse<Object> undeploy(String id);
 }

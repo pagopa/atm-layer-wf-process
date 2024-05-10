@@ -254,4 +254,35 @@ public class ProcessResource extends CommonLogic{
         return response;
     }
 
+    /**
+     * Endpoint to retrieve the variables of a task.
+     * 
+     * @param request
+     * @return A `RestResponse` containing variables of the task.
+    */
+    @Operation(summary = "Effettua l'undeploy del bpmn.")
+    @APIResponse(responseCode = "204", description = "OK. Operazione eseguita con successo.")
+    @APIResponse(responseCode = "404", description = "NOT_FOUND. Nel caso il deployment corrispondente al id non esiste.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
+    @APIResponse(responseCode = "500", description = "ERROR. Nel caso di errori durante l'undeploy.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
+    @POST
+    @Path("/undeploy/{id}")
+    public RestResponse<Object> undeploy(@PathParam("id") String id) {
+        log.info("Executing UNDEPLOY. . .");
+        long start = System.currentTimeMillis();
+
+        RestResponse<Object> response;
+
+        try {
+            response = processService.undeploy(id);
+        } catch (ProcessException e) {
+            throw e;
+        } catch (RuntimeException e) {
+            log.error("Generic exception occured while executing variables: ", e);
+            throw new ProcessException(ProcessErrorEnum.GENERIC);
+        } finally {
+			logElapsedTime(PROCESS_VARIABLES_LOG_ID, start);
+        }
+
+        return response;
+    }
 }

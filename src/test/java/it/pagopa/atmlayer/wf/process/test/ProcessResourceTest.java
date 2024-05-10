@@ -788,4 +788,43 @@ class ProcessResourceTest {
                                 .then()
                                 .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
         }
+
+        @Test
+        void testUndeployOk() {
+                Mockito.when(camundaRestClient.undeploy(Mockito.anyString(), Mockito.anyBoolean()))
+                                .thenReturn(RestResponse.noContent());
+
+                given()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/undeploy/{id}", ProcessTestData.DEPLOYMENT_ID)
+                                .then()
+                                .statusCode(StatusCode.NO_CONTENT);
+        }
+
+        @Test
+        void testUndeployNotFound() {
+                Mockito.when(camundaRestClient.undeploy(Mockito.anyString(), Mockito.anyBoolean()))
+                                .thenReturn(RestResponse.notFound());
+
+                given()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/undeploy/{id}", ProcessTestData.DEPLOYMENT_ID)
+                                .then()
+                                .statusCode(StatusCode.NOT_FOUND);
+        }
+
+        @Test
+        void testUndeployKo() {
+                Mockito.when(camundaRestClient.undeploy(Mockito.anyString(), Mockito.anyBoolean()))
+                                .thenThrow(new RuntimeException());
+
+                given()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/undeploy/{id}", ProcessTestData.DEPLOYMENT_ID)
+                                .then()
+                                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+        }
 }

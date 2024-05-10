@@ -216,7 +216,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         } catch (SdkException e){
             log.error("Error while trying to retrieve instance variables from DynamoDB: ", e);
         }
-        
+
         try {
             CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
                 .businessKey(transactionId)
@@ -562,6 +562,33 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         }
 
         return camundaGetResourceBinaryResponse.getEntity();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public RestResponse<Object> undeploy(String id) {
+        long start = 0;
+        RestResponse<Object> camundaUndeployResponse;
+        try {
+            log.info("Undeploying bpmn. . .");
+            start = System.currentTimeMillis();
+            camundaUndeployResponse = camundaRestClient.undeploy(id, true);
+            log.info("Bpmn with id: {} undeployed! ", id);
+        } catch (WebApplicationException e) {
+            if (e.getResponse().getStatus() == RestResponse.StatusCode.NOT_FOUND) {
+                log.error("Deployment with the given id not found!");
+                throw new ProcessException(ProcessErrorEnum.RESOURCE_R02);
+            } else {
+                log.error(UNKNOWN_STATUS, e.getResponse().getStatus());
+                throw new ProcessException(ProcessErrorEnum.GENERIC);
+            }
+        } finally {
+            logElapsedTime(CAMUNDA_UNDEPLOY_LOG_ID, start);
+        }
+
+        return camundaUndeployResponse;
     }
 
 }

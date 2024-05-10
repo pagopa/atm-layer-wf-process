@@ -23,6 +23,11 @@ tracing:
   endpointBasePath: "http://jaeger-collector.default.svc.cluster.local:4317"
   enableJDBCMonitoring: "false"
 
+objectStore:
+  region: eu-south-1
+  bucket_name: pagopa-dev-atm-layer-s3-wf-task-trace-logs
+  resource_template_path: logs
+
 modelServiceAddress: http://pagopa-dev-atm-layer-model.pagopa.svc.cluster.local:8080
 
 camundaWebUser:
@@ -34,6 +39,14 @@ camundaWebUser:
     password: WEB_PASSWORD
 
 transactionServiceAddress: http://pagopa-dev-atm-layer-transaction-service.pagopa.svc.cluster.local:8080
+
+redis:
+  credentialsSecretEnabled: true
+  credentialsSecretName: pagopa-dev-atm-layer-wf-process-redis
+  credentialsSecretKeys:
+    host: host
+    port: port
+    hostReader: hostReader
 
 secretProviderClass:
   enabled: true
@@ -65,9 +78,9 @@ securityContext: {}
 
 deployment:
   name: pagopa-dev-atm-layer-wf-process
-  annotation:
+  annotations:
     reloader.stakater.com/auto: "true"
-    secret.reloader.stakater.com/reload: pagopa-dev-atm-layer-wf-process-camunda
+    secret.reloader.stakater.com/reload: pagopa-dev-atm-layer-wf-process-camunda, pagopa-dev-atm-layer-wf-process-redis
 
 service:
   name: pagopa-dev-atm-layer-wf-process

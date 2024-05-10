@@ -35,6 +35,14 @@ camundaWebUser:
 
 transactionServiceAddress: http://pagopa-prod-atm-layer-transaction-service.pagopa.svc.cluster.local:8080
 
+redis:
+  credentialsSecretEnabled: true
+  credentialsSecretName: pagopa-prod-atm-layer-wf-process-redis
+  credentialsSecretKeys:
+    host: host
+    port: port
+    hostReader: hostReader
+
 secretProviderClass:
   enabled: true
   name: atm-layer-wf-process-secrets
@@ -65,9 +73,9 @@ securityContext: {}
 
 deployment:
   name: pagopa-prod-atm-layer-wf-process
-  annotation:
+  annotations:
     reloader.stakater.com/auto: "true"
-    secret.reloader.stakater.com/reload: pagopa-prod-atm-layer-wf-process-camunda
+    secret.reloader.stakater.com/reload: pagopa-prod-atm-layer-wf-process-camunda, pagopa-prod-atm-layer-wf-process-redis
 
 service:
   name: pagopa-prod-atm-layer-wf-process
@@ -99,15 +107,15 @@ resources:
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 600m
-  #   memory: 600Mi
-  # requests:
-  #   cpu: 300m
-  #   memory: 300Mi
+  limits:
+    cpu: 150m
+    memory: 150Mi
+  requests:
+    cpu: 50m
+    memory: 50Mi
 
 autoscaling:
-  enabled: false
+  enabled: true
   minReplicas: 2
   maxReplicas: 4
   targetCPUUtilizationPercentage: 80

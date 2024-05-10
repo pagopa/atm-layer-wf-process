@@ -3,8 +3,8 @@ This microservice serves as entrypoint to Camunda 7 platform. Manipulates and pr
 
 ## Prerequisites
 * Install an instance of Camunda platform 7
-* JDK 17
-* GraalVM 17 (necessary in case of a locally native build is needed)
+* JDK 21
+* GraalVM 21 (necessary in case of a locally native build is needed)
 * Docker (necessary in case of build into container is needed)
 
 ## Installation

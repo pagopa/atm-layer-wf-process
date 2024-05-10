@@ -2,7 +2,12 @@ package it.pagopa.atmlayer.wf.process.resource.interceptor;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Objects;
 
+import org.slf4j.MDC;
+
+import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
+import it.pagopa.atmlayer.wf.process.util.Constants;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
@@ -38,13 +43,23 @@ public class LogFilter implements ContainerRequestFilter, ContainerResponseFilte
      */
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+        String URI = requestContext.getUriInfo().getPath();
+        byte[] entity = requestContext.getEntityStream().readAllBytes();
+        String body = new String(entity);
+        if (URI.contains("start") || URI.contains("next")){
+            TaskRequest taskRequest = Utility.getObject(body, TaskRequest.class);
+            if (!Objects.isNull(taskRequest.getTransactionId())){
+                MDC.put(Constants.TRANSACTION_ID, taskRequest.getTransactionId());
+            }
+        }
+
         log.info("============== RECEIVED REQUEST ==============");
         if (requestContext.getUriInfo().getPathParameters() != null && !requestContext.getUriInfo().getPathParameters().isEmpty()) {
             log.info("PARAMS: {}", requestContext.getUriInfo().getPathParameters());
         }
         log.info("METHOD: {}", requestContext.getMethod());
-        byte[] entity = requestContext.getEntityStream().readAllBytes();
-        log.info("BODY: {}", new String(entity));
+        log.info("BODY: {}", body);
+        
         requestContext.setEntityStream(new ByteArrayInputStream(entity));
         log.info("============== RECEIVED REQUEST ==============");
     }

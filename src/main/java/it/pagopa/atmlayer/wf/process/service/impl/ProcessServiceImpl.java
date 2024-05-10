@@ -3,8 +3,10 @@ package it.pagopa.atmlayer.wf.process.service.impl;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,8 @@ import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
 import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
 import it.pagopa.atmlayer.wf.process.client.transactions.TransactionsServiceRestClient;
 import it.pagopa.atmlayer.wf.process.client.transactions.bean.TransactionServiceRequest;
+import it.pagopa.atmlayer.wf.process.database.dynamo.entity.InstanceVariables;
+import it.pagopa.atmlayer.wf.process.database.dynamo.service.InstanceVariablesServiceImpl;
 import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
 import it.pagopa.atmlayer.wf.process.exception.ProcessException;
 import it.pagopa.atmlayer.wf.process.service.ProcessService;
@@ -38,6 +42,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.WebApplicationException;
 import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.core.exception.SdkException;
 
 /**
  * ProcessService implementation
@@ -57,6 +62,9 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
 
     @Inject
     Properties properties;
+
+    @Inject
+    InstanceVariablesServiceImpl instanceVariablesService;
 
     /**
      * {@inheritDoc}
@@ -190,6 +198,25 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
     private void startInstance(String transactionId, String bpmnId, Map<String, Object> variables) {
         long start = 0;
 
+        List<InstanceVariables> instanceVariablesList = new LinkedList<>();
+        try {
+            /*
+             * Retrieving instance variables from DynamoDB and send them to Camunda
+             */
+           instanceVariablesList = instanceVariablesService.findAll();
+            if (!Objects.isNull(instanceVariablesList) && !instanceVariablesList.isEmpty()){
+                log.debug("Number of instance variables found: {}", instanceVariablesList.size());
+                variables.putAll(instanceVariablesList.stream()
+                                        .collect(Collectors.toMap(
+                                                InstanceVariables::getName,
+                                                InstanceVariables::getValue)));
+            } else {
+                log.debug("instance-variables table is empty!");
+            }
+        } catch (SdkException e){
+            log.error("Error while trying to retrieve instance variables from DynamoDB: ", e);
+        }
+        
         try {
             CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
                 .businessKey(transactionId)

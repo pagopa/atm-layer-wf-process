@@ -18,7 +18,9 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.slf4j.MDC;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import it.pagopa.atmlayer.wf.process.bean.DeviceInfo;
 import it.pagopa.atmlayer.wf.process.bean.VariableResponse;
@@ -255,5 +257,26 @@ public class Utility {
      */
     private static String constructTerminalId(String bankId, String code){
         return bankId.concat(code);
+    }
+
+     /**
+     * Converts a json into a Generic Object T
+     * 
+     * @param <T>
+     * @param json
+     * @param clazz
+     * @return
+     */
+    public static <T> T getObject(String json, Class<T> clazz) {
+        ObjectMapper om = JsonMapper.builder()
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .build();
+        T result = null;
+        try {
+            result = om.readValue(json, clazz);
+        } catch (JsonProcessingException e) {
+            log.error("Error deserializing: {}", e);
+        }
+        return result;
     }
 }

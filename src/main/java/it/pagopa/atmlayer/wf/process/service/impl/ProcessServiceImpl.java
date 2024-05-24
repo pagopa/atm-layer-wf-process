@@ -2,6 +2,8 @@ package it.pagopa.atmlayer.wf.process.service.impl;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -77,10 +79,10 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
 
         try {
             start = System.currentTimeMillis();
-            URI uri = Paths.get( requestUrl ).toUri() ;
+            URI uri = new URI(requestUrl);
             camundaDeployResponse = camundaRestClient.deploy(Utility.downloadBpmnFile(uri.toURL(), fileName));
             log.info("Resource deployed!");
-        } catch (WebApplicationException e) {
+        } catch (WebApplicationException | URISyntaxException e) {
             log.error("Deploy bpmn failed! The service may be unreachable or an error occured:", e);
             throw new ProcessException(ProcessErrorEnum.DEPLOY_D01);
         } finally {

@@ -7,9 +7,9 @@ import software.amazon.awssdk.services.dynamodb.model.ScanRequest;
  */
 public abstract class InstanceVariablesService {
 
-    public final static String INSTANCE_VARIABLES_NAME_COL = "name";
-    public final static String INSTANCE_VARIABLES_VALUE_COL = "value";
-    public final static String INSTANCE_VARIABLES_TABLE_NAME = "pagopa-dev-atm-layer-wf-process-instance-variables";
+    public static final String INSTANCE_VARIABLES_NAME_COL = "name";
+    public static final String INSTANCE_VARIABLES_VALUE_COL = "value";
+    public static final String INSTANCE_VARIABLES_TABLE_NAME = "pagopa-dev-atm-layer-wf-process-instance-variables";
 
     /**
      * Creates a ScanRequest for pagopa-dev-atm-layer-wf-process-instance-variables table on DynamoDB.

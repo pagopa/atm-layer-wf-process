@@ -1,7 +1,8 @@
 package it.pagopa.atmlayer.wf.process.service.impl;
 
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -76,7 +77,8 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
 
         try {
             start = System.currentTimeMillis();
-            camundaDeployResponse = camundaRestClient.deploy(Utility.downloadBpmnFile(new URL(requestUrl), fileName));
+            URI uri = Paths.get( requestUrl ).toUri() ;
+            camundaDeployResponse = camundaRestClient.deploy(Utility.downloadBpmnFile(uri.toURL(), fileName));
             log.info("Resource deployed!");
         } catch (WebApplicationException e) {
             log.error("Deploy bpmn failed! The service may be unreachable or an error occured:", e);
@@ -123,9 +125,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         request.setTransactionId(transactionId);
         request.setTransactionStatus((String)extendedVariables.get(Constants.TRANSACTION_STATUS));
     
-        CompletableFuture.runAsync(() -> {          
-            transactionsRestClient.inset(request);
-        });
+        CompletableFuture.runAsync(() -> transactionsRestClient.inset(request));
 
         startInstance(transactionId, bpmnId, extendedVariables);
     }
@@ -477,11 +477,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
                      (String) mapVariables.get(Constants.FUNCTION_ID) ,
                      (String) mapVariables.get(Constants.TRANSACTION_ID),
                      (String) mapVariables.get(Constants.TRANSACTION_STATUS));
-            CompletableFuture.runAsync(() -> {
-                transactionsRestClient.update(request);
-            });
-            
-            
+            CompletableFuture.runAsync(() -> transactionsRestClient.update(request));
             
         } catch (WebApplicationException e) {
             if (e.getResponse().getStatus() == RestResponse.StatusCode.INTERNAL_SERVER_ERROR) {

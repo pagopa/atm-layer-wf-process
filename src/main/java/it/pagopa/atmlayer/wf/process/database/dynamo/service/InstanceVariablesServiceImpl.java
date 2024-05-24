@@ -23,7 +23,7 @@ public class InstanceVariablesServiceImpl extends InstanceVariablesService{
     public List<InstanceVariables> findAll() {
         return dynamoDB.scanPaginator(scanRequest()).items().stream()
                 .map(InstanceVariables::from)
-                .collect(Collectors.toList());
+                .toList();
     }
     
 }

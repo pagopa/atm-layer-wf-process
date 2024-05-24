@@ -23,6 +23,8 @@
     <jakarta-validation.version>3.0.2</jakarta-validation.version>
     <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
     <quarkus-amazon-services.version>2.12.2</quarkus-amazon-services.version>
+    <sonarsource.scanner.version>3.11.0.3922</sonarsource.scanner.version>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -139,6 +141,11 @@
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>url-connection-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sonarsource.scanner.maven</groupId>
+      <artifactId>sonar-maven-plugin</artifactId>
+      <version>${sonarsource.scanner.version}</version>
     </dependency>
   </dependencies>
   <build>

@@ -102,6 +102,6 @@ jobs:
 
       - name: Code Review
         run: |
-          mvn sonar:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }} -Dsonar.projectKey=pagopa-atm-layer-wf-process \
+          mvn sonar:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }} -Dsonar.projectKey=atm-layer-wf-process \
           -Dsonar.organization=pagopa -Dsonar.java.binaries=src/main \
           -Dsonar.coverage.jacoco.xmlReportPaths=../atm-layer-wf-process/target/jacoco-report/jacoco.xml -Pcoverage

@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -409,7 +410,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             String definitionVersionCamunda = modelFindBpmnIdResponse.getEntity().getDefinitionVersionCamunda();
             log.info("definitionKey: {}, definitionVersionCamunda: {}", definitionKey, definitionVersionCamunda);
 
-            variables = variables != null ? variables : Collections.emptyMap();
+            variables = variables != null ? variables : new HashMap<>();
             variables.put(Constants.DEFINITION_KEY, definitionKey);
             variables.put(Constants.DEFINITION_VERSION_CAMUNDA, definitionVersionCamunda);
 

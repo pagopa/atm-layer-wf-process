@@ -43,10 +43,10 @@ public class LogFilter implements ContainerRequestFilter, ContainerResponseFilte
      */
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        String URI = requestContext.getUriInfo().getPath();
+        String uri = requestContext.getUriInfo().getPath();
         byte[] entity = requestContext.getEntityStream().readAllBytes();
         String body = new String(entity);
-        if (URI.contains("start") || URI.contains("next")){
+        if (uri.contains("start") || uri.contains("next")){
             TaskRequest taskRequest = Utility.getObject(body, TaskRequest.class);
             if (!Objects.isNull(taskRequest.getTransactionId())){
                 MDC.put(Constants.TRANSACTION_ID, taskRequest.getTransactionId());
@@ -79,7 +79,6 @@ public class LogFilter implements ContainerRequestFilter, ContainerResponseFilte
                 log.info("BODY: {}", Utility.getJson(responseContext.getEntity()));
             }
             log.info("============== RESPONSE ==============");
-            MDC.remove(Constants.TRANSACTION_ID);
         }
     }
 

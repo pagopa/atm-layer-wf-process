@@ -47,7 +47,7 @@ jobs:
       - name: Setup JDK
         uses: graalvm/setup-graalvm@v1
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -92,54 +92,54 @@ jobs:
           git commit --allow-empty -m "Chart.yaml updated with new version v${{ steps.semantic-release-dryrun.outputs.new_release_version }}"
           git push
 
-      # - name: Test and Integration tests
-      #   run: |
-      #     mvn test -Dquarkus.package.type=native -Dquarkus.application.name=atm-layer-wf-process -Dquarkus.profile=prod
+      - name: Test and Integration tests
+        run: |
+          mvn test -Dquarkus.package.type=native -Dquarkus.application.name=atm-layer-wf-process -Dquarkus.profile=prod
 
-      # - name: Create Status check based on postman results
-      #   id: process-postman
-      #   uses: im-open/process-postman-test-results@v2.1.5
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     results-file: src/test/resources/integration-test/output/result.json
-      #     report-name: 'Postman create pre-release: ${{ github.run_number }}'
-      #     create-status-check: true
-      #     create-pr-comment: true
-      #     update-comment-if-one-exists: true
-      #     ignore-test-failures: true
-      #     timezone: 'europe/rome'
+      - name: Create Status check based on postman results
+        id: process-postman
+        uses: im-open/process-postman-test-results@v2.1.5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          results-file: src/test/resources/integration-test/output/result.json
+          report-name: 'Postman create pre-release: ${{ github.run_number }}'
+          create-status-check: true
+          create-pr-comment: true
+          update-comment-if-one-exists: true
+          ignore-test-failures: true
+          timezone: 'europe/rome'
 
-      # - name: Fail if there were errors in the postman tests
-      #   if: steps.process-postman.outputs.test-outcome == 'Failed'
-      #   run: |
-      #     echo "There were postman failures."
-      #     exit 1
+      - name: Fail if there were errors in the postman tests
+        if: steps.process-postman.outputs.test-outcome == 'Failed'
+        run: |
+          echo "There were postman failures."
+          exit 1
 
-      # - name: Upload result.html
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: html-report
-      #     path: src/test/resources/integration-test/output/result.html
+      - name: Upload result.html
+        uses: actions/upload-artifact@v3
+        with:
+          name: html-report
+          path: src/test/resources/integration-test/output/result.html
 
-      # - name: JaCoCo Code Coverage Report
-      #   id: jacoco_reporter
-      #   uses: PavanMudigonda/jacoco-reporter@v4.9
-      #   with:
-      #     coverage_results_path: target/jacoco-report/jacoco.xml
-      #     coverage_report_name: 'Coverage create pre-release: ${{ github.run_number }}'
-      #     coverage_report_title: JaCoCo
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     skip_check_run: false
-      #     minimum_coverage: 90
-      #     fail_below_threshold: false
-      #     publish_only_summary: false
+      - name: JaCoCo Code Coverage Report
+        id: jacoco_reporter
+        uses: PavanMudigonda/jacoco-reporter@v4.9
+        with:
+          coverage_results_path: target/jacoco-report/jacoco.xml
+          coverage_report_name: 'Coverage create pre-release: ${{ github.run_number }}'
+          coverage_report_title: JaCoCo
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          skip_check_run: false
+          minimum_coverage: 90
+          fail_below_threshold: false
+          publish_only_summary: false
 
-      # - name: Fail Build if overall coverage is less than 90%
-      #   if: steps.jacoco_reporter.outputs.coverage_percentage < 90.0 
-      #   uses: actions/github-script@v6
-      #   with:
-      #     script: |
-      #       core.setFailed('Overall coverage is less than 90%!')
+      - name: Fail Build if overall coverage is less than 90%
+        if: steps.jacoco_reporter.outputs.coverage_percentage < 90.0 
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.setFailed('Overall coverage is less than 90%!')
 
       - name: Build docker image
         env:

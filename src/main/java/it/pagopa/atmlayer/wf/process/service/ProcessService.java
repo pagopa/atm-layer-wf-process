@@ -60,17 +60,6 @@ public interface ProcessService {
      * @return A `RestResponse` containing the active tasks.
      */
     RestResponse<TaskResponse> retrieveActiveTasks(String businessKey);
-    
-    
-    /**
-     * This method retrieves the active tasks for the specified camunda process
-     * identified by the business key.
-     * 
-     * @param businessKey
-     * @param isExternal
-     * @return A `RestResponse` containing the active tasks.
-     */
-    RestResponse<TaskResponse> retrieveActiveTasks(String businessKey, boolean isExternal);
 
     
     /**
@@ -79,7 +68,7 @@ public interface ProcessService {
      * @param taskId    The ID of the task to complete.
      * @param variables The variables to associate with the completion.
      */
-    RestResponse complete(String taskId, Map<String, Object> variables);
+    void complete(String taskId, Map<String, Object> variables);
 
     /**
      * Completes a task in Camunda.
@@ -88,7 +77,7 @@ public interface ProcessService {
      * @param variables The variables to associate with the completion.
      * @param functionId the ID of the function.
      */
-    RestResponse complete(String taskId, Map<String, Object> variables, String functionId, DeviceInfo deviceInfo);
+    void complete(String taskId, Map<String, Object> variables, String functionId, DeviceInfo deviceInfo);
 
     /**
      * Gets the task instance variables.
@@ -107,5 +96,4 @@ public interface ProcessService {
      * @return A `RestResponse` with the undeploy response status
      */
     RestResponse<Object> undeploy(String id);
-
 }

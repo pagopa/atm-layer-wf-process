@@ -2,7 +2,6 @@ package it.pagopa.atmlayer.wf.process.resource;
 
 import java.io.IOException;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -21,8 +20,8 @@ import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
 import it.pagopa.atmlayer.wf.process.exception.ProcessException;
 import it.pagopa.atmlayer.wf.process.exception.bean.ProcessErrorResponse;
 import it.pagopa.atmlayer.wf.process.service.ProcessService;
-import it.pagopa.atmlayer.wf.process.util.CommonLogic;
 import it.pagopa.atmlayer.wf.process.util.Constants;
+import it.pagopa.atmlayer.wf.process.util.CommonLogic;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -153,15 +152,12 @@ public class ProcessResource extends CommonLogic{
             /*
              * Starting camunda process
              */
-            CompletableFuture.runAsync(() -> processService.start(request.getTransactionId(), request.getFunctionId(), request.getDeviceInfo(),request.getVariables()));
+            processService.start(request.getTransactionId(), request.getFunctionId(), request.getDeviceInfo(),
+                    request.getVariables());
             /*
              * Retrieve active tasks
              */
-            response = processService.retrieveActiveTasks(request.getTransactionId(), true);
-            if (response.getStatus() == RestResponse.StatusCode.CREATED) {
-                response = response.ok(response.getEntity());
-            }
-
+            response = processService.retrieveActiveTasks(request.getTransactionId());
         } catch (ProcessException e) {
             throw e;
         } catch (RuntimeException e) {
@@ -205,14 +201,11 @@ public class ProcessResource extends CommonLogic{
                  * Complete camunda task
                  */
                 if (request.getVariables() != null && request.getVariables().get(Constants.FUNCTION_ID) != null) {
-                    CompletableFuture.runAsync(() -> processService.complete(request.getTaskId(), request.getVariables(), request.getVariables().get(Constants.FUNCTION_ID).toString(), request.getDeviceInfo()));
+                    processService.complete(request.getTaskId(), request.getVariables(), request.getVariables().get(Constants.FUNCTION_ID).toString(), request.getDeviceInfo());
                 } else {
-                    
-                    CompletableFuture.runAsync(() -> processService.complete(request.getTaskId(), request.getVariables()));
+                    processService.complete(request.getTaskId(), request.getVariables());
                 }             
             }
-           
-            
             /*
              * Retrieve active tasks
              */
@@ -224,94 +217,6 @@ public class ProcessResource extends CommonLogic{
             throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
 			logElapsedTime(PROCESS_NEXT_LOG_ID , start);
-        }
-
-        return response;
-    }
-    
-    /**
-     * Endpoint to complete a Camunda task and to retrieve active tasks.
-     *
-     * @param request The task request.
-     * @return A `RestResponse` containing information about active tasks.
-     */
-    @Operation(summary = "Esegue il 'next' task dell'istanza di processo del flusso BPMN", description = "Esegue il 'next' task dell'istanza di processo del flusso BPMN nel motore di workflow (es. Camunda) e restituisce la lista dei task attivi.")
-    @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la lista dei task attivi del workflow, dopo il completamento del task corrente. Task attivi non presenti se il bpmn risulta completato.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RestResponse.Status.class)))
-    @APIResponse(responseCode = "202", description = "ACCEPTED. Service task in esecuzione ma non ancora completato al momento della risposta.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
-    @APIResponse(responseCode = "400", description = "BAD_REQUEST. Nel caso di 'taskId' nullo.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
-    @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore generico.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
-    @APIResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE. Nel caso di errore durante il completamento del task ritornato da Camunda.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
-    @POST
-    @Path("/complete")
-    public RestResponse completeTask(
-            @Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
-        
-        log.info("Executing COMPLETE. . .");
-        long start = System.currentTimeMillis();
-        
-        RestResponse response = null;
-
-        try {
-            /*
-             * Checking presence of taskId for complete
-             */
-            if (request.getTaskId() != null && !request.getTaskId().isEmpty()) {
-                /*
-                 * Complete camunda task
-                 */
-                if (request.getVariables() != null && request.getVariables().get(Constants.FUNCTION_ID) != null) {
-                    response = processService.complete(request.getTaskId(), request.getVariables(), request.getVariables().get(Constants.FUNCTION_ID).toString(), request.getDeviceInfo());
-                } else {
-                    response = processService.complete(request.getTaskId(), request.getVariables());
-                }             
-            }
-           
-        } catch (ProcessException e) {
-            throw e;
-        } catch (RuntimeException e) {
-            log.error("Generic exception occured while executing next: ", e);
-            throw new ProcessException(ProcessErrorEnum.GENERIC);
-        } finally {
-            logElapsedTime(PROCESS_NEXT_LOG_ID , start);
-        }
-
-        return response;
-    }
-    
-    /**
-     * Endpoint to complete a Camunda task and to retrieve active tasks.
-     *
-     * @param request The task request.
-     * @return A `RestResponse` containing information about active tasks.
-     */
-    @Operation(summary = "Esegue il 'next' task dell'istanza di processo del flusso BPMN", description = "Esegue il 'next' task dell'istanza di processo del flusso BPMN nel motore di workflow (es. Camunda) e restituisce la lista dei task attivi.")
-    @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la lista dei task attivi del workflow, dopo il completamento del task corrente. Task attivi non presenti se il bpmn risulta completato.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TaskResponse.class)))
-    @APIResponse(responseCode = "202", description = "ACCEPTED. Service task in esecuzione ma non ancora completato al momento della risposta.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
-    @APIResponse(responseCode = "400", description = "BAD_REQUEST. Nel caso di 'taskId' nullo.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
-    @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore generico.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
-    @APIResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE. Nel caso di errore durante il completamento del task ritornato da Camunda.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
-    @POST
-    @Path("/next2")
-    public RestResponse<TaskResponse> next2(
-            @Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
-        
-        log.info("Executing NEXT. . .");
-        long start = System.currentTimeMillis();
-        
-        RestResponse<TaskResponse> response;
-
-        try {           
-            /*
-             * Retrieve active tasks
-             */
-            response = processService.retrieveActiveTasks(request.getTransactionId());
-        } catch (ProcessException e) {
-            throw e;
-        } catch (RuntimeException e) {
-            log.error("Generic exception occured while executing next: ", e);
-            throw new ProcessException(ProcessErrorEnum.GENERIC);
-        } finally {
-            logElapsedTime(PROCESS_NEXT_LOG_ID , start);
         }
 
         return response;
@@ -380,5 +285,4 @@ public class ProcessResource extends CommonLogic{
 
         return response;
     }
-
 }

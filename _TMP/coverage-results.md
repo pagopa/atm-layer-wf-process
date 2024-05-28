@@ -1,15 +1,15 @@
 
 # Coverage Report: JaCoCo
 
-* quarkus-application
+* IntegrationTest (QuarkusTest)
       
       
 | Outcome                 | Value                                                               |
 |-------------------------|---------------------------------------------------------------------|
-| Code Coverage %         | 92.16%               |
-| :heavy_check_mark: Number of Lines Covered | 435    |
-| :x: Number of Lines Missed  | 37     |
-| Total Number of Lines   | 472     |
+| Code Coverage %         | 93.23%               |
+| :heavy_check_mark: Number of Lines Covered | 482    |
+| :x: Number of Lines Missed  | 35     |
+| Total Number of Lines   | 517     |
 
 
 ## Details:
@@ -110,6 +110,19 @@
 </details>
 
     
+### it/pagopa/atmlayer/wf/process/database/dynamo/service/contract
+
+<details>
+    <summary>
+:heavy_check_mark: InstanceVariablesService.java
+    </summary>
+
+        
+#### All Lines Covered!
+        
+</details>
+
+    
 ### it/pagopa/atmlayer/wf/process
 
 <details>
@@ -133,29 +146,25 @@
         
 #### Lines Missed:
         
-- Line #73
+- Line #86
 ```
-        } catch (WebApplicationException e) {
+        } catch (WebApplicationException | URISyntaxException e) {
 ```
-- Line #120
+- Line #219
 ```
-        });
+        } catch (SdkException e){
 ```
-- Line #351
+- Line #381
 ```
             } catch (InterruptedException e) {
 ```
-- Line #355
+- Line #385
 ```
             } catch (WebApplicationException e) {
 ```
-- Line #383
+- Line #578
 ```
-            variables = variables != null ? variables : Collections.emptyMap();
-```
-- Line #455
-```
-            });
+        } catch (WebApplicationException e) {
 ```
 </details>
 
@@ -174,21 +183,9 @@
 ```
                 .append(resourceType != null ? resourceType.toLowerCase() : Constants.BPMN).toString();
 ```
-- Line #262
+- Line #277
 ```
         } catch (ProcessException e) {
-```
-- Line #264
-```
-        } catch (RuntimeException e) {
-```
-- Line #301
-```
-        } catch (ProcessException e) {
-```
-- Line #303
-```
-        } catch (RuntimeException e) {
 ```
 </details>
 
@@ -200,6 +197,19 @@
 :x: ProcessErrorResponse.java
     </summary>
 
+        
+</details>
+
+    
+### it/pagopa/atmlayer/wf/process/database/dynamo/service
+
+<details>
+    <summary>
+:heavy_check_mark: InstanceVariablesServiceImpl.java
+    </summary>
+
+        
+#### All Lines Covered!
         
 </details>
 
@@ -397,13 +407,17 @@
         
 #### Lines Missed:
         
-- Line #75
+- Line #77
 ```
         } catch (JsonProcessingException e) {
 ```
-- Line #93
+- Line #95
 ```
             } catch (IOException e) {
+```
+- Line #277
+```
+        } catch (JsonProcessingException e) {
 ```
 </details>
 
@@ -462,6 +476,19 @@
 :x: TransactionsServiceRestClient.java
     </summary>
 
+        
+</details>
+
+    
+### it/pagopa/atmlayer/wf/process/database/dynamo/entity
+
+<details>
+    <summary>
+:heavy_check_mark: InstanceVariables.java
+    </summary>
+
+        
+#### All Lines Covered!
         
 </details>
 

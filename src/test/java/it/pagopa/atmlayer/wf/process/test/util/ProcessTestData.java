@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -15,7 +14,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import it.pagopa.atmlayer.wf.process.bean.DeviceInfo;
 import it.pagopa.atmlayer.wf.process.bean.DeviceType;
-import it.pagopa.atmlayer.wf.process.bean.Task;
 import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
 import it.pagopa.atmlayer.wf.process.bean.VariableRequest;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaBodyRequestDto;
@@ -25,9 +23,11 @@ import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.InstanceDto;
 import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
-import it.pagopa.atmlayer.wf.process.service.impl.SubscriptionPayload;
 import it.pagopa.atmlayer.wf.process.util.Constants;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProcessTestData {
 
     public static final String TRANSACTION_ID = "TEST_TRANSACTION_ID";
@@ -52,7 +52,6 @@ public class ProcessTestData {
 
     private static Random random = new Random();
 
-   
     public static DeviceInfo getDeviceInfo() {
         return DeviceInfo.builder().bankId(RandomStringUtils.random(5, false, true))
                 .branchId(RandomStringUtils.random(5, false, true))
@@ -275,19 +274,6 @@ public class ProcessTestData {
         tasks.add(CamundaTaskDto.builder().id(TASK_ID + "1").build());
         tasks.add(CamundaTaskDto.builder().id(TASK_ID + "2").build());
         return tasks;
-    }
-    
-    public static  SubscriptionPayload createSubscriptionPayload() {
-        CompletableFuture<Task> future = new CompletableFuture<>();       
-        SubscriptionPayload payload = SubscriptionPayload.builder()
-                .future(future)  
-                .build();
-        Task t = Task.builder()
-                .form("form.html")
-                .id("aaa")
-                .build();
-        future.complete(t);
-        return payload;
     }
 
     public static ModelBpmnDto createModelBpmnDto() {

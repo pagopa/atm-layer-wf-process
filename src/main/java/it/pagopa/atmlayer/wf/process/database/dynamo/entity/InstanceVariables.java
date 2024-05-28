@@ -19,9 +19,6 @@ public class InstanceVariables {
 
     private Object value;
 
-    public InstanceVariables() {
-    }
-
     /**
      * Perform conversion from AWS item to Java Object of type InstanceVariables.
      * 

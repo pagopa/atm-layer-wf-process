@@ -6,10 +6,10 @@
       
 | Outcome                 | Value                                                               |
 |-------------------------|---------------------------------------------------------------------|
-| Code Coverage %         | 92.53%               |
-| :heavy_check_mark: Number of Lines Covered | 483    |
-| :x: Number of Lines Missed  | 39     |
-| Total Number of Lines   | 522     |
+| Code Coverage %         | 93.23%               |
+| :heavy_check_mark: Number of Lines Covered | 482    |
+| :x: Number of Lines Missed  | 35     |
+| Total Number of Lines   | 517     |
 
 
 ## Details:
@@ -146,35 +146,23 @@
         
 #### Lines Missed:
         
-- Line #81
+- Line #86
 ```
-        } catch (WebApplicationException e) {
+        } catch (WebApplicationException | URISyntaxException e) {
 ```
-- Line #128
-```
-        });
-```
-- Line #216
+- Line #219
 ```
         } catch (SdkException e){
 ```
-- Line #378
+- Line #381
 ```
             } catch (InterruptedException e) {
 ```
-- Line #382
+- Line #385
 ```
             } catch (WebApplicationException e) {
 ```
-- Line #410
-```
-            variables = variables != null ? variables : Collections.emptyMap();
-```
-- Line #482
-```
-            });
-```
-- Line #579
+- Line #578
 ```
         } catch (WebApplicationException e) {
 ```

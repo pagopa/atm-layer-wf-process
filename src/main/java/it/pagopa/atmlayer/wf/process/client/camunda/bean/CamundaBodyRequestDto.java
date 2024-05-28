@@ -25,6 +25,8 @@ public class CamundaBodyRequestDto {
 
     private String taskId;
     
+    private String processInstanceId;
+    
     private  Map<String, Map<String, Object>> variables;
 
 }

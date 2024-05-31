@@ -37,7 +37,7 @@ jobs:
       - name: Setup JDK
         uses: graalvm/setup-graalvm@v1
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -96,4 +96,12 @@ jobs:
           REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
           DOCKER_IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -f src/main/docker/Dockerfile.native-micro -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
+          docker build -f src/main/docker/Dockerfile.native-micro -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG . \
+          --build-arg QUARKUS_PROFILE=prod \
+          --build-arg APP_NAME=atm-layer-wf-process
+
+      - name: Code Review
+        run: |
+          mvn sonar:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }} -Dsonar.projectKey=pagopa_atm-layer-wf-process \
+          -Dsonar.organization=pagopa -Dsonar.java.binaries=src/main \
+          -Dsonar.coverage.jacoco.xmlReportPaths=../atm-layer-wf-process/target/jacoco-report/jacoco.xml -Pcoverage

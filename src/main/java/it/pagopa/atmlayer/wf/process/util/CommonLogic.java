@@ -29,7 +29,7 @@ public class CommonLogic{
     protected static final String CAMUNDA_COMPLETE_LOG_ID = CAMUNDA_REST_CLIENT_CLASS_ID + "complete";
     protected static final String CAMUNDA_GET_TASK_VARIABLES_LOG_ID = CAMUNDA_REST_CLIENT_CLASS_ID + "getTaskVariables";
     protected static final String CAMUNDA_GET_INSTANCE_ACTIVITY_LOG_ID = CAMUNDA_REST_CLIENT_CLASS_ID + "getInstanceActivity";
-
+    protected static final String CAMUNDA_UNDEPLOY_LOG_ID = CAMUNDA_REST_CLIENT_CLASS_ID + "undeploy";
 
     /**
      * Logs the elapsed time occurred for the processing.

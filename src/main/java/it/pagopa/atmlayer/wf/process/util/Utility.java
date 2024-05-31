@@ -15,9 +15,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.jboss.resteasy.reactive.RestResponse;
+import org.slf4j.MDC;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import it.pagopa.atmlayer.wf.process.bean.DeviceInfo;
 import it.pagopa.atmlayer.wf.process.bean.VariableResponse;
@@ -127,7 +130,7 @@ public class Utility {
         Map<String, Map<String, Object>> filteredFields = variablesDto.entrySet().stream()
                 .filter(entry -> vars.contains(entry.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
+        
         return CamundaVariablesDto.builder().variables(filteredFields).build();
     }
 
@@ -138,12 +141,23 @@ public class Utility {
      * @return A map structure containing the variable names and their corresponding values.
      */
     public static Map<String, Object> mapVariablesResponse(CamundaVariablesDto camundaVariablesDto) {
+        if (camundaVariablesDto == null || camundaVariablesDto.getVariables().isEmpty())
+            return new HashMap<>();
         Map<String, Map<String, Object>> variables = camundaVariablesDto.getVariables();
-
+        
         return variables.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> entry.getValue().get("value")));
+                .collect(Collectors.toMap(Map.Entry::getKey,Utility::getVariableValue));                    
+    }
+    
+    private static Object getVariableValue( Map.Entry<String, Map<String, Object>> entry ) {
+        Object result = "";
+        if (!entry.getValue().isEmpty()) {
+            result = entry.getValue().get("value");
+            if (result == null) {
+                result = ""; 
+            }            
+        }
+        return result;
     }
 
     /**
@@ -153,20 +167,24 @@ public class Utility {
      * @param deviceInfo     The device information.
      * @param variables      The map to be populated with device information variables.
      */
-    public static void populateDeviceInfoVariables(String transactionId, DeviceInfo deviceInfo,
+    public static Map<String, Object> populateDeviceInfoVariables(String transactionId, DeviceInfo deviceInfo,
             Map<String, Object> variables) {
         
-        if (variables == null){
-            variables = new HashMap<>();
+        Map<String, Object> extendedVariables = new HashMap<>();
+        
+        if (variables != null){
+            extendedVariables.putAll(variables);
         }
 
-        variables.put(DeviceInfoEnum.TRANSACTION_ID.getValue(), transactionId);
-        variables.put(DeviceInfoEnum.BANK_ID.getValue(), deviceInfo.getBankId());
-        variables.put(DeviceInfoEnum.BRANCH_ID.getValue(), deviceInfo.getBranchId());
-        variables.put(DeviceInfoEnum.TERMINAL_ID.getValue(), deviceInfo.getTerminalId());
-        variables.put(DeviceInfoEnum.CODE.getValue(), deviceInfo.getCode());
-        variables.put(DeviceInfoEnum.OP_TIMESTAMP.getValue(), deviceInfo.getOpTimestamp());
-        variables.put(DeviceInfoEnum.DEVICE_TYPE.getValue(), deviceInfo.getChannel());
+        extendedVariables.put(DeviceInfoEnum.TRANSACTION_ID.getValue(), transactionId);
+        extendedVariables.put(DeviceInfoEnum.BANK_ID.getValue(), deviceInfo.getBankId());
+        extendedVariables.put(DeviceInfoEnum.BRANCH_ID.getValue(), deviceInfo.getBranchId());
+        extendedVariables.put(DeviceInfoEnum.TERMINAL_ID.getValue(), deviceInfo.getTerminalId());
+        extendedVariables.put(DeviceInfoEnum.CODE.getValue(), deviceInfo.getCode());
+        extendedVariables.put(DeviceInfoEnum.OP_TIMESTAMP.getValue(), deviceInfo.getOpTimestamp());
+        extendedVariables.put(DeviceInfoEnum.DEVICE_TYPE.getValue(), deviceInfo.getChannel());
+        
+        return extendedVariables;
     }
 
     /**
@@ -188,7 +206,12 @@ public class Utility {
         }
         
         CamundaVariablesDto variablesFilteredList = Utility.filterCamundaVariables(taskVariables, variables);
-        variableResponseBuilder.variables(Utility.mapVariablesResponse(variablesFilteredList));
+        Map<String,Object> variablesMap = Utility.mapVariablesResponse(variablesFilteredList);
+        variableResponseBuilder.variables(variablesMap);
+        //Aggiungo al contesto dei log la functionId
+        if (variablesMap != null && variablesMap.get(Constants.FUNCTION_ID) != null) {
+            MDC.put(Constants.FUNCTION_ID, (String) variablesMap.get(Constants.FUNCTION_ID));
+        }
     
         // Filter buttons
         if (buttons != null) {
@@ -234,5 +257,26 @@ public class Utility {
      */
     private static String constructTerminalId(String bankId, String code){
         return bankId.concat(code);
+    }
+
+     /**
+     * Converts a json into a Generic Object T
+     * 
+     * @param <T>
+     * @param json
+     * @param clazz
+     * @return
+     */
+    public static <T> T getObject(String json, Class<T> clazz) {
+        ObjectMapper om = JsonMapper.builder()
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .build();
+        T result = null;
+        try {
+            result = om.readValue(json, clazz);
+        } catch (JsonProcessingException e) {
+            log.error("Error deserializing: {}", e);
+        }
+        return result;
     }
 }

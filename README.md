@@ -3,8 +3,8 @@ This microservice serves as entrypoint to Camunda 7 platform. Manipulates and pr
 
 ## Prerequisites
 * Install an instance of Camunda platform 7
-* JDK 17
-* GraalVM 17 (necessary in case of a locally native build is needed)
+* JDK 21
+* GraalVM 21 (necessary in case of a locally native build is needed)
 * Docker (necessary in case of build into container is needed)
 
 ## Installation
@@ -44,11 +44,13 @@ This command will build a native image and deploy it into a container. Make sure
 * [NEXT] Complete a task, move on to another and retrieve the active tasks.
 * [VARIABLES] Retrieve variables of a specified task and filter them based on the ones you want.
 * [RESOURCE] Get the resource XML of deployment through the deployment ID.
+* [UNDEPLOY] Undeploy a deployed bpmn with a given ID.
 
 ### Build with
-[![Quarkus Badge](https://img.shields.io/badge/Quarkus-3.2.9.Final-1488C6?style=for-the-badge&logo=quarkus)](https://quarkus.io/)
-[![Java 17 Badge](https://img.shields.io/badge/Java-17-007396?style=for-the-badge&logo=java)](https://www.oracle.com/java/technologies/javase-jdk17-downloads.html)
+[![Quarkus Badge](https://img.shields.io/badge/Quarkus-3.8.1-1488C6?style=for-the-badge&logo=quarkus)](https://quarkus.io/)
+[![Java 17 Badge](https://img.shields.io/badge/Java-21-007396?style=for-the-badge&logo=java)](https://www.oracle.com/java/technologies/javase-jdk17-downloads.html)
 [![Camunda Badge](https://img.shields.io/badge/Camunda-7.20-2F73C9?style=for-the-badge&logo=camunda)](https://camunda.com/)
+[![AWS SDK Badge](https://img.shields.io/badge/AWS_SDK-2.12.2-232F3E?style=for-the-badge&logo=amazon-aws)](https://aws.amazon.com/sdk-for-java/)
 
 
 

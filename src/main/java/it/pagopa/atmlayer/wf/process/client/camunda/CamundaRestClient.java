@@ -15,6 +15,7 @@ import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaTaskDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.InstanceDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.filter.CamundaBasicAuthFilter;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -73,5 +74,9 @@ public interface CamundaRestClient {
     @GET
     @Path("/process-instance")
     RestResponse<List<InstanceDto>> getInstanceActivity(@QueryParam("businessKey") String businessKey);
+
+    @DELETE
+    @Path("/deployment/{id}")
+    RestResponse<Object> undeploy(@PathParam("id") String id, @QueryParam("cascade") Boolean cascade);
 
 }

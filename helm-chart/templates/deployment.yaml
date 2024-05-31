@@ -9,7 +9,7 @@ metadata:
     {{- toYaml .Values.deployment.annotations | nindent 4 }}
 
 spec:
-  {{- if .Values.autoscaling.disabled -}}
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
@@ -23,12 +23,14 @@ spec:
     spec:
       serviceAccountName: {{ include "atm-layer-wf-process.serviceAccountName" . }}
       volumes:
+      {{- if .Values.secretProviderClass.enabled }}
       - name: secrets-store-inline
         csi:
           driver: secrets-store.csi.k8s.io
           readOnly: true 
           volumeAttributes:
             secretProviderClass: {{ .Values.secretProviderClass.name }}
+      {{- end }}
       containers:
         - name: {{ .Values.deployment.name }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
@@ -36,6 +38,8 @@ spec:
             - containerPort: {{ .Values.service.port }}
           imagePullPolicy: Always
           env:
+            - name: TZ
+              value: Europe/Rome
             - name: PROCESS_SERVICE_LOG_LEVEL
               value: "{{ .Values.logLevel }}"
             - name: CAMUNDA_ADDRESS
@@ -46,6 +50,9 @@ spec:
               value: "{{ .Values.tracing.endpointBasePath }}"
             - name: TRACING_ENABLE_JDBC_MONITORING
               value: "{{ .Values.tracing.enableJDBCMonitoring }}"
+            - name: TRANSACTIONS_SERVICE_ADDRESS
+              value: "{{ .Values.transactionServiceAddress }}"
+            {{- if .Values.camundaWebUser.credentialsSecretEnabled }}
             - name: PROCESS_SERVICE_ENGINE_ACCOUNT_USER
               valueFrom:
                 secretKeyRef:
@@ -56,21 +63,33 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.camundaWebUser.credentialsSecretName }}
                   key: {{ .Values.camundaWebUser.credentialsSecretKeys.password }}
+            {{- end }}
             - name: MODEL_SERVICE_ADDRESS
               value: "{{ .Values.modelServiceAddress }}"
+            {{- if .Values.redis.credentialsSecretEnabled }}
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.redis.credentialsSecretName }}
+                  key: {{ .Values.redis.credentialsSecretKeys.host }}
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.redis.credentialsSecretName }}
+                  key: {{ .Values.redis.credentialsSecretKeys.port }}
+            - name: REDIS_HOST_READER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.redis.credentialsSecretName }}
+                  key: {{ .Values.redis.credentialsSecretKeys.hostReader }}
+            {{- end }}
           volumeMounts:
+          {{- if .Values.secretProviderClass.enabled }}
           - name: secrets-store-inline
             mountPath: "/mnt/secrets-store"
             readOnly: true
-          {{- if .Values.autoscaling.enabled }}
-          resources:
-            limits:
-              cpu: {{ .Values.autoscaling.cpuLimits }}
-              memory: {{ .Values.autoscaling.memoryLimits }}
-            requests:
-              cpu: {{ .Values.autoscaling.cpuRequest }}
-              memory: {{ .Values.autoscaling.memoryRequests }}
           {{- end }}
-
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
   strategy:
     type: Recreate

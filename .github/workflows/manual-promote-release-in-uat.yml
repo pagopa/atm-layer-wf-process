@@ -61,6 +61,26 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Update file pom.xml with the new version
+        if: steps.semantic-release-dryrun.outputs.new_release_published == 'true'
+        run: |
+          mvn versions:set -DnewVersion=${{ steps.semantic-release-dryrun.outputs.new_release_version }} --no-transfer-progress
+          git pull
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add pom.xml
+          git commit --allow-empty -m "pom.xml updated with new version ${{ steps.semantic-release-dryrun.outputs.new_release_version }}"
+          git push
+
+      - name: Update file Chart.yaml with the new version
+        if: steps.semantic-release-dryrun.outputs.new_release_published == 'true'
+        run: |
+          yq -i ".version = \"v${{ steps.semantic-release-dryrun.outputs.new_release_version }}\"" "helm-chart/Chart.yaml"
+          git pull
+          git add "helm-chart/Chart.yaml"
+          git commit --allow-empty -m "Chart.yaml updated with new version v${{ steps.semantic-release-dryrun.outputs.new_release_version }}"
+          git push
+
       - name: Commit with "${{ inputs.commit }}:" prefix
         run: |
           git config user.name "GitHub Action"
@@ -80,26 +100,6 @@ jobs:
             @semantic-release/git@10.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Update file pom.xml with the new version
-        if: steps.semantic-release.outputs.new_release_published == 'true'
-        run: |
-          mvn versions:set -DnewVersion=${{ steps.semantic-release.outputs.new_release_version }} --no-transfer-progress
-          git pull
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-          git add pom.xml
-          git commit -m "pom.xml updated with new version ${{ steps.semantic-release.outputs.new_release_version }}"
-          git push
-
-      - name: Update file Chart.yaml with the new version
-        if: steps.semantic-release.outputs.new_release_published == 'true'
-        run: |
-          yq -i ".version = \"v${{ steps.semantic-release.outputs.new_release_version }}\"" "helm-chart/Chart.yaml"
-          git pull
-          git add "helm-chart/Chart.yaml"
-          git commit -m "Chart.yaml updated with new version v${{ steps.semantic-release.outputs.new_release_version }}"
-          git push
 
       - name: Configure dev AWS Credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838

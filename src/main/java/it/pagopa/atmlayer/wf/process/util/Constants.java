@@ -20,4 +20,11 @@ public class Constants {
     public static final String DEFINITION_VERSION_CAMUNDA = "definitionVersionCamunda";
 
     public static final String FUNCTION_ID = "functionId";
+    
+    public static final String TRANSACTION_ID = "transactionId";
+    
+    public static final String TRANSACTION_STATUS = "transactionStatus";
+    
+    public static final String TRANSACTION_STATUS_NEW_SESSION = "SESSIONE_AVVIATA";
+    
 }

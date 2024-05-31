@@ -1,10 +1,15 @@
 package it.pagopa.atmlayer.wf.process.service.impl;
 
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -23,6 +28,10 @@ import it.pagopa.atmlayer.wf.process.client.camunda.bean.CamundaVariablesDto;
 import it.pagopa.atmlayer.wf.process.client.camunda.bean.InstanceDto;
 import it.pagopa.atmlayer.wf.process.client.model.ModelRestClient;
 import it.pagopa.atmlayer.wf.process.client.model.bean.ModelBpmnDto;
+import it.pagopa.atmlayer.wf.process.client.transactions.TransactionsServiceRestClient;
+import it.pagopa.atmlayer.wf.process.client.transactions.bean.TransactionServiceRequest;
+import it.pagopa.atmlayer.wf.process.database.dynamo.entity.InstanceVariables;
+import it.pagopa.atmlayer.wf.process.database.dynamo.service.InstanceVariablesServiceImpl;
 import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
 import it.pagopa.atmlayer.wf.process.exception.ProcessException;
 import it.pagopa.atmlayer.wf.process.service.ProcessService;
@@ -35,6 +44,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.WebApplicationException;
 import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.core.exception.SdkException;
 
 /**
  * ProcessService implementation
@@ -48,9 +58,15 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
 
     @RestClient
     ModelRestClient modelRestClient;
+    
+    @RestClient
+    TransactionsServiceRestClient transactionsRestClient;
 
     @Inject
     Properties properties;
+
+    @Inject
+    InstanceVariablesServiceImpl instanceVariablesService;
 
     /**
      * {@inheritDoc}
@@ -62,9 +78,10 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
 
         try {
             start = System.currentTimeMillis();
-            camundaDeployResponse = camundaRestClient.deploy(Utility.downloadBpmnFile(new URL(requestUrl), fileName));
+            URI uri = new URI(requestUrl);
+            camundaDeployResponse = camundaRestClient.deploy(Utility.downloadBpmnFile(uri.toURL(), fileName));
             log.info("Resource deployed!");
-        } catch (WebApplicationException e) {
+        } catch (WebApplicationException | URISyntaxException e) {
             log.error("Deploy bpmn failed! The service may be unreachable or an error occured:", e);
             throw new ProcessException(ProcessErrorEnum.DEPLOY_D01);
         } finally {
@@ -92,13 +109,26 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      * @param variables
      */
     public void start(String transactionId, String functionId, DeviceInfo deviceInfo, Map<String, Object> variables) {
-        Utility.populateDeviceInfoVariables(transactionId, deviceInfo, variables);
+        
+        Map<String, Object> extendedVariables = Utility.populateDeviceInfoVariables(transactionId, deviceInfo, variables);
+        extendedVariables.put(Constants.FUNCTION_ID, functionId);
+        extendedVariables.put(Constants.TRANSACTION_STATUS, Constants.TRANSACTION_STATUS_NEW_SESSION);
 
         RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = findBpmnId(functionId, deviceInfo);
 
         String bpmnId = getBpmnId(modelFindBpmnIdResponse, functionId);
+        
+        final TransactionServiceRequest request = new TransactionServiceRequest();
+        request.setFunctionType(functionId);
+        request.setAcquirerId(deviceInfo.getBankId());
+        request.setBranchId(deviceInfo.getBranchId());
+        request.setTerminalId(deviceInfo.getTerminalId());
+        request.setTransactionId(transactionId);
+        request.setTransactionStatus((String)extendedVariables.get(Constants.TRANSACTION_STATUS));
+    
+        CompletableFuture.runAsync(() -> transactionsRestClient.inset(request));
 
-        startInstance(transactionId, bpmnId, variables);
+        startInstance(transactionId, bpmnId, extendedVariables);
     }
 
     /**
@@ -168,6 +198,25 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      */
     private void startInstance(String transactionId, String bpmnId, Map<String, Object> variables) {
         long start = 0;
+
+        List<InstanceVariables> instanceVariablesList = new LinkedList<>();
+        try {
+            /*
+             * Retrieving instance variables from DynamoDB and send them to Camunda
+             */
+           instanceVariablesList = instanceVariablesService.findAll();
+            if (!Objects.isNull(instanceVariablesList) && !instanceVariablesList.isEmpty()){
+                log.debug("Number of instance variables found: {}", instanceVariablesList.size());
+                variables.putAll(instanceVariablesList.stream()
+                                        .collect(Collectors.toMap(
+                                                InstanceVariables::getName,
+                                                InstanceVariables::getValue)));
+            } else {
+                log.debug("instance-variables table is empty!");
+            }
+        } catch (SdkException e){
+            log.error("Error while trying to retrieve instance variables from DynamoDB: ", e);
+        }
 
         try {
             CamundaBodyRequestDto body = CamundaBodyRequestDto.builder()
@@ -350,6 +399,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void complete(String taskId, Map<String, Object> variables, String functionId, DeviceInfo deviceInfo) {
         RestResponse<ModelBpmnDto> modelFindBpmnIdResponse = findBpmnId(functionId, deviceInfo);
 
@@ -358,7 +408,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
             String definitionVersionCamunda = modelFindBpmnIdResponse.getEntity().getDefinitionVersionCamunda();
             log.info("definitionKey: {}, definitionVersionCamunda: {}", definitionKey, definitionVersionCamunda);
 
-            variables = variables != null ? variables : Collections.emptyMap();
+            variables = variables != null ? variables : new HashMap<>();
             variables.put(Constants.DEFINITION_KEY, definitionKey);
             variables.put(Constants.DEFINITION_VERSION_CAMUNDA, definitionVersionCamunda);
 
@@ -372,6 +422,7 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void complete(String taskId, Map<String, Object> variables) {
         long start = 0;
 
@@ -413,14 +464,22 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
      */
     public RestResponse<VariableResponse> getTaskVariables(String taskId, List<String> variables,
             List<String> buttons) {
-        long start = 0;
-        RestResponse<CamundaVariablesDto> taskVariables;
-
+        long start = 0;         
+         RestResponse<CamundaVariablesDto> taskVariables;
         try {
             log.info("CAMUNDA GET TASK VARIABLES sending request with params: [ taskId: {} ]", taskId);
             start = System.currentTimeMillis();
-            taskVariables = camundaRestClient.getTaskVariables(taskId);
-            log.info("Variables: [{}]", taskVariables.getEntity());
+            taskVariables = camundaRestClient.getTaskVariables(taskId);            
+            log.info("Variables: [{}]", taskVariables);      
+           
+            Map<String, Object> mapVariables = Utility.mapVariablesResponse(taskVariables.getEntity());   
+            
+            final TransactionServiceRequest request = new TransactionServiceRequest(
+                     (String) mapVariables.get(Constants.FUNCTION_ID) ,
+                     (String) mapVariables.get(Constants.TRANSACTION_ID),
+                     (String) mapVariables.get(Constants.TRANSACTION_STATUS));
+            CompletableFuture.runAsync(() -> transactionsRestClient.update(request));
+            
         } catch (WebApplicationException e) {
             if (e.getResponse().getStatus() == RestResponse.StatusCode.INTERNAL_SERVER_ERROR) {
                 log.error("Retrieve variables failed! Task id is null or does ont exist.");
@@ -500,6 +559,33 @@ public class ProcessServiceImpl extends CommonLogic implements ProcessService {
         }
 
         return camundaGetResourceBinaryResponse.getEntity();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public RestResponse<Object> undeploy(String id) {
+        long start = 0;
+        RestResponse<Object> camundaUndeployResponse;
+        try {
+            log.info("Undeploying bpmn. . .");
+            start = System.currentTimeMillis();
+            camundaUndeployResponse = camundaRestClient.undeploy(id, true);
+            log.info("Bpmn with id: {} undeployed! ", id);
+        } catch (WebApplicationException e) {
+            if (e.getResponse().getStatus() == RestResponse.StatusCode.NOT_FOUND) {
+                log.error("Deployment with the given id not found!");
+                throw new ProcessException(ProcessErrorEnum.RESOURCE_R02);
+            } else {
+                log.error(UNKNOWN_STATUS, e.getResponse().getStatus());
+                throw new ProcessException(ProcessErrorEnum.GENERIC);
+            }
+        } finally {
+            logElapsedTime(CAMUNDA_UNDEPLOY_LOG_ID, start);
+        }
+
+        return camundaUndeployResponse;
     }
 
 }

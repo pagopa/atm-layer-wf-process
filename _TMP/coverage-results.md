@@ -1,14 +1,14 @@
 
 # Coverage Report: JaCoCo
 
-* IntegrationTest (QuarkusTest)
+* LogFilterTest (QuarkusTest)
       
       
 | Outcome                 | Value                                                               |
 |-------------------------|---------------------------------------------------------------------|
-| Code Coverage %         | 93.23%               |
-| :heavy_check_mark: Number of Lines Covered | 482    |
-| :x: Number of Lines Missed  | 35     |
+| Code Coverage %         | 92.84%               |
+| :heavy_check_mark: Number of Lines Covered | 480    |
+| :x: Number of Lines Missed  | 37     |
 | Total Number of Lines   | 517     |
 
 
@@ -146,23 +146,23 @@
         
 #### Lines Missed:
         
-- Line #86
+- Line #84
 ```
         } catch (WebApplicationException | URISyntaxException e) {
 ```
-- Line #219
+- Line #217
 ```
         } catch (SdkException e){
 ```
-- Line #381
+- Line #379
 ```
             } catch (InterruptedException e) {
 ```
-- Line #385
+- Line #383
 ```
             } catch (WebApplicationException e) {
 ```
-- Line #578
+- Line #576
 ```
         } catch (WebApplicationException e) {
 ```
@@ -484,12 +484,16 @@
 
 <details>
     <summary>
-:heavy_check_mark: InstanceVariables.java
+:x: InstanceVariables.java
     </summary>
 
         
-#### All Lines Covered!
+#### Lines Missed:
         
+- Line #35
+```
+                    break;
+```
 </details>
 
     

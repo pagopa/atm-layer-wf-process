@@ -9,7 +9,7 @@ public abstract class InstanceVariablesService {
 
     public static final String INSTANCE_VARIABLES_NAME_COL = "name";
     public static final String INSTANCE_VARIABLES_VALUE_COL = "value";
-    public static final String INSTANCE_VARIABLES_TABLE_NAME = "pagopa-dev-atm-layer-wf-process-instance-variables";
+    public static final String INSTANCE_VARIABLES_TABLE_NAME = "pagopa-atm-layer-wf-process-instance-variables";
 
     /**
      * Creates a ScanRequest for pagopa-dev-atm-layer-wf-process-instance-variables table on DynamoDB.

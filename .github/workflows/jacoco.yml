@@ -11,10 +11,10 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
 
       - name: Setup JDK
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@2911b2304bee2c2f59b9a67bf45f025a6b6de4b1 # v1
         with:
           java-version: '21'
           distribution: 'graalvm'
@@ -36,7 +36,7 @@ jobs:
 
       - name: Fail PR if overall coverage is less than 90%
         if: ${{ steps.jacoco.outputs.coverage-overall < 90.0 }}
-        uses: actions/github-script@v6
+        uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6
         with:
           script: |
             core.setFailed('Overall coverage is less than 90%!')

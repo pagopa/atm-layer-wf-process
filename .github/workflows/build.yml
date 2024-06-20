@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
@@ -32,10 +32,10 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 # v2
 
       - name: Setup JDK
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@2911b2304bee2c2f59b9a67bf45f025a6b6de4b1 # v1
         with:
           java-version: '21'
           distribution: 'graalvm'
@@ -47,7 +47,7 @@ jobs:
 
       - name: Create Status check based on postman results
         id: process-postman
-        uses: im-open/process-postman-test-results@v2.1.5
+        uses: im-open/process-postman-test-results@4cc90df9ffdd1554366e19e759a15d008bdf3c39 # v2.1.5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           results-file: src/test/resources/integration-test/output/result.json
@@ -65,14 +65,14 @@ jobs:
           exit 1
 
       - name: Upload result.html
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
         with:
           name: html-report
           path: src/test/resources/integration-test/output/result.html
 
       - name: JaCoCo Code Coverage Report
         id: jacoco_reporter
-        uses: PavanMudigonda/jacoco-reporter@v4.9
+        uses: PavanMudigonda/jacoco-reporter@76044ebc031589dcbce0bb1048ffee1072a43f97 # v4.9
         with:
           coverage_results_path: target/jacoco-report/jacoco.xml
           coverage_report_name: 'Coverage build ${{ github.run_number }}'
@@ -85,7 +85,7 @@ jobs:
 
       - name: Fail Build if overall coverage is less than 90%
         if: steps.jacoco_reporter.outputs.coverage_percentage < 90.0 
-        uses: actions/github-script@v6
+        uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6
         with:
           script: |
             core.setFailed('Overall coverage is less than 90%!')

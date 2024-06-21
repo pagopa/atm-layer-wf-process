@@ -20,7 +20,7 @@ logLevel: DEBUG
 
 tracing:
   enabled: "true"
-  endpointBasePath: "http://jaeger-collector.default.svc.cluster.local:4317"
+  endpointBasePath: "http://jeager-manual-trace-ecs-priv-b19cfd091be2d616.elb.eu-south-1.amazonaws.com:4317"
   enableJDBCMonitoring: "false"
 
 modelServiceAddress: http://pagopa-uat-atm-layer-model.pagopa.svc.cluster.local:8080
@@ -108,17 +108,17 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 150m
+    cpu: 300m
     memory: 150Mi
   requests:
-    cpu: 50m
+    cpu: 150m
     memory: 50Mi
 
 autoscaling:
   enabled: true
   minReplicas: 2
-  maxReplicas: 4
-  targetCPUUtilizationPercentage: 80
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 30
   # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}

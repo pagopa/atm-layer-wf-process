@@ -58,7 +58,7 @@ public class ProcessResource extends CommonLogic{
     /**
      * Endpoint to deploy a BPMN process definition to Camunda.
      *
-     * @param request The task request.
+     * @param requestUrl The task request.
      * @return A `RestResponse` containing the deployment outcome.
      */
     @Operation(summary = "Esegue il 'deploy' di una risorsa.", description = "Esegue il deploy di una risorsa nel motore di workflow (es. Camunda)")
@@ -209,8 +209,7 @@ public class ProcessResource extends CommonLogic{
             /*
              * Retrieve active tasks
              */
-            SubscriptionPayload payload = processService.getSubscribe(request.getTransactionId());
-            response = processService.retrieveActiveTasks(request.getTransactionId(), payload);
+            response = processService.retrieveActiveTasks(request.getTransactionId());
         } catch (ProcessException e) {
             throw e;
         } catch (RuntimeException e) {
@@ -258,7 +257,7 @@ public class ProcessResource extends CommonLogic{
     /**
      * Endpoint to retrieve the variables of a task.
      * 
-     * @param request
+     * @param id
      * @return A `RestResponse` containing variables of the task.
     */
     @Operation(summary = "Effettua l'undeploy del bpmn.")

@@ -1,7 +1,7 @@
 
 # Coverage Report: JaCoCo
 
-* IntegrationTest (QuarkusTest)
+* LogFilterTest (QuarkusTest)
       
       
 | Outcome                 | Value                                                               |

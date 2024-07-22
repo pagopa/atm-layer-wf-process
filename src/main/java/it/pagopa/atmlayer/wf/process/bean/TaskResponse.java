@@ -22,10 +22,10 @@ import lombok.NoArgsConstructor;
 @Schema(description = "La risposta all'elaborazione del task")
 public class TaskResponse {
 
-    @Schema(description = "lista dei task recuperati")
+    @Schema(description = "lista dei task recuperati", maxItems = 10000, implementation = Task.class)
     private List<Task> tasks;
 
-    @Schema(description = "business key associata al processo camunda")
+    @Schema(description = "business key associata al processo camunda", maxLength = 36, format = "string")
     private String transactionId;
 
 }

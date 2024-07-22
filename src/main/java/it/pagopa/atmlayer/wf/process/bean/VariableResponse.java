@@ -3,6 +3,7 @@ package it.pagopa.atmlayer.wf.process.bean;
 import java.util.Map;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.media.Schema.False;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -22,9 +23,9 @@ import lombok.NoArgsConstructor;
 @JsonInclude(Include.NON_NULL)
 public class VariableResponse {
     
-    @Schema(description = "Buttons filtrati per il task richiesto")
+    @Schema(description = "Buttons filtrati per il task richiesto", additionalProperties = False.class)
     Map<String, Object> buttons;
 
-    @Schema(description = "Variabili filtrate per il task richiesto")
+    @Schema(description = "Variabili filtrate per il task richiesto", additionalProperties = False.class)
     Map<String, Object> variables;
 }

@@ -33,7 +33,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response.Status;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -234,7 +233,7 @@ public class ProcessResource extends CommonLogic{
     */
     @Operation(operationId = "variables", description = "Recupero delle variabili del task presente nella richiesta.",summary = "Recupera le variabili dell'istanza di processo e filtra le stesse in base a quelle richieste dal task aggiungendovi le variabili e i bottoni di default.")
     @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la mappa delle variabili filtrate e le Taskvars del task corrente del workflow.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = VariableResponse.class)))
-    @APIResponse(responseCode = "400", description = "BAD REQUEST. Nel caso di errori di validazione o di una richiesta malformata.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Status.class)))
+    @APIResponse(responseCode = "400", description = "BAD REQUEST. Nel caso di errori di validazione o di una richiesta malformata.")
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante l'elaborazione.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @APIResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE. Nel caso di errore durante il recupero delle variabili ritornato da Camunda.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @POST
@@ -267,7 +266,7 @@ public class ProcessResource extends CommonLogic{
     */
     @Operation(operationId = "undeploy", description = "Esegue l'undeploy del bpmn.", summary = "Effettua l'undeploy del bpmn.")
     @APIResponse(responseCode = "204", description = "OK. Operazione eseguita con successo.")
-    @APIResponse(responseCode = "400", description = "BAD REQUEST. Nel caso di errori di validazione o di una richiesta malformata.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Status.class)))
+    @APIResponse(responseCode = "400", description = "BAD REQUEST. Nel caso di errori di validazione o di una richiesta malformata.")
     @APIResponse(responseCode = "404", description = "NOT_FOUND. Nel caso il deployment corrispondente al id non esiste.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @APIResponse(responseCode = "500", description = "ERROR. Nel caso di errori durante l'undeploy.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @POST

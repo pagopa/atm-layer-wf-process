@@ -212,7 +212,8 @@ public class ProcessResource extends CommonLogic{
             /*
              * Retrieve active tasks
              */
-            response = processService.retrieveActiveTasks(request.getTransactionId());
+            SubscriptionPayload payload = processService.getSubscribe(request.getTransactionId());
+            response = processService.retrieveActiveTasks(request.getTransactionId(), payload);
         } catch (ProcessException e) {
             throw e;
         } catch (RuntimeException e) {

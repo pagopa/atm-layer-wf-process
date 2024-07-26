@@ -1,7 +1,7 @@
 
 # Coverage Report: JaCoCo
 
-* IntegrationTest (QuarkusTest)
+* LogFilterTest (QuarkusTest)
       
       
 | Outcome                 | Value                                                               |
@@ -179,11 +179,11 @@
         
 #### Lines Missed:
         
-- Line #81
+- Line #84
 ```
                 .append(resourceType != null ? resourceType.toLowerCase() : Constants.BPMN).toString();
 ```
-- Line #277
+- Line #282
 ```
         } catch (ProcessException e) {
 ```

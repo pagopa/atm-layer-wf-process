@@ -2,6 +2,7 @@ package it.pagopa.atmlayer.wf.process.enums;
 
 import lombok.Getter;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jboss.resteasy.reactive.RestResponse;
 
 /**
@@ -26,7 +27,7 @@ public enum ProcessErrorEnum {
     DEPLOY_D01(RestResponse.Status.SERVICE_UNAVAILABLE, "D01", "Deploy failed! An error occurs during deployment on Camunda platform.", "DEPLOY_ERROR"),
     UNDEPLOY_D01(RestResponse.Status.NOT_FOUND, "U01", "The deployment with the given id does not exists.", "DEPLOYMENT_NOT_FOUND");
     
-    
+    @Schema(implementation = RestResponse.Status.class)
     private final RestResponse.Status status;
     private final String errorCode;
     private final String errorMessage;

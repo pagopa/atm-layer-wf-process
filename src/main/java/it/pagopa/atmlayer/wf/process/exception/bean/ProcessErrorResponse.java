@@ -5,6 +5,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -43,21 +44,26 @@ public class ProcessErrorResponse {
     /**
      * The error code associated with the exception.
      */
+    @Schema(description = "Il codice di errore identificativo", example = "G01", format = "String", maxLength = 3)
     private String errorCode;
 
     /**
      * The type or category of the error.
      */
+    @Schema(description = "Il tipo dell'errore", example = "NOT_VALID_REFERENCED_ENTITY", format = "String", maxLength = 27)
     private String type;
 
     /**
      * The HTTP status code representing the error.
      */
+    @Schema(description = "Lo status code della risposta d'errore", minimum = "200", maximum = "500")
+    @Positive
     private int statusCode;
 
     /**
      * A human-readable error message providing details about the exception.
      */
+    @Schema(description = "Una breve descrizione dell'errore", example = "Generic error", format = "String", maxLength = 80)
     private String message;
 
 }

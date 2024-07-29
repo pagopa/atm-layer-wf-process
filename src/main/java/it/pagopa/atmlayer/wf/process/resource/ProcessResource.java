@@ -8,6 +8,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.RestResponse;
 
@@ -20,10 +21,11 @@ import it.pagopa.atmlayer.wf.process.enums.ProcessErrorEnum;
 import it.pagopa.atmlayer.wf.process.exception.ProcessException;
 import it.pagopa.atmlayer.wf.process.exception.bean.ProcessErrorResponse;
 import it.pagopa.atmlayer.wf.process.service.ProcessService;
-import it.pagopa.atmlayer.wf.process.util.Constants;
 import it.pagopa.atmlayer.wf.process.util.CommonLogic;
+import it.pagopa.atmlayer.wf.process.util.Constants;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.inject.Inject;
+import jakarta.validation.constraints.Size;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -47,6 +49,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Path("/api/v1/processes")
+@Tag(name = "Workflow", description = "Gestione del task affidata all'engine Camunda")
 public class ProcessResource extends CommonLogic{
 
     @Inject
@@ -58,10 +61,10 @@ public class ProcessResource extends CommonLogic{
     /**
      * Endpoint to deploy a BPMN process definition to Camunda.
      *
-     * @param request The task request.
+     * @param requestUrl The task request.
      * @return A `RestResponse` containing the deployment outcome.
      */
-    @Operation(summary = "Esegue il 'deploy' di una risorsa.", description = "Esegue il deploy di una risorsa nel motore di workflow (es. Camunda)")
+    @Operation(operationId = "deploy", summary = "Esegue il 'deploy' di una risorsa.", description = "Esegue il deploy di una risorsa nel motore di workflow (es. Camunda)")
     @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce l'ID della risorsa creata nel motore di workflow.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @APIResponse(responseCode = "400", description = "BAD_REQUEST. Nel caso di richiesta errata.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore generico.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
@@ -70,8 +73,8 @@ public class ProcessResource extends CommonLogic{
     @Path("/deploy/{resourceType:.*}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public RestResponse<Object> deploy(
-            @Parameter(description = "L'url da cui recuperare il file bpmn.") @RestForm("url") String requestUrl,
-            @Parameter(description = "Tipo di File (BPMN, DMN...)") @PathParam("resourceType") String resourceType) {
+            @Parameter(description = "L'url da cui recuperare il file bpmn.") @RestForm("url") @Schema(format = "String", maxLength = 300) @Size(max = 300) String requestUrl,
+            @Parameter(description = "Tipo di File (BPMN, DMN...)") @Schema(format = "String", maxLength = 4) @Size(max = 300) @PathParam("resourceType") String resourceType) {
         long start = System.currentTimeMillis();
         log.info("Executing DEPLOY. . .");
 
@@ -100,15 +103,15 @@ public class ProcessResource extends CommonLogic{
      * @param id The deploymentId.
      * @return A `RestResponse` containing the resource BPMN.
      */
-    @Operation(summary = "Recupera risorsa BPMN/FORM/DMN.", description = "Recupera file BPMN per il dato deploymentId.")
-    @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce il file in formato Xml.", content = @Content(mediaType = "application/xml", schema = @Schema(implementation = String.class)))
+    @Operation(operationId = "resource", summary = "Recupera risorsa BPMN/FORM/DMN.", description = "Recupera file BPMN per il dato deploymentId.")
+    @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce il file in formato Xml.", content = @Content(mediaType = "application/xml", schema = @Schema(implementation = String.class, format = "String", maxLength = 36)))
     @APIResponse(responseCode = "400", description = "BAD_REQUEST. Risorsa non trovata.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @APIResponse(responseCode = "404", description = "NOT_FOUND. Deployments non trovati.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore generico.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @GET
     @Path("/deploy/{id}/data")
     @Produces(MediaType.APPLICATION_XML)
-    public RestResponse<String> resource(@PathParam("id") String id) {
+    public RestResponse<String> resource(@Schema(format = "String", maxLength = 36) @PathParam("id") @Size(max = 36) @Parameter(description = "Il deploymentId del bpmn da deployare")String id) {
         log.info("Executing RESOURCE. . .");
         long start = System.currentTimeMillis();
 
@@ -134,7 +137,7 @@ public class ProcessResource extends CommonLogic{
      * @param request The task request.
      * @return A `RestResponse` containing information about the active tasks.
      */
-    @Operation(summary = "Esegue la 'start' dell'istanza di processo del flusso BPMN", description = "Esegue la 'start' dell'istanza di processo del flusso BPMN nel motore di workflow (es. Camunda) e restituisce la lista dei task attivi.")
+    @Operation(operationId = "startProcess", summary = "Esegue la 'start' dell'istanza di processo del flusso BPMN", description = "Esegue la 'start' dell'istanza di processo del flusso BPMN nel motore di workflow (es. Camunda) e restituisce la lista dei task attivi.")
     @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la lista dei task attivi del workflow. Task attivi non presenti se il bpmn risulta completato.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TaskResponse.class)))
     @APIResponse(responseCode = "202", description = "ACCEPTED. Service task in esecuzione ma non ancora completato al momento della risposta.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @APIResponse(responseCode = "400", description = "BAD_REQUEST. Nel caso di 'businessKey' errata.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
@@ -176,7 +179,7 @@ public class ProcessResource extends CommonLogic{
      * @param request The task request.
      * @return A `RestResponse` containing information about active tasks.
      */
-    @Operation(summary = "Esegue il 'next' task dell'istanza di processo del flusso BPMN", description = "Esegue il 'next' task dell'istanza di processo del flusso BPMN nel motore di workflow (es. Camunda) e restituisce la lista dei task attivi.")
+    @Operation(operationId = "next", summary = "Esegue il 'next' task dell'istanza di processo del flusso BPMN", description = "Esegue il 'next' task dell'istanza di processo del flusso BPMN nel motore di workflow (es. Camunda) e restituisce la lista dei task attivi.")
     @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la lista dei task attivi del workflow, dopo il completamento del task corrente. Task attivi non presenti se il bpmn risulta completato.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TaskResponse.class)))
     @APIResponse(responseCode = "202", description = "ACCEPTED. Service task in esecuzione ma non ancora completato al momento della risposta.", content = @Content(schema = @Schema(implementation = RestResponse.Status.class)))
     @APIResponse(responseCode = "400", description = "BAD_REQUEST. Nel caso di 'taskId' nullo.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
@@ -209,8 +212,7 @@ public class ProcessResource extends CommonLogic{
             /*
              * Retrieve active tasks
              */
-            SubscriptionPayload payload = processService.getSubscribe(request.getTransactionId());
-            response = processService.retrieveActiveTasks(request.getTransactionId(), payload);
+            response = processService.retrieveActiveTasks(request.getTransactionId());
         } catch (ProcessException e) {
             throw e;
         } catch (RuntimeException e) {
@@ -229,8 +231,9 @@ public class ProcessResource extends CommonLogic{
      * @param request
      * @return A `RestResponse` containing variables of the task.
     */
-    @Operation(summary = "Recupera le variabili dell'istanza di processo e filtra le stesse in base a quelle richieste dal task aggiungendovi le variabili e i bottoni di default.")
+    @Operation(operationId = "variables", description = "Recupero delle variabili del task presente nella richiesta.",summary = "Recupera le variabili dell'istanza di processo e filtra le stesse in base a quelle richieste dal task aggiungendovi le variabili e i bottoni di default.")
     @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la mappa delle variabili filtrate e le Taskvars del task corrente del workflow.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = VariableResponse.class)))
+    @APIResponse(responseCode = "400", description = "BAD REQUEST. Nel caso di errori di validazione o di una richiesta malformata.")
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante l'elaborazione.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @APIResponse(responseCode = "503", description = "SERVICE_UNAVAILABLE. Nel caso di errore durante il recupero delle variabili ritornato da Camunda.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @POST
@@ -258,16 +261,17 @@ public class ProcessResource extends CommonLogic{
     /**
      * Endpoint to retrieve the variables of a task.
      * 
-     * @param request
+     * @param id
      * @return A `RestResponse` containing variables of the task.
     */
-    @Operation(summary = "Effettua l'undeploy del bpmn.")
+    @Operation(operationId = "undeploy", description = "Esegue l'undeploy del bpmn.", summary = "Effettua l'undeploy del bpmn.")
     @APIResponse(responseCode = "204", description = "OK. Operazione eseguita con successo.")
+    @APIResponse(responseCode = "400", description = "BAD REQUEST. Nel caso di errori di validazione o di una richiesta malformata.")
     @APIResponse(responseCode = "404", description = "NOT_FOUND. Nel caso il deployment corrispondente al id non esiste.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @APIResponse(responseCode = "500", description = "ERROR. Nel caso di errori durante l'undeploy.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
     @POST
     @Path("/undeploy/{id}")
-    public RestResponse<Object> undeploy(@PathParam("id") String id) {
+    public RestResponse<Object> undeploy(@Schema(format = "String", maxLength = 36) @PathParam("id") @Size(max = 36) @Parameter(description = "Il deploymentId del bpmn su cui effettuare l'undeploy") String id) {
         log.info("Executing UNDEPLOY. . .");
         long start = System.currentTimeMillis();
 

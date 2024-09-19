@@ -40,14 +40,6 @@ camundaWebUser:
 
 transactionServiceAddress: http://pagopa-dev-atm-layer-transaction-service.pagopa.svc.cluster.local:8080
 
-redis:
-  credentialsSecretEnabled: true
-  credentialsSecretName: pagopa-dev-atm-layer-wf-process-redis
-  credentialsSecretKeys:
-    host: host
-    port: port
-    hostReader: hostReader
-
 secretProviderClass:
   enabled: true
   name: atm-layer-wf-process-secrets
@@ -80,7 +72,7 @@ deployment:
   name: pagopa-dev-atm-layer-wf-process
   annotations:
     reloader.stakater.com/auto: "true"
-    secret.reloader.stakater.com/reload: pagopa-dev-atm-layer-wf-process-camunda, pagopa-dev-atm-layer-wf-process-redis
+    secret.reloader.stakater.com/reload: pagopa-dev-atm-layer-wf-process-camunda
 
 service:
   name: pagopa-dev-atm-layer-wf-process

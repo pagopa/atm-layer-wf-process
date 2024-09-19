@@ -35,14 +35,6 @@ camundaWebUser:
 
 transactionServiceAddress: http://pagopa-prod-atm-layer-transaction-service.pagopa.svc.cluster.local:8080
 
-redis:
-  credentialsSecretEnabled: true
-  credentialsSecretName: pagopa-prod-atm-layer-wf-process-redis
-  credentialsSecretKeys:
-    host: host
-    port: port
-    hostReader: hostReader
-
 secretProviderClass:
   enabled: true
   name: atm-layer-wf-process-secrets
@@ -75,8 +67,7 @@ deployment:
   name: pagopa-prod-atm-layer-wf-process
   annotations:
     reloader.stakater.com/auto: "true"
-    secret.reloader.stakater.com/reload: pagopa-prod-atm-layer-wf-process-camunda, pagopa-prod-atm-layer-wf-process-redis
-
+    secret.reloader.stakater.com/reload: pagopa-prod-atm-layer-wf-process-camunda
 service:
   name: pagopa-prod-atm-layer-wf-process
   type: NodePort
@@ -108,17 +99,17 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 150m
+    cpu: 600m
     memory: 150Mi
   requests:
-    cpu: 50m
+    cpu: 150m
     memory: 50Mi
 
 autoscaling:
   enabled: true
   minReplicas: 2
-  maxReplicas: 4
-  targetCPUUtilizationPercentage: 80
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 30
   # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}

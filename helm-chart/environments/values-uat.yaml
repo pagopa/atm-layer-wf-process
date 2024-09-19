@@ -35,14 +35,6 @@ camundaWebUser:
 
 transactionServiceAddress: http://pagopa-uat-atm-layer-transaction-service.pagopa.svc.cluster.local:8080
 
-redis:
-  credentialsSecretEnabled: true
-  credentialsSecretName: pagopa-uat-atm-layer-wf-process-redis
-  credentialsSecretKeys:
-    host: host
-    port: port
-    hostReader: hostReader
-
 secretProviderClass:
   enabled: true
   name: atm-layer-wf-process-secrets
@@ -75,7 +67,7 @@ deployment:
   name: pagopa-uat-atm-layer-wf-process
   annotations:
     reloader.stakater.com/auto: "true"
-    secret.reloader.stakater.com/reload: pagopa-uat-atm-layer-wf-process-camunda, pagopa-uat-atm-layer-wf-process-redis
+    secret.reloader.stakater.com/reload: pagopa-uat-atm-layer-wf-process-camunda
 
 service:
   name: pagopa-uat-atm-layer-wf-process
@@ -115,9 +107,9 @@ resources:
     memory: 50Mi
 
 autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 1
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
   targetCPUUtilizationPercentage: 30
   # targetMemoryUtilizationPercentage: 80
 

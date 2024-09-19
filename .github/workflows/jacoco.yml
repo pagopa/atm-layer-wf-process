@@ -26,16 +26,13 @@ jobs:
 
       - name: Add coverage to PR
         id: jacoco
-        uses: PavanMudigonda/jacoco-reporter@76044ebc031589dcbce0bb1048ffee1072a43f97 # v4.9
+        uses: madrapps/jacoco-report@7a334255fbce42f385d7567c25d986a9c62e2971
         with:
-          coverage_results_path: target/jacoco-report/jacoco.xml
-          coverage_report_name: 'Coverage PR ${{ github.run_number }}'
-          coverage_report_title: JaCoCo
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          skip_check_run: false
-          minimum_coverage: 90
-          fail_below_threshold: true
-          publish_only_summary: false
+          paths: target/jacoco-report/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 90
+          title: jacoco
+          update-comment: true
 
       - name: Fail PR if overall coverage is less than 90%
         if: ${{ steps.jacoco.outputs.coverage-overall < 90.0 }}

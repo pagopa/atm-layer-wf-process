@@ -16,7 +16,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-logLevel: DEBUG
+logLevel: INFO
 
 tracing:
   enabled: "true"

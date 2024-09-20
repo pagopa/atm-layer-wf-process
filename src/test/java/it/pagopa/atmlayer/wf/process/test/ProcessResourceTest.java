@@ -825,4 +825,30 @@ class ProcessResourceTest {
                                 .then()
                                 .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
         }
+        
+        @Test
+        void testUndeployKoWeb() {
+                Mockito.when(camundaRestClient.undeploy(Mockito.anyString(), Mockito.anyBoolean()))
+                                .thenThrow(new WebApplicationException());
+
+                given()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/undeploy/{id}", ProcessTestData.DEPLOYMENT_ID)
+                                .then()
+                                .statusCode(StatusCode.INTERNAL_SERVER_ERROR);
+        }
+        
+        @Test
+        void testUndeployKoWebNotFound() {
+                Mockito.when(camundaRestClient.undeploy(Mockito.anyString(), Mockito.anyBoolean()))
+                                .thenThrow(new WebApplicationException(Response.status(Status.NOT_FOUND).build()));
+
+                given()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .when()
+                                .post("/undeploy/{id}", ProcessTestData.DEPLOYMENT_ID)
+                                .then()
+                                .statusCode(StatusCode.BAD_REQUEST);
+        }
 }

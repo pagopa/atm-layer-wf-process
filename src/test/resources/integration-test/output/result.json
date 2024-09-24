@@ -1,0 +1,4176 @@
+{
+  "collection": {
+    "_": {
+      "postman_id": "fa41de07-c678-4c26-9e8f-4cb0ff0184f5",
+      "exporter_id": "25309445"
+    },
+    "item": [
+      {
+        "id": "9fcfee6e-a40b-45e4-9ba9-98633ac2890f",
+        "name": "Start - Processo correttamente iniziato",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "start"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"00000\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "daaf8904-5117-4dc5-b0b7-ec83b954dc2f",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {\r",
+                "    pm.response.to.have.status(200);\r",
+                "});"
+              ],
+              "_lastExecutionId": "e942521a-64a1-433d-a26a-6e741a46a658"
+            }
+          }
+        ]
+      },
+      {
+        "id": "58ed1fe0-e63b-4223-8488-f3fde5698957",
+        "name": "Start - Errore su Camunda, processo non startato correttamente",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "start"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"22222\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "a28883d0-84b6-43ea-b259-1d404a649579",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 503\", function () {\r",
+                "    pm.response.to.have.status(503);\r",
+                "});"
+              ],
+              "_lastExecutionId": "ecb4d742-00ed-42eb-a941-40ce88e39a06"
+            }
+          }
+        ]
+      },
+      {
+        "id": "969769b3-e23a-44bd-b182-184927f14afe",
+        "name": "Start - Model recupero bpmn id fallito, utilizzo functionId",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "start"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"11111\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "d3e18503-e8f0-49af-8e71-269f01449921",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {\r",
+                "    pm.response.to.have.status(200);\r",
+                "});"
+              ],
+              "_lastExecutionId": "a919be2b-bdd5-41b2-a908-a9bb7dd8908a"
+            }
+          }
+        ]
+      },
+      {
+        "id": "92a6651e-9054-42ce-8d42-7d1bea471dda",
+        "name": "Next - Task specificato completato corretamente e recuperati i task attivi",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "next"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"taskId\": \"4badbbab-846e-11ee-8aec-f296510bbaa3\",\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"55555\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "82668a6b-5794-4c73-a417-b5c486fbfd83",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {\r",
+                "    pm.response.to.have.status(200);\r",
+                "});"
+              ],
+              "_lastExecutionId": "8a0aa02c-8c02-4e96-8100-28cfe1d35173"
+            }
+          }
+        ]
+      },
+      {
+        "id": "e9c68ab6-8f85-4f57-8ec0-6a3ae6367241",
+        "name": "Next - Task non specificato, recupero dei task attivi",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "next"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"33333\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "4bbcd2f1-e5af-4ba5-b615-c0c9561866e0",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {\r",
+                "    pm.response.to.have.status(200);\r",
+                "});"
+              ],
+              "_lastExecutionId": "9daafc4c-fceb-4e23-853f-59a3baa9a004"
+            }
+          }
+        ]
+      },
+      {
+        "id": "85f1dd9f-0478-49b9-9fd3-89f8e36f5b28",
+        "name": "Variables - Variabili dell'istanza di processo relative al task recuperate correttamente",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "variables"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-3adabfa508b8\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "a59b0b7f-4a17-4850-b39f-b4da4d85b985",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {\r",
+                "    pm.response.to.have.status(200);\r",
+                "});"
+              ],
+              "_lastExecutionId": "42c4a363-47a5-4dc7-a8d3-a2133bd7e2f7"
+            }
+          }
+        ]
+      },
+      {
+        "id": "19a35434-b14b-45a2-9ae7-8b603c5d9979",
+        "name": "Variables - Errore su Camunda, task specificato non esistente.",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "variables"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-0000000000\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "d55acd0a-f689-4c54-9f8e-a37ecfe006ee",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 503\", function () {\r",
+                "    pm.response.to.have.status(503);\r",
+                "});"
+              ],
+              "_lastExecutionId": "33ea0c54-3030-4ded-adba-99820adc40cd"
+            }
+          }
+        ]
+      },
+      {
+        "id": "364189f9-2d2e-43f1-9a09-93f976a8ad92",
+        "name": "Deploy - Deploy del bpmn, dmn o form",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "deploy",
+              ":resourceType"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": [
+              {
+                "type": "any",
+                "value": "BPMN",
+                "key": "resourceType"
+              }
+            ]
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "urlencoded",
+            "urlencoded": [
+              {
+                "key": "url",
+                "value": "http://localhost:3000/download"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "0503504c-d73f-4f3c-95d2-a7f976531379",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {\r",
+                "    pm.response.to.have.status(200);\r",
+                "});"
+              ],
+              "_lastExecutionId": "e52db2f9-1f4e-46d4-a4de-43abacdecca1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "5fb96b3d-f65d-41e7-a8cd-e2df58b72f83",
+        "name": "Deploy - Errore per download della risorsa fallito",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "deploy",
+              ":resourceType"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": [
+              {
+                "type": "any",
+                "value": "BPMN",
+                "key": "resourceType"
+              }
+            ]
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "urlencoded",
+            "urlencoded": [
+              {
+                "key": "url",
+                "value": "http://test:3000/download"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "59126ca8-0ad4-4127-b017-353d6e11eff3",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 500\", function () {\r",
+                "    pm.response.to.have.status(500);\r",
+                "});"
+              ],
+              "_lastExecutionId": "85fe1984-30f5-4319-967d-bf1bf241f02d"
+            }
+          }
+        ]
+      },
+      {
+        "id": "edb03476-d84a-4b4d-a8cf-ab757431d303",
+        "name": "Resource - Recupera il bpmn associato al deployment ID",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "deploy",
+              ":id",
+              "data"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": [
+              {
+                "type": "any",
+                "value": "test",
+                "key": "id"
+              }
+            ]
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "612a4937-93fd-4020-a3c3-152cddda76e4",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {\r",
+                "    pm.response.to.have.status(200);\r",
+                "});"
+              ],
+              "_lastExecutionId": "b74c8a34-74bc-4df6-b13f-41d99935d729"
+            }
+          }
+        ]
+      },
+      {
+        "id": "1edc3494-f5cd-470c-973c-7d9cf6218681",
+        "name": "Resource - Risorsa non trovata",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "deploy",
+              ":id",
+              "data"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": [
+              {
+                "type": "any",
+                "value": "test_not_found",
+                "key": "id"
+              }
+            ]
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "1b93f7e6-21c5-4f66-9479-1963034e2313",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 404\", function () {\r",
+                "    pm.response.to.have.status(404);\r",
+                "});"
+              ],
+              "_lastExecutionId": "f5d9041a-a0ac-42b3-b476-1a279f550c3a"
+            }
+          }
+        ]
+      }
+    ],
+    "event": [],
+    "variable": [],
+    "info": {
+      "_postman_id": "fa41de07-c678-4c26-9e8f-4cb0ff0184f5",
+      "name": "Integration_test_process",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    }
+  },
+  "environment": {
+    "id": "72d121b9-9596-4487-a8b3-50c850dcb617",
+    "values": [
+      {
+        "type": "any",
+        "value": "http://host.testcontainers.internal:8086",
+        "key": "baseUrl"
+      }
+    ]
+  },
+  "globals": {
+    "id": "58df0d39-c668-47d6-925f-a71cf9b50064",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 11,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 11,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 11,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 11,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 11,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 11,
+        "pending": 0,
+        "failed": 0
+      },
+      "testScripts": {
+        "total": 11,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 0,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 157.63636363636363,
+      "responseMin": 11,
+      "responseMax": 1145,
+      "responseSd": 320.57569599004876,
+      "dnsAverage": 0,
+      "dnsMin": 0,
+      "dnsMax": 0,
+      "dnsSd": 0,
+      "firstByteAverage": 0,
+      "firstByteMin": 0,
+      "firstByteMax": 0,
+      "firstByteSd": 0,
+      "started": 1727192357445,
+      "completed": 1727192359349
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 11,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "a05fd848-0ba9-4a9d-8e36-8eb5c92d17dd",
+          "httpRequestId": "b563e9e1-a953-4b4a-9bd6-7a985563549f"
+        },
+        "item": {
+          "id": "9fcfee6e-a40b-45e4-9ba9-98633ac2890f",
+          "name": "Start - Processo correttamente iniziato",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "start"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"00000\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "daaf8904-5117-4dc5-b0b7-ec83b954dc2f",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "e942521a-64a1-433d-a26a-6e741a46a658"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "start"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "61d22ef9-5ab7-48f4-b679-045883791252",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "367",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"00000\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "760e9b08-5766-48ff-8fa2-40a9628870d9",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "119"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              97,
+              115,
+              107,
+              115,
+              34,
+              58,
+              91,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              53,
+              55,
+              99,
+              48,
+              101,
+              51,
+              55,
+              98,
+              45,
+              56,
+              55,
+              99,
+              53,
+              45,
+              49,
+              49,
+              101,
+              101,
+              45,
+              97,
+              99,
+              101,
+              101,
+              45,
+              51,
+              97,
+              100,
+              97,
+              98,
+              102,
+              97,
+              53,
+              48,
+              56,
+              98,
+              56,
+              34,
+              44,
+              34,
+              102,
+              111,
+              114,
+              109,
+              34,
+              58,
+              34,
+              100,
+              97,
+              116,
+              105,
+              65,
+              118,
+              118,
+              105,
+              115,
+              111,
+              46,
+              104,
+              116,
+              109,
+              108,
+              34,
+              44,
+              34,
+              112,
+              114,
+              105,
+              111,
+              114,
+              105,
+              116,
+              121,
+              34,
+              58,
+              53,
+              48,
+              125,
+              93,
+              44,
+              34,
+              116,
+              114,
+              97,
+              110,
+              115,
+              97,
+              99,
+              116,
+              105,
+              111,
+              110,
+              73,
+              100,
+              34,
+              58,
+              34,
+              116,
+              101,
+              115,
+              116,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 1145,
+          "responseSize": 119
+        },
+        "id": "9fcfee6e-a40b-45e4-9ba9-98633ac2890f",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "111db835-75ef-457f-813c-c7ffb7d7052d",
+          "length": 11,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "4fcb3e99-3e40-4ac6-906a-9aed1a568e17"
+        },
+        "item": {
+          "id": "58ed1fe0-e63b-4223-8488-f3fde5698957",
+          "name": "Start - Errore su Camunda, processo non startato correttamente",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "start"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"22222\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "a28883d0-84b6-43ea-b259-1d404a649579",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 503\", function () {\r",
+                  "    pm.response.to.have.status(503);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "ecb4d742-00ed-42eb-a941-40ce88e39a06"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "start"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "12080250-a929-458e-8c10-c3bd7645a21a",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "367",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"22222\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "1662caf3-5c1a-4f1c-ba68-5b324b544d02",
+          "status": "Service Unavailable",
+          "code": 503,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            },
+            {
+              "key": "content-length",
+              "value": "128"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              83,
+              84,
+              65,
+              82,
+              84,
+              95,
+              73,
+              78,
+              83,
+              84,
+              65,
+              78,
+              67,
+              69,
+              95,
+              70,
+              65,
+              73,
+              76,
+              85,
+              82,
+              69,
+              34,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              34,
+              67,
+              48,
+              50,
+              34,
+              44,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              84,
+              104,
+              101,
+              32,
+              105,
+              110,
+              115,
+              116,
+              97,
+              110,
+              99,
+              101,
+              32,
+              99,
+              111,
+              117,
+              108,
+              100,
+              32,
+              110,
+              111,
+              116,
+              32,
+              98,
+              101,
+              32,
+              99,
+              114,
+              101,
+              97,
+              116,
+              101,
+              100,
+              32,
+              115,
+              117,
+              99,
+              99,
+              101,
+              115,
+              115,
+              102,
+              117,
+              108,
+              108,
+              121,
+              46,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              53,
+              48,
+              51,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 210,
+          "responseSize": 128
+        },
+        "id": "58ed1fe0-e63b-4223-8488-f3fde5698957",
+        "assertions": [
+          {
+            "assertion": "Status code is 503",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "bf66e350-2da1-410a-abd3-36026cd0b863",
+          "length": 11,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "dd1c0ed5-7c3b-4ada-8861-b67b1e3c95e7"
+        },
+        "item": {
+          "id": "969769b3-e23a-44bd-b182-184927f14afe",
+          "name": "Start - Model recupero bpmn id fallito, utilizzo functionId",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "start"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"11111\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "d3e18503-e8f0-49af-8e71-269f01449921",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "a919be2b-bdd5-41b2-a908-a9bb7dd8908a"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "start"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "adcb43d4-1364-48f0-a125-e2ebd0469573",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "367",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"functionId\": \"MENU\",\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"SCANNER\": \"OK\"\r\n    },\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"11111\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "de34d1c6-5f34-4194-88f4-020c5ad67ff0",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "119"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              97,
+              115,
+              107,
+              115,
+              34,
+              58,
+              91,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              53,
+              55,
+              99,
+              48,
+              101,
+              51,
+              55,
+              98,
+              45,
+              56,
+              55,
+              99,
+              53,
+              45,
+              49,
+              49,
+              101,
+              101,
+              45,
+              97,
+              99,
+              101,
+              101,
+              45,
+              51,
+              97,
+              100,
+              97,
+              98,
+              102,
+              97,
+              53,
+              48,
+              56,
+              98,
+              56,
+              34,
+              44,
+              34,
+              102,
+              111,
+              114,
+              109,
+              34,
+              58,
+              34,
+              100,
+              97,
+              116,
+              105,
+              65,
+              118,
+              118,
+              105,
+              115,
+              111,
+              46,
+              104,
+              116,
+              109,
+              108,
+              34,
+              44,
+              34,
+              112,
+              114,
+              105,
+              111,
+              114,
+              105,
+              116,
+              121,
+              34,
+              58,
+              53,
+              48,
+              125,
+              93,
+              44,
+              34,
+              116,
+              114,
+              97,
+              110,
+              115,
+              97,
+              99,
+              116,
+              105,
+              111,
+              110,
+              73,
+              100,
+              34,
+              58,
+              34,
+              116,
+              101,
+              115,
+              116,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 211,
+          "responseSize": 119
+        },
+        "id": "969769b3-e23a-44bd-b182-184927f14afe",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "6b1cfe5f-c753-4eb4-b26e-4dab05d02508",
+          "length": 11,
+          "cycles": 1,
+          "position": 3,
+          "iteration": 0,
+          "httpRequestId": "dacf2f1d-9521-4bc2-9514-977f1d45894b"
+        },
+        "item": {
+          "id": "92a6651e-9054-42ce-8d42-7d1bea471dda",
+          "name": "Next - Task specificato completato corretamente e recuperati i task attivi",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "next"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"taskId\": \"4badbbab-846e-11ee-8aec-f296510bbaa3\",\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"55555\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "82668a6b-5794-4c73-a417-b5c486fbfd83",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "8a0aa02c-8c02-4e96-8100-28cfe1d35173"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "next"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "e54a5255-fbdf-4032-9ca3-2901464e95bf",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "503",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"taskId\": \"4badbbab-846e-11ee-8aec-f296510bbaa3\",\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"55555\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "1b697664-ea97-40af-b1d7-73da2bcbe25c",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "119"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              97,
+              115,
+              107,
+              115,
+              34,
+              58,
+              91,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              53,
+              55,
+              99,
+              48,
+              101,
+              51,
+              55,
+              98,
+              45,
+              56,
+              55,
+              99,
+              53,
+              45,
+              49,
+              49,
+              101,
+              101,
+              45,
+              97,
+              99,
+              101,
+              101,
+              45,
+              51,
+              97,
+              100,
+              97,
+              98,
+              102,
+              97,
+              53,
+              48,
+              56,
+              98,
+              56,
+              34,
+              44,
+              34,
+              102,
+              111,
+              114,
+              109,
+              34,
+              58,
+              34,
+              100,
+              97,
+              116,
+              105,
+              65,
+              118,
+              118,
+              105,
+              115,
+              111,
+              46,
+              104,
+              116,
+              109,
+              108,
+              34,
+              44,
+              34,
+              112,
+              114,
+              105,
+              111,
+              114,
+              105,
+              116,
+              121,
+              34,
+              58,
+              53,
+              48,
+              125,
+              93,
+              44,
+              34,
+              116,
+              114,
+              97,
+              110,
+              115,
+              97,
+              99,
+              116,
+              105,
+              111,
+              110,
+              73,
+              100,
+              34,
+              58,
+              34,
+              116,
+              101,
+              115,
+              116,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 26,
+          "responseSize": 119
+        },
+        "id": "92a6651e-9054-42ce-8d42-7d1bea471dda",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "908b0a09-dd99-4333-a177-4396662e4cb3",
+          "length": 11,
+          "cycles": 1,
+          "position": 4,
+          "iteration": 0,
+          "httpRequestId": "056ac6e0-334b-4ca7-940b-85808d606f92"
+        },
+        "item": {
+          "id": "e9c68ab6-8f85-4f57-8ec0-6a3ae6367241",
+          "name": "Next - Task non specificato, recupero dei task attivi",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "next"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"33333\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "4bbcd2f1-e5af-4ba5-b615-c0c9561866e0",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "9daafc4c-fceb-4e23-853f-59a3baa9a004"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "next"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "771c2812-42d9-42b5-8e31-08bd59af1608",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "448",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"transactionId\": \"test\",\r\n    \"deviceInfo\": {\r\n        \"bankId\": \"33333\",\r\n        \"branchId\": \"1111\",\r\n        \"code\": \"123\",\r\n        \"terminalId\": \"64874412\",\r\n        \"opTimestamp\": \"2023-10-31T16:30:00.000+00:00\",\r\n        \"channel\": \"ATM\"\r\n    },\r\n    \"variables\": {\r\n        \"PRINTER\": \"OK\",\r\n        \"errorDescription\": \"timeout on menu.html\",\r\n        \"continue\": true,\r\n        \"errorCode\": \"27\",\r\n        \"SCANNER\": \"KO\"\r\n    }\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "d6171e8c-14b4-49ff-abf9-307b827c2001",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "119"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              97,
+              115,
+              107,
+              115,
+              34,
+              58,
+              91,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              53,
+              55,
+              99,
+              48,
+              101,
+              51,
+              55,
+              98,
+              45,
+              56,
+              55,
+              99,
+              53,
+              45,
+              49,
+              49,
+              101,
+              101,
+              45,
+              97,
+              99,
+              101,
+              101,
+              45,
+              51,
+              97,
+              100,
+              97,
+              98,
+              102,
+              97,
+              53,
+              48,
+              56,
+              98,
+              56,
+              34,
+              44,
+              34,
+              102,
+              111,
+              114,
+              109,
+              34,
+              58,
+              34,
+              100,
+              97,
+              116,
+              105,
+              65,
+              118,
+              118,
+              105,
+              115,
+              111,
+              46,
+              104,
+              116,
+              109,
+              108,
+              34,
+              44,
+              34,
+              112,
+              114,
+              105,
+              111,
+              114,
+              105,
+              116,
+              121,
+              34,
+              58,
+              53,
+              48,
+              125,
+              93,
+              44,
+              34,
+              116,
+              114,
+              97,
+              110,
+              115,
+              97,
+              99,
+              116,
+              105,
+              111,
+              110,
+              73,
+              100,
+              34,
+              58,
+              34,
+              116,
+              101,
+              115,
+              116,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 18,
+          "responseSize": 119
+        },
+        "id": "e9c68ab6-8f85-4f57-8ec0-6a3ae6367241",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "890e1310-1852-40f6-adac-e2882f677b44",
+          "length": 11,
+          "cycles": 1,
+          "position": 5,
+          "iteration": 0,
+          "httpRequestId": "c6b2484c-bffe-4b49-8a3c-59353d3683c6"
+        },
+        "item": {
+          "id": "85f1dd9f-0478-49b9-9fd3-89f8e36f5b28",
+          "name": "Variables - Variabili dell'istanza di processo relative al task recuperate correttamente",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "variables"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-3adabfa508b8\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "a59b0b7f-4a17-4850-b39f-b4da4d85b985",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "42c4a363-47a5-4dc7-a8d3-a2133bd7e2f7"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "variables"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "be7abd7e-cdc1-435e-bc87-e7e6dcda8f89",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "94",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-3adabfa508b8\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "a4e4e973-4b68-4700-9344-b9ad2bcc5bbb",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "57"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              98,
+              117,
+              116,
+              116,
+              111,
+              110,
+              115,
+              34,
+              58,
+              123,
+              125,
+              44,
+              34,
+              118,
+              97,
+              114,
+              105,
+              97,
+              98,
+              108,
+              101,
+              115,
+              34,
+              58,
+              123,
+              34,
+              97,
+              86,
+              97,
+              114,
+              105,
+              97,
+              98,
+              108,
+              101,
+              75,
+              101,
+              121,
+              34,
+              58,
+              123,
+              34,
+              112,
+              114,
+              111,
+              112,
+              49,
+              34,
+              58,
+              34,
+              97,
+              34,
+              125,
+              125,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 25,
+          "responseSize": 57
+        },
+        "id": "85f1dd9f-0478-49b9-9fd3-89f8e36f5b28",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "b61dc16b-d8a0-4b79-a168-08d3337213c4",
+          "length": 11,
+          "cycles": 1,
+          "position": 6,
+          "iteration": 0,
+          "httpRequestId": "3aa40d22-e539-4d41-a8e6-8cf42d79f8a7"
+        },
+        "item": {
+          "id": "19a35434-b14b-45a2-9ae7-8b603c5d9979",
+          "name": "Variables - Errore su Camunda, task specificato non esistente.",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "variables"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-0000000000\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "d55acd0a-f689-4c54-9f8e-a37ecfe006ee",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 503\", function () {\r",
+                  "    pm.response.to.have.status(503);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "33ea0c54-3030-4ded-adba-99820adc40cd"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "variables"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "60ebbde7-e0fa-4611-8f2c-9b366d8e9cdc",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "92",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"taskId\" : \"57c0e37b-87c5-11ee-acee-0000000000\",\r\n    \"variables\":[\"aVariableKey\"]\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "c7310599-e2f1-4f0f-b537-2fe18163d6c1",
+          "status": "Service Unavailable",
+          "code": 503,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            },
+            {
+              "key": "content-length",
+              "value": "117"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              86,
+              65,
+              82,
+              73,
+              65,
+              66,
+              76,
+              69,
+              83,
+              95,
+              84,
+              65,
+              83,
+              75,
+              95,
+              78,
+              79,
+              84,
+              95,
+              69,
+              88,
+              73,
+              83,
+              84,
+              34,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              34,
+              67,
+              48,
+              54,
+              34,
+              44,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              84,
+              97,
+              115,
+              107,
+              32,
+              105,
+              100,
+              32,
+              105,
+              115,
+              32,
+              110,
+              117,
+              108,
+              108,
+              32,
+              111,
+              114,
+              32,
+              100,
+              111,
+              101,
+              115,
+              32,
+              110,
+              111,
+              116,
+              32,
+              101,
+              120,
+              105,
+              115,
+              116,
+              115,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              53,
+              48,
+              51,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 13,
+          "responseSize": 117
+        },
+        "id": "19a35434-b14b-45a2-9ae7-8b603c5d9979",
+        "assertions": [
+          {
+            "assertion": "Status code is 503",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "dec195de-5c27-4942-82ff-a2cab00c6708",
+          "length": 11,
+          "cycles": 1,
+          "position": 7,
+          "iteration": 0,
+          "httpRequestId": "1e34abbf-7f3c-414e-8a6f-56a57584c5c1"
+        },
+        "item": {
+          "id": "364189f9-2d2e-43f1-9a09-93f976a8ad92",
+          "name": "Deploy - Deploy del bpmn, dmn o form",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "deploy",
+                ":resourceType"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "type": "any",
+                  "value": "BPMN",
+                  "key": "resourceType"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "url",
+                  "value": "http://localhost:3000/download"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "0503504c-d73f-4f3c-95d2-a7f976531379",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "e52db2f9-1f4e-46d4-a4de-43abacdecca1"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "deploy",
+              "BPMN"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "f5711303-1657-4327-ba2a-8779caa9313f",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "44",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "urlencoded",
+            "urlencoded": [
+              {
+                "key": "url",
+                "value": "http://localhost:3000/download"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "06950e0e-5ba4-4582-9231-1dfdd152347f",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Length",
+              "value": "0"
+            },
+            {
+              "key": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 24 Sep 2024 15:39:19 GMT"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": []
+          },
+          "cookie": [],
+          "responseTime": 40,
+          "responseSize": 0
+        },
+        "id": "364189f9-2d2e-43f1-9a09-93f976a8ad92",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "4371abd4-6ec3-442a-a2f8-51861a23e4a7",
+          "length": 11,
+          "cycles": 1,
+          "position": 8,
+          "iteration": 0,
+          "httpRequestId": "030b0cef-a6ce-42a6-ad5a-2b8d59ce035a"
+        },
+        "item": {
+          "id": "5fb96b3d-f65d-41e7-a8cd-e2df58b72f83",
+          "name": "Deploy - Errore per download della risorsa fallito",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "deploy",
+                ":resourceType"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "type": "any",
+                  "value": "BPMN",
+                  "key": "resourceType"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "url",
+                  "value": "http://test:3000/download"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "59126ca8-0ad4-4127-b017-353d6e11eff3",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 500\", function () {\r",
+                  "    pm.response.to.have.status(500);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "85fe1984-30f5-4319-967d-bf1bf241f02d"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "deploy",
+              "BPMN"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "cf8e400b-9967-4f93-94fb-fb9cfdf9d088",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "39",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "urlencoded",
+            "urlencoded": [
+              {
+                "key": "url",
+                "value": "http://test:3000/download"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "4f0fa9fb-9e00-4f5d-885c-8bfe39c41cc9",
+          "status": "Internal Server Error",
+          "code": 500,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            },
+            {
+              "key": "content-length",
+              "value": "129"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              71,
+              69,
+              78,
+              69,
+              82,
+              73,
+              67,
+              95,
+              69,
+              82,
+              82,
+              79,
+              82,
+              34,
+              44,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              34,
+              71,
+              48,
+              49,
+              34,
+              44,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              65,
+              110,
+              32,
+              117,
+              110,
+              101,
+              120,
+              112,
+              101,
+              99,
+              116,
+              101,
+              100,
+              32,
+              101,
+              114,
+              114,
+              111,
+              114,
+              32,
+              104,
+              97,
+              115,
+              32,
+              111,
+              99,
+              99,
+              117,
+              114,
+              114,
+              101,
+              100,
+              44,
+              32,
+              115,
+              101,
+              101,
+              32,
+              108,
+              111,
+              103,
+              115,
+              32,
+              102,
+              111,
+              114,
+              32,
+              109,
+              111,
+              114,
+              101,
+              32,
+              105,
+              110,
+              102,
+              111,
+              46,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              67,
+              111,
+              100,
+              101,
+              34,
+              58,
+              53,
+              48,
+              48,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 14,
+          "responseSize": 129
+        },
+        "id": "5fb96b3d-f65d-41e7-a8cd-e2df58b72f83",
+        "assertions": [
+          {
+            "assertion": "Status code is 500",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "ece81db2-4da1-47f0-a5e9-0ae99aa9ae35",
+          "length": 11,
+          "cycles": 1,
+          "position": 9,
+          "iteration": 0,
+          "httpRequestId": "0b364d85-b892-49b1-acd7-099463fa9894"
+        },
+        "item": {
+          "id": "edb03476-d84a-4b4d-a8cf-ab757431d303",
+          "name": "Resource - Recupera il bpmn associato al deployment ID",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "deploy",
+                ":id",
+                "data"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "type": "any",
+                  "value": "test",
+                  "key": "id"
+                }
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "612a4937-93fd-4020-a3c3-152cddda76e4",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "b74c8a34-74bc-4df6-b13f-41d99935d729"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "deploy",
+              "test",
+              "data"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "c7540329-a4e0-42c9-b693-4bdbeddcce56",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "ba45c052-9a5c-4d45-8b48-7fe5071ad246",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "797"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/xml;charset=UTF-8"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              60,
+              63,
+              120,
+              109,
+              108,
+              32,
+              118,
+              101,
+              114,
+              115,
+              105,
+              111,
+              110,
+              61,
+              34,
+              49,
+              46,
+              48,
+              34,
+              32,
+              101,
+              110,
+              99,
+              111,
+              100,
+              105,
+              110,
+              103,
+              61,
+              34,
+              85,
+              84,
+              70,
+              45,
+              56,
+              34,
+              63,
+              62,
+              13,
+              10,
+              60,
+              98,
+              112,
+              109,
+              110,
+              58,
+              100,
+              101,
+              102,
+              105,
+              110,
+              105,
+              116,
+              105,
+              111,
+              110,
+              115,
+              32,
+              120,
+              109,
+              108,
+              110,
+              115,
+              58,
+              98,
+              112,
+              109,
+              110,
+              61,
+              34,
+              104,
+              116,
+              116,
+              112,
+              58,
+              47,
+              47,
+              119,
+              119,
+              119,
+              46,
+              111,
+              109,
+              103,
+              46,
+              111,
+              114,
+              103,
+              47,
+              115,
+              112,
+              101,
+              99,
+              47,
+              66,
+              80,
+              77,
+              78,
+              47,
+              50,
+              48,
+              49,
+              48,
+              48,
+              53,
+              50,
+              52,
+              47,
+              77,
+              79,
+              68,
+              69,
+              76,
+              34,
+              32,
+              120,
+              109,
+              108,
+              110,
+              115,
+              58,
+              98,
+              112,
+              109,
+              110,
+              100,
+              105,
+              61,
+              34,
+              104,
+              116,
+              116,
+              112,
+              58,
+              47,
+              47,
+              119,
+              119,
+              119,
+              46,
+              111,
+              109,
+              103,
+              46,
+              111,
+              114,
+              103,
+              47,
+              115,
+              112,
+              101,
+              99,
+              47,
+              66,
+              80,
+              77,
+              78,
+              47,
+              50,
+              48,
+              49,
+              48,
+              48,
+              53,
+              50,
+              52,
+              47,
+              68,
+              73,
+              34,
+              32,
+              120,
+              109,
+              108,
+              110,
+              115,
+              58,
+              100,
+              99,
+              61,
+              34,
+              104,
+              116,
+              116,
+              112,
+              58,
+              47,
+              47,
+              119,
+              119,
+              119,
+              46,
+              111,
+              109,
+              103,
+              46,
+              111,
+              114,
+              103,
+              47,
+              115,
+              112,
+              101,
+              99,
+              47,
+              68,
+              68,
+              47,
+              50,
+              48,
+              49,
+              48,
+              48,
+              53,
+              50,
+              52,
+              47,
+              68,
+              67,
+              34,
+              32,
+              120,
+              109,
+              108,
+              110,
+              115,
+              58,
+              99,
+              97,
+              109,
+              117,
+              110,
+              100,
+              97,
+              61,
+              34,
+              104,
+              116,
+              116,
+              112,
+              58,
+              47,
+              47,
+              99,
+              97,
+              109,
+              117,
+              110,
+              100,
+              97,
+              46,
+              111,
+              114,
+              103,
+              47,
+              115,
+              99,
+              104,
+              101,
+              109,
+              97,
+              47,
+              49,
+              46,
+              48,
+              47,
+              98,
+              112,
+              109,
+              110,
+              34,
+              32,
+              120,
+              109,
+              108,
+              110,
+              115,
+              58,
+              120,
+              115,
+              105,
+              61,
+              34,
+              104,
+              116,
+              116,
+              112,
+              58,
+              47,
+              47,
+              119,
+              119,
+              119,
+              46,
+              119,
+              51,
+              46,
+              111,
+              114,
+              103,
+              47,
+              50,
+              48,
+              48,
+              49,
+              47,
+              88,
+              77,
+              76,
+              83,
+              99,
+              104,
+              101,
+              109,
+              97,
+              45,
+              105,
+              110,
+              115,
+              116,
+              97,
+              110,
+              99,
+              101,
+              34,
+              32,
+              120,
+              109,
+              108,
+              110,
+              115,
+              58,
+              100,
+              105,
+              61,
+              34,
+              104,
+              116,
+              116,
+              112,
+              58,
+              47,
+              47,
+              119,
+              119,
+              119,
+              46,
+              111,
+              109,
+              103,
+              46,
+              111,
+              114,
+              103,
+              47,
+              115,
+              112,
+              101,
+              99,
+              47,
+              68,
+              68,
+              47,
+              50,
+              48,
+              49,
+              48,
+              48,
+              53,
+              50,
+              52,
+              47,
+              68,
+              73,
+              34,
+              32,
+              120,
+              109,
+              108,
+              110,
+              115,
+              58,
+              98,
+              105,
+              111,
+              99,
+              61,
+              34,
+              104,
+              116,
+              116,
+              112,
+              58,
+              47,
+              47,
+              98,
+              112,
+              109,
+              110,
+              46,
+              105,
+              111,
+              47,
+              115,
+              99,
+              104,
+              101,
+              109,
+              97,
+              47,
+              98,
+              112,
+              109,
+              110,
+              47,
+              98,
+              105,
+              111,
+              99,
+              111,
+              108,
+              111,
+              114,
+              47,
+              49,
+              46,
+              48,
+              34,
+              32,
+              120,
+              109,
+              108,
+              110,
+              115,
+              58,
+              99,
+              111,
+              108,
+              111,
+              114,
+              61,
+              34,
+              104,
+              116,
+              116,
+              112,
+              58,
+              47,
+              47,
+              119,
+              119,
+              119,
+              46,
+              111,
+              109,
+              103,
+              46,
+              111,
+              114,
+              103,
+              47,
+              115,
+              112,
+              101,
+              99,
+              47,
+              66,
+              80,
+              77,
+              78,
+              47,
+              110,
+              111,
+              110,
+              45,
+              110,
+              111,
+              114,
+              109,
+              97,
+              116,
+              105,
+              118,
+              101,
+              47,
+              99,
+              111,
+              108,
+              111,
+              114,
+              47,
+              49,
+              46,
+              48,
+              34,
+              32,
+              120,
+              109,
+              108,
+              110,
+              115,
+              58,
+              109,
+              111,
+              100,
+              101,
+              108,
+              101,
+              114,
+              61,
+              34,
+              104,
+              116,
+              116,
+              112,
+              58,
+              47,
+              47,
+              99,
+              97,
+              109,
+              117,
+              110,
+              100,
+              97,
+              46,
+              111,
+              114,
+              103,
+              47,
+              115,
+              99,
+              104,
+              101,
+              109,
+              97,
+              47,
+              109,
+              111,
+              100,
+              101,
+              108,
+              101,
+              114,
+              47,
+              49,
+              46,
+              48,
+              34,
+              32,
+              105,
+              100,
+              61,
+              34,
+              68,
+              101,
+              102,
+              105,
+              110,
+              105,
+              116,
+              105,
+              111,
+              110,
+              115,
+              95,
+              48,
+              48,
+              122,
+              119,
+              51,
+              112,
+              108,
+              34,
+              32,
+              116,
+              97,
+              114,
+              103,
+              101,
+              116,
+              78,
+              97,
+              109,
+              101,
+              115,
+              112,
+              97,
+              99,
+              101,
+              61,
+              34,
+              104,
+              116,
+              116,
+              112,
+              58,
+              47,
+              47,
+              98,
+              112,
+              109,
+              110,
+              46,
+              105,
+              111,
+              47,
+              115,
+              99,
+              104,
+              101,
+              109,
+              97,
+              47,
+              98,
+              112,
+              109,
+              110,
+              34,
+              32,
+              101,
+              120,
+              112,
+              111,
+              114,
+              116,
+              101,
+              114,
+              61,
+              34,
+              67,
+              97,
+              109,
+              117,
+              110,
+              100,
+              97,
+              32,
+              77,
+              111,
+              100,
+              101,
+              108,
+              101,
+              114,
+              34,
+              32,
+              101,
+              120,
+              112,
+              111,
+              114,
+              116,
+              101,
+              114,
+              86,
+              101,
+              114,
+              115,
+              105,
+              111,
+              110,
+              61,
+              34,
+              53,
+              46,
+              49,
+              54,
+              46,
+              48,
+              34,
+              32,
+              109,
+              111,
+              100,
+              101,
+              108,
+              101,
+              114,
+              58,
+              101,
+              120,
+              101,
+              99,
+              117,
+              116,
+              105,
+              111,
+              110,
+              80,
+              108,
+              97,
+              116,
+              102,
+              111,
+              114,
+              109,
+              61,
+              34,
+              67,
+              97,
+              109,
+              117,
+              110,
+              100,
+              97,
+              32,
+              80,
+              108,
+              97,
+              116,
+              102,
+              111,
+              114,
+              109,
+              34,
+              32,
+              109,
+              111,
+              100,
+              101,
+              108,
+              101,
+              114,
+              58,
+              101,
+              120,
+              101,
+              99,
+              117,
+              116,
+              105,
+              111,
+              110,
+              80,
+              108,
+              97,
+              116,
+              102,
+              111,
+              114,
+              109,
+              86,
+              101,
+              114,
+              115,
+              105,
+              111,
+              110,
+              61,
+              34,
+              55,
+              46,
+              49,
+              57,
+              46,
+              48,
+              34,
+              62,
+              13,
+              10,
+              32,
+              32,
+              60,
+              98,
+              109,
+              112,
+              110,
+              62,
+              60,
+              47,
+              98,
+              109,
+              112,
+              110,
+              62,
+              13,
+              10,
+              60,
+              47,
+              98,
+              112,
+              109,
+              110,
+              58,
+              100,
+              101,
+              102,
+              105,
+              110,
+              105,
+              116,
+              105,
+              111,
+              110,
+              115,
+              62
+            ]
+          },
+          "cookie": [],
+          "responseTime": 21,
+          "responseSize": 797
+        },
+        "id": "edb03476-d84a-4b4d-a8cf-ab757431d303",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "c9eea6ff-5f26-4a04-b2f7-ff370e952e1f",
+          "length": 11,
+          "cycles": 1,
+          "position": 10,
+          "iteration": 0,
+          "httpRequestId": "e06ec12b-2ff4-40ec-aade-7bfc76b2fcd5"
+        },
+        "item": {
+          "id": "1edc3494-f5cd-470c-973c-7d9cf6218681",
+          "name": "Resource - Risorsa non trovata",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "processes",
+                "deploy",
+                ":id",
+                "data"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "type": "any",
+                  "value": "test_not_found",
+                  "key": "id"
+                }
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "1b93f7e6-21c5-4f66-9479-1963034e2313",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "f5d9041a-a0ac-42b3-b476-1a279f550c3a"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8086",
+            "path": [
+              "api",
+              "v1",
+              "processes",
+              "deploy",
+              "test_not_found",
+              "data"
+            ],
+            "host": [
+              "host",
+              "testcontainers",
+              "internal"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "72623e93-6415-4751-bbae-aa15b7f0b11d",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "host.testcontainers.internal:8086",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "214792e6-f737-4f08-be28-a0488b6a220d",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/xml;charset=UTF-8"
+            },
+            {
+              "key": "content-length",
+              "value": "74"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              105,
+              116,
+              46,
+              112,
+              97,
+              103,
+              111,
+              112,
+              97,
+              46,
+              97,
+              116,
+              109,
+              108,
+              97,
+              121,
+              101,
+              114,
+              46,
+              119,
+              102,
+              46,
+              112,
+              114,
+              111,
+              99,
+              101,
+              115,
+              115,
+              46,
+              101,
+              120,
+              99,
+              101,
+              112,
+              116,
+              105,
+              111,
+              110,
+              46,
+              98,
+              101,
+              97,
+              110,
+              46,
+              80,
+              114,
+              111,
+              99,
+              101,
+              115,
+              115,
+              69,
+              114,
+              114,
+              111,
+              114,
+              82,
+              101,
+              115,
+              112,
+              111,
+              110,
+              115,
+              101,
+              64,
+              51,
+              101,
+              99,
+              56,
+              55,
+              53,
+              100,
+              97
+            ]
+          },
+          "cookie": [],
+          "responseTime": 11,
+          "responseSize": 74
+        },
+        "id": "1edc3494-f5cd-470c-973c-7d9cf6218681",
+        "assertions": [
+          {
+            "assertion": "Status code is 404",
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "transfers": {
+      "responseTotal": 1778
+    },
+    "failures": [],
+    "error": null
+  }
+}

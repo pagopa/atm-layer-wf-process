@@ -1,18 +1,5 @@
 package it.pagopa.atmlayer.wf.process.resource;
 
-import java.io.IOException;
-import java.util.UUID;
-
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import org.jboss.resteasy.reactive.RestForm;
-import org.jboss.resteasy.reactive.RestResponse;
-
-import io.opentelemetry.api.trace.Tracer;
 import it.pagopa.atmlayer.wf.process.bean.TaskRequest;
 import it.pagopa.atmlayer.wf.process.bean.TaskResponse;
 import it.pagopa.atmlayer.wf.process.bean.VariableRequest;
@@ -26,38 +13,40 @@ import it.pagopa.atmlayer.wf.process.util.Constants;
 import it.pagopa.atmlayer.wf.process.util.Utility;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.Size;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.resteasy.reactive.RestForm;
+import org.jboss.resteasy.reactive.RestResponse;
+
+import java.io.IOException;
+import java.util.UUID;
 
 /**
  * @author Pasquale Sansonna
- * 
+ *
  * <p>The {@code ProcessResource} class defines REST endpoints for managing BPM processes through Camunda.
  * It provides operations for deploying BPMN process definitions, retrieving BPMN resources, starting process instances,
  * completing tasks, and handling variables within the workflow. </p>
  *
  * <p>The class is designed to handle BPM process-related operations and interacts with the Camunda workflow engine
  * through the injected {@link it.pagopa.atmlayer.wf.process.service.impl.ProcessServiceImpl} instance. </p>
- * 
  * @see it.pagopa.atmlayer.wf.process.service.impl.ProcessServiceImpl
  */
 @Slf4j
 @Path("/api/v1/processes")
 @Tag(name = "Workflow", description = "Gestione del task affidata all'engine Camunda")
-public class ProcessResource extends CommonLogic{
+public class ProcessResource extends CommonLogic {
 
     @Inject
     ProcessService processService;
 
-    @Inject
-    Tracer tracer;
-    
     /**
      * Endpoint to deploy a BPMN process definition to Camunda.
      *
@@ -91,7 +80,7 @@ public class ProcessResource extends CommonLogic{
         } finally {
             // Delete of temp bpmn used for deploy on Camunda platform
             Utility.deleteFileIfExists(fileName);
-		    logElapsedTime(PROCESS_DEPLOY_LOG_ID , start);
+            logElapsedTime(PROCESS_DEPLOY_LOG_ID, start);
         }
 
         return response;
@@ -111,7 +100,7 @@ public class ProcessResource extends CommonLogic{
     @GET
     @Path("/deploy/{id}/data")
     @Produces(MediaType.APPLICATION_XML)
-    public RestResponse<String> resource(@Schema(format = "String", maxLength = 36) @PathParam("id") @Size(max = 36) @Parameter(description = "Il deploymentId del bpmn da deployare")String id) {
+    public RestResponse<String> resource(@Schema(format = "String", maxLength = 36) @PathParam("id") @Size(max = 36) @Parameter(description = "Il deploymentId del bpmn da deployare") String id) {
         log.info("Executing RESOURCE. . .");
         long start = System.currentTimeMillis();
 
@@ -125,7 +114,7 @@ public class ProcessResource extends CommonLogic{
             log.error("Generic exception occured while processing get resource bpmn: ", e);
             throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
-			logElapsedTime(PROCESS_RESOURCE_LOG_ID , start);
+            logElapsedTime(PROCESS_RESOURCE_LOG_ID, start);
         }
 
         return response;
@@ -148,7 +137,7 @@ public class ProcessResource extends CommonLogic{
     public RestResponse<TaskResponse> startProcess(@Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
         log.info("Executing START. . .");
         long start = System.currentTimeMillis();
-        
+
         RestResponse<TaskResponse> response;
 
         try {
@@ -167,7 +156,7 @@ public class ProcessResource extends CommonLogic{
             log.error("Generic exception occured while starting process: ", e);
             throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
-			logElapsedTime(PROCESS_START_PROCESS_LOG_ID , start);
+            logElapsedTime(PROCESS_START_PROCESS_LOG_ID, start);
         }
 
         return response;
@@ -189,10 +178,10 @@ public class ProcessResource extends CommonLogic{
     @Path("/next")
     public RestResponse<TaskResponse> next(
             @Parameter(description = "Il body della richiesta con le info del dispositivo, le info del task corrente e la mappa delle variabili di input") TaskRequest request) {
-        
+
         log.info("Executing NEXT. . .");
         long start = System.currentTimeMillis();
-        
+
         RestResponse<TaskResponse> response;
 
         try {
@@ -207,7 +196,7 @@ public class ProcessResource extends CommonLogic{
                     processService.complete(request.getTaskId(), request.getVariables(), request.getVariables().get(Constants.FUNCTION_ID).toString(), request.getDeviceInfo());
                 } else {
                     processService.complete(request.getTaskId(), request.getVariables());
-                }             
+                }
             }
             /*
              * Retrieve active tasks
@@ -219,7 +208,7 @@ public class ProcessResource extends CommonLogic{
             log.error("Generic exception occured while executing next: ", e);
             throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
-			logElapsedTime(PROCESS_NEXT_LOG_ID , start);
+            logElapsedTime(PROCESS_NEXT_LOG_ID, start);
         }
 
         return response;
@@ -227,11 +216,11 @@ public class ProcessResource extends CommonLogic{
 
     /**
      * Endpoint to retrieve the variables of a task.
-     * 
+     *
      * @param request
      * @return A `RestResponse` containing variables of the task.
-    */
-    @Operation(operationId = "variables", description = "Recupero delle variabili del task presente nella richiesta.",summary = "Recupera le variabili dell'istanza di processo e filtra le stesse in base a quelle richieste dal task aggiungendovi le variabili e i bottoni di default.")
+     */
+    @Operation(operationId = "variables", description = "Recupero delle variabili del task presente nella richiesta.", summary = "Recupera le variabili dell'istanza di processo e filtra le stesse in base a quelle richieste dal task aggiungendovi le variabili e i bottoni di default.")
     @APIResponse(responseCode = "200", description = "OK. Operazione eseguita con successo. Restituisce la mappa delle variabili filtrate e le Taskvars del task corrente del workflow.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = VariableResponse.class)))
     @APIResponse(responseCode = "400", description = "BAD REQUEST. Nel caso di errori di validazione o di una richiesta malformata.")
     @APIResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR. Nel caso di errore durante l'elaborazione.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessErrorResponse.class)))
@@ -252,7 +241,7 @@ public class ProcessResource extends CommonLogic{
             log.error("Generic exception occured while executing variables: ", e);
             throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
-			logElapsedTime(PROCESS_VARIABLES_LOG_ID, start);
+            logElapsedTime(PROCESS_VARIABLES_LOG_ID, start);
         }
 
         return response;
@@ -260,10 +249,10 @@ public class ProcessResource extends CommonLogic{
 
     /**
      * Endpoint to retrieve the variables of a task.
-     * 
+     *
      * @param id
      * @return A `RestResponse` containing variables of the task.
-    */
+     */
     @Operation(operationId = "undeploy", description = "Esegue l'undeploy del bpmn.", summary = "Effettua l'undeploy del bpmn.")
     @APIResponse(responseCode = "204", description = "OK. Operazione eseguita con successo.")
     @APIResponse(responseCode = "400", description = "BAD REQUEST. Nel caso di errori di validazione o di una richiesta malformata.")
@@ -285,7 +274,7 @@ public class ProcessResource extends CommonLogic{
             log.error("Generic exception occured while executing variables: ", e);
             throw new ProcessException(ProcessErrorEnum.GENERIC);
         } finally {
-			logElapsedTime(PROCESS_VARIABLES_LOG_ID, start);
+            logElapsedTime(PROCESS_VARIABLES_LOG_ID, start);
         }
 
         return response;

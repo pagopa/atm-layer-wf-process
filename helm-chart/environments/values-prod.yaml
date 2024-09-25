@@ -19,7 +19,7 @@ fullnameOverride: ""
 logLevel: INFO
 
 tracing:
-  enabled: "true"
+  enabled: "false"
   endpointBasePath: "http://jaeger-collector.default.svc.cluster.local:4317"
   enableJDBCMonitoring: "false"
 
